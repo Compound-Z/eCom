@@ -8,7 +8,7 @@ import vn.ztech.software.ecom.domain.model.ProductDetails
 
 interface IProductRepository {
     suspend fun getListProducts(): List<ProductResponse>
-    suspend fun getProductDetails(productId: Int): ProductDetailsResponse
+    suspend fun getProductDetails(productId: String): ProductDetailsResponse
 }
 
 class ProductRepository(private val productApi: IProductApi): IProductRepository{
@@ -16,7 +16,7 @@ class ProductRepository(private val productApi: IProductApi): IProductRepository
         return productApi.getListProducts()
     }
 
-    override suspend fun getProductDetails(productId: Int): ProductDetailsResponse {
+    override suspend fun getProductDetails(productId: String): ProductDetailsResponse {
         return productApi.getProductDetails(productId)
     }
 

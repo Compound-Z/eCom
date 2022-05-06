@@ -11,7 +11,7 @@ interface IProductApi{
     suspend fun getListProducts(): List<ProductResponse>
 
     @GET("api/v1/product/{productId}")
-    suspend fun getProductDetails(productId: Int): ProductDetailsResponse
+    suspend fun getProductDetails(productId: String): ProductDetailsResponse
 }
 
 
