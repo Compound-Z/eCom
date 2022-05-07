@@ -7,7 +7,7 @@ import vn.ztech.software.ecom.data.remote.dto.ProductResponse
 
 @Keep
 interface IProductApi{
-    @GET("api/v1/product/list")
+    @GET("api/v1/products")
     suspend fun getListProducts(): List<ProductResponse>
 
     @GET("api/v1/product/{productId}")

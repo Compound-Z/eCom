@@ -8,12 +8,12 @@ import vn.ztech.software.ecom.data.repository.IProductRepository
 import vn.ztech.software.ecom.data.repository.ProductRepository
 import vn.ztech.software.ecom.domain.model.Product
 
-interface IGetListProductUseCase{
-    suspend fun getListProductUseCase(): Flow<List<Product>>
+interface IListProductUseCase{
+    suspend fun getListProducts(): Flow<List<Product>>
 }
 
-class GetListProductsUseCase(private val productRepository: IProductRepository): IGetListProductUseCase{
-    override suspend fun getListProductUseCase(): Flow<List<Product>> = flow{
+class ListProductsUseCase(private val productRepository: IProductRepository): IListProductUseCase{
+    override suspend fun getListProducts(): Flow<List<Product>> = flow{
         val listProducts = productRepository.getListProducts().map {
             it.toProduct()
         }

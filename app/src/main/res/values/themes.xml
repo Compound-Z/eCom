@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ShoppingApp" parent="Base.Theme.ShoppingApp" />
+    <style name="Theme.ECom" parent="Base.Theme.ECom" />
 
-    <style name="Base.Theme.ShoppingApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Base.Theme.ECom" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
