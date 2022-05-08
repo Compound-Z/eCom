@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.findNavController
@@ -30,19 +31,19 @@ class ProductDetailsFragment : Fragment() {
 //        } else {
             binding.proDetailsAddCartBtn.visibility = View.VISIBLE
             binding.proDetailsAddCartBtn.setOnClickListener {
-//                if (viewModel.isItemInCart.value == true) {
-//                    navigateToCartFragment()
-//                } else {
-//                    onAddToCart()
+                if (viewModel.isItemInCart.value == true) {
+                    navigateToCartFragment()
+                } else {
+                    viewModel.addToCart()
 //                    if (viewModel.errorStatus.value?.isEmpty() == true) {
-//                        viewModel.addItemStatus.observe(viewLifecycleOwner) { status ->
-//                            if (status == AddObjectStatus.DONE) {
-//                                makeToast("Product Added To Cart")
-//                                viewModel.checkIfInCart()
-//                            }
-//                        }
+                    viewModel.addItemStatus.observe(viewLifecycleOwner) { status ->
+                        if (status == StoreDataStatus.DONE) {
+                            makeToast("Product Added To Cart")
+                            viewModel.checkIfInCart()
+                        }
+                    }
 //                    }
-//                }
+                }
             }
 //        }
 
@@ -137,5 +138,9 @@ class ProductDetailsFragment : Fragment() {
             binding.proDetailsImagesRecyclerview.addItemDecoration(itemDecoration)
             PagerSnapHelper().attachToRecyclerView(binding.proDetailsImagesRecyclerview)
         }
+    }
+
+    private fun makeToast(text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
     }
 }

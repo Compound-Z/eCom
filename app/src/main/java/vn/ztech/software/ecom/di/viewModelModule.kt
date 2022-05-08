@@ -7,5 +7,5 @@ import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
 
 fun viewModelModule() = module {
     viewModel { HomeViewModel(get())}
-    viewModel { ProductDetailsViewModel(get()) }
+    viewModel { ProductDetailsViewModel(get(), get())}
 }

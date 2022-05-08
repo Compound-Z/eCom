@@ -12,12 +12,14 @@ import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.domain.model.ProductDetails
+import vn.ztech.software.ecom.domain.use_case.cart.ICartUseCase
 import vn.ztech.software.ecom.domain.use_case.get_product_details.IProductDetailsUseCase;
 
 private const val TAG = "ProductViewModel"
 
 class ProductDetailsViewModel(
-    private val productDetailsUseCase: IProductDetailsUseCase
+    private val productDetailsUseCase: IProductDetailsUseCase,
+    private val cartUseCase: ICartUseCase
     ) : ViewModel(){
     private val _productData = MutableLiveData<ProductDetails?>()
     val productData: LiveData<ProductDetails?> get() = _productData
@@ -25,10 +27,42 @@ class ProductDetailsViewModel(
     private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
     val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
 
+    private val _addItemStatus = MutableLiveData<StoreDataStatus?>()
+    val addItemStatus: LiveData<StoreDataStatus?> get() = _addItemStatus
+
 //    private val _errorStatus = MutableLiveData<List<AddItemErrors>>()
 //    val errorStatus: LiveData<List<AddItemErrors>> get() = _errorStatus
 
+    private val _isItemInCart = MutableLiveData<Boolean>()
+    val isItemInCart: LiveData<Boolean> get() = _isItemInCart
+
+    init {
+        viewModelScope.launch {
+            checkIfInCart()
+        }
+    }
+
     fun getProductDetails(id: String) {
+        viewModelScope.launch {
+            productDetailsUseCase.getProductDetails(id).flowOn(Dispatchers.IO).toLoadState().collect {
+                when(it){
+                    LoadState.Loading -> {
+                        _storeDataStatus.value = StoreDataStatus.LOADING
+                    }
+                    is LoadState.Loaded -> {
+                        _storeDataStatus.value = StoreDataStatus.DONE
+                        _productData.value = it.data
+                    }
+                    is LoadState.Error -> {
+                        _storeDataStatus.value = StoreDataStatus.ERROR
+                        _productData.value = ProductDetails()
+                    }
+                }
+            }
+        }
+    }
+
+    fun checkIfInCart(){
         viewModelScope.launch {
             productDetailsUseCase.getProductDetails(id).flowOn(Dispatchers.IO).toLoadState().collect {
                 when(it){
