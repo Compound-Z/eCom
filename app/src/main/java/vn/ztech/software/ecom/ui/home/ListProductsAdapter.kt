@@ -1,11 +1,9 @@
-package vn.ztech.software.ecom.presentation.home
+package vn.ztech.software.ecom.ui.home
 
 import android.content.Context
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
@@ -50,8 +48,8 @@ class ListProductsAdapter(proList: List<Any>, private val context: Context) :
 				context.getString(R.string.pro_details_price_value, productData.salePrice.toString())
 			proRatingBar.rating = productData.avgRating.toFloat()
 
-			if (productData.images.isNotEmpty()) {
-				val imgUrl = productData.images.toUri().buildUpon().scheme("https").build()
+			if (productData.thumbnail.isNotEmpty()) {
+				val imgUrl = productData.thumbnail.toUri().buildUpon().scheme("https").build()
 				Glide.with(context)
 					.asBitmap()
 					.load(imgUrl)

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="vn.ztech.software.ecom.presentation.home.HomeFragment"
+        android:name="vn.ztech.software.ecom.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 <!--        <action-->
@@ -42,7 +42,7 @@
 <!--    </fragment>-->
     <fragment
         android:id="@+id/productDetailsFragment"
-        android:name="vn.ztech.software.ecom.presentation.product_details.ProductDetailsFragment"
+        android:name="vn.ztech.software.ecom.ui.product_details.ProductDetailsFragment"
         android:label="ProductDetailsFragment"
         tools:layout="@layout/fragment_product_details">
         <action

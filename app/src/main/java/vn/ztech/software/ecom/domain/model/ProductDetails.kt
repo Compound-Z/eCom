@@ -1,6 +1,9 @@
 package vn.ztech.software.ecom.domain.model
 
 data class ProductDetails (
-    val id: Int,
-    val name: String
+    var id: String="-1",
+    var productGeneralInfo: Product = Product(),
+    var description: String = "",
+    var providerInfo: String = "", //should be another object Provider, will be fixed later
+    var images: List<String> = emptyList()
 )

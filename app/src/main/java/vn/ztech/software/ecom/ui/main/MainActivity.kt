@@ -1,4 +1,4 @@
-package vn.ztech.software.ecom.presentation.main
+package vn.ztech.software.ecom.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

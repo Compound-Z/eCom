@@ -1,6 +1,5 @@
-package vn.ztech.software.ecom.presentation.common
+package vn.ztech.software.ecom.ui.common
 
-import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

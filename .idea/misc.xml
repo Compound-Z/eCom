@@ -9,11 +9,14 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/font/nunito_sans.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/activity_main.xml" value="0.10054347826086957" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_home.xml" value="0.22" />
-        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_product_details.xml" value="0.1671195652173913" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_product_details.xml" value="0.21" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/images_item.xml" value="0.1" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/item_product_list.xml" value="0.12" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_circular_loader.xml" value="0.2" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_home_ad.xml" value="0.1671195652173913" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_home_top_app_bar.xml" value="0.11875" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_top_bar.xml" value="0.1" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/menu/app_bar_menu.xml" value="0.1" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.22" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/menu/home_app_bar_menu.xml" value="0.12916666666666668" />
       </map>

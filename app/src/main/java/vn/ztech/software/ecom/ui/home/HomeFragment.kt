@@ -1,4 +1,4 @@
-package vn.ztech.software.ecom.presentation.home
+package vn.ztech.software.ecom.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -16,8 +16,8 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.FragmentHomeBinding
 import vn.ztech.software.ecom.domain.model.Product
-import vn.ztech.software.ecom.presentation.common.ItemDecorationRecyclerViewPadding
-import vn.ztech.software.ecom.presentation.home.ListProductsAdapter.OnClickListener
+import vn.ztech.software.ecom.ui.common.ItemDecorationRecyclerViewPadding
+import vn.ztech.software.ecom.ui.home.ListProductsAdapter.OnClickListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "HomeFragment"
