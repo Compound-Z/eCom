@@ -1,10 +1,21 @@
 package vn.ztech.software.ecom.domain.model
 
 data class Product(
-    var id: String = "-1",
-    var name: String = "",
-    var category: String = "",
-    var salePrice: Double = 0.0,
-    var thumbnail: String = "",
-    var avgRating: Double = 0.0
+    val _id: String,
+    val name: String,
+    val description: String,
+    val category: String,
+    val brand: String,
+    val image: String,
+
+    val price: Int,
+    val saleOffPercentage: Int,
+    val freeShipping: Boolean,
+
+    val inventory: Int,
+    val saleNumber: Int,
+
+    val numOfReviews: Int,
+    val averageRating: Int,
+    val featured: Boolean,
 )

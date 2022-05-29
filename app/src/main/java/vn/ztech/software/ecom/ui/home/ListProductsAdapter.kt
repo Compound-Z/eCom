@@ -45,11 +45,11 @@ class ListProductsAdapter(proList: List<Any>, private val context: Context) :
 			}
 			proName.text = productData.name
 			proPrice.text =
-				context.getString(R.string.pro_details_price_value, productData.salePrice.toString())
-			proRatingBar.rating = productData.avgRating.toFloat()
+				context.getString(R.string.pro_details_price_value, productData.price.toString())
+			proRatingBar.rating = productData.averageRating.toFloat()
 
-			if (productData.thumbnail.isNotEmpty()) {
-				val imgUrl = productData.thumbnail.toUri().buildUpon().scheme("https").build()
+			if (productData.image.isNotEmpty()) {
+				val imgUrl = productData.image.toUri().buildUpon().scheme("https").build()
 				Glide.with(context)
 					.asBitmap()
 					.load(imgUrl)
@@ -72,7 +72,7 @@ class ListProductsAdapter(proList: List<Any>, private val context: Context) :
 //			} else {
 				proEditBtn.visibility = View.GONE
 				proDeleteButton.visibility = View.GONE
-				bindImageButtons.setCartButton(productData.id.toString(), proCartButton)
+				bindImageButtons.setCartButton(productData._id, proCartButton)
 				proLikeButton.setOnCheckedChangeListener { _, _ ->
 
 

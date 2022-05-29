@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.FragmentHomeBinding
-import vn.ztech.software.ecom.domain.model.Product
 import vn.ztech.software.ecom.ui.common.ItemDecorationRecyclerViewPadding
 import vn.ztech.software.ecom.ui.home.ListProductsAdapter.OnClickListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.domain.model.Product
 
 private const val TAG = "HomeFragment"
 
@@ -175,7 +175,7 @@ class HomeFragment : Fragment() {
             override fun onClick(productData: Product) {
                 findNavController().navigate(
                     R.id.action_seeProduct,
-                    bundleOf("productId" to productData.id)
+                    bundleOf("productId" to productData._id)
                 )
             }
 
@@ -214,7 +214,7 @@ class HomeFragment : Fragment() {
 
     private fun getMixedDataList(data: List<Product>, adsList: List<Int>): List<Any> {
         val itemsList = mutableListOf<Any>()
-        itemsList.addAll(data.sortedBy { it.id })
+        itemsList.addAll(data.sortedBy { it._id })
         var currPos = 0
         if (itemsList.size >= 4) {
             adsList.forEach label@{ ad ->

@@ -95,7 +95,7 @@ class ProductDetailsFragment : Fragment() {
     private fun setViews() {
         binding.layoutViewsGroup.visibility = View.VISIBLE
         binding.proDetailsAddCartBtn.visibility = View.VISIBLE
-        binding.addProAppBar.topAppBar.title = viewModel.productData.value?.productGeneralInfo?.name
+//        binding.addProAppBar.topAppBar.title = viewModel.productData.value?.productGeneralInfo?.name
         binding.addProAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -109,13 +109,13 @@ class ProductDetailsFragment : Fragment() {
 
         setImagesView()
 
-        binding.proDetailsTitleTv.text = viewModel.productData.value?.productGeneralInfo?.name ?: ""
-
-        binding.proDetailsRatingBar.rating = (viewModel.productData.value?.productGeneralInfo?.avgRating ?: 0.0).toFloat()
-        binding.proDetailsPriceTv.text = resources.getString(
-            R.string.pro_details_price_value,
-            viewModel.productData.value?.productGeneralInfo?.salePrice.toString()
-        )
+//        binding.proDetailsTitleTv.text = viewModel.productData.value?.productGeneralInfo?.name ?: ""
+//
+//        binding.proDetailsRatingBar.rating = (viewModel.productData.value?.productGeneralInfo?.avgRating ?: 0.0).toFloat()
+//        binding.proDetailsPriceTv.text = resources.getString(
+//            R.string.pro_details_price_value,
+//            viewModel.productData.value?.productGeneralInfo?.salePrice.toString()
+//        )
         binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
         //todo: add provider textview
     }
