@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.converter.gson.GsonConverterFactory
 import vn.ztech.software.ecom.common.Constants
+import vn.ztech.software.ecom.network.ApiNetworkInterceptor
 
 val API = named("api")
 
@@ -32,7 +33,7 @@ fun networkModule() = module {
 
     single<OkHttpClient> {
         OkHttpClient.Builder()
-//            .addInterceptor(ApiNetworkInterceptor(get()))
+            .addInterceptor(ApiNetworkInterceptor(get()))
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)

@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,8 @@ import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.domain.model.Product
 import vn.ztech.software.ecom.domain.use_case.get_list_product.IListProductUseCase
+import vn.ztech.software.ecom.util.CustomError
+import vn.ztech.software.ecom.util.errorMessage
 
 private const val TAG = "HomeViewModel"
 
@@ -28,6 +31,9 @@ class HomeViewModel(
     private var _filterCategory = MutableLiveData("All")
     val filterCategory: LiveData<String> get() = _filterCategory
 
+    val error = MutableLiveData<CustomError>()
+
+
     fun getProducts(){
         viewModelScope.launch {
             listProductsUseCase.getListProducts().flowOn(Dispatchers.IO).toLoadState().collect {
@@ -37,10 +43,11 @@ class HomeViewModel(
                     }
                     is LoadState.Loaded -> {
                         _storeDataStatus.value = StoreDataStatus.DONE
-                        _allProducts.value = it.data ?: emptyList()
+                        _allProducts.value = it.data?: emptyList()
                     }
                     is LoadState.Error -> {
                         _storeDataStatus.value = StoreDataStatus.ERROR
+                        error.value = errorMessage(it.e)
                     }
                 }
             }
