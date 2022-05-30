@@ -8,7 +8,7 @@ import vn.ztech.software.ecom.domain.model.ProductDetails
 
 @Keep
 interface IProductApi{
-    @GET("/api/v1/productss")
+    @GET("/api/v1/products")
     suspend fun getListProducts(): List<Product>
 
     @GET("/api/v1/products/{id}")
