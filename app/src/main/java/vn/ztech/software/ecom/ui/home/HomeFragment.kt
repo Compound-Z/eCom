@@ -42,6 +42,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getProducts()
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.getProducts()
+        }
     }
 
     private fun setViews() {
@@ -93,6 +96,7 @@ class HomeFragment : Fragment() {
             }else{
                 binding.loaderLayout.circularLoader.hideAnimationBehavior
                 binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
             }
         }
         viewModel.allProducts.observe(viewLifecycleOwner) { listProducts->

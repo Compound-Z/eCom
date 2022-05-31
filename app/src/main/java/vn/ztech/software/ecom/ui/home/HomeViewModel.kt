@@ -44,6 +44,7 @@ class HomeViewModel(
                     is LoadState.Loaded -> {
                         _storeDataStatus.value = StoreDataStatus.DONE
                         _allProducts.value = it.data?: emptyList()
+                        Log.d(TAG, "LOADED")
                     }
                     is LoadState.Error -> {
                         _storeDataStatus.value = StoreDataStatus.ERROR
