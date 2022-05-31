@@ -18,25 +18,30 @@ class ApiNetworkInterceptor(private val gson: Gson): Interceptor, CoroutineScope
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
         val response = chain.proceed(request.build())
-        var responseObj: ApiErrorMessageModel? = null
-        response.body?.let {
-            try {
-                responseObj = gson.fromJson(it.string()+",{--x", ApiErrorMessageModel::class.java)
-            }catch (e: Exception){
-                throw CustomError()
+
+        //if there is a error, throw errors
+        if(response.code < HttpURLConnection.HTTP_OK || response.code >= HttpURLConnection.HTTP_BAD_REQUEST){
+            var responseObj: ApiErrorMessageModel? = null
+            response.body?.let {
+                try {
+                    responseObj = gson.fromJson(it.string(), ApiErrorMessageModel::class.java)
+                }catch (e: Exception){
+                    throw CustomError()
+                }
+            }
+            when(response.code) {
+                HttpURLConnection.HTTP_BAD_REQUEST -> {
+                    throw ResourceException(responseObj?.message?:"Bad request")
+                }
+                HttpURLConnection.HTTP_NOT_FOUND -> {
+                    throw ResourceException(responseObj?.message?:"Not found")
+                }
+                HttpURLConnection.HTTP_INTERNAL_ERROR -> {
+                    throw ResourceException(responseObj?.message?:"System error")
+                }
             }
         }
-        when(response.code) {
-            HttpURLConnection.HTTP_BAD_REQUEST -> {
-               throw ResourceException(responseObj?.message?:"Bad request")
-            }
-            HttpURLConnection.HTTP_NOT_FOUND -> {
-                throw ResourceException(responseObj?.message?:"Not found")
-            }
-            HttpURLConnection.HTTP_INTERNAL_ERROR -> {
-                throw ResourceException(responseObj?.message?:"System error")
-            }
-        }
+
         return response
     }
 }

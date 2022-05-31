@@ -13,6 +13,5 @@ fun <T> Flow<T>.toLoadState(): Flow<LoadState<T>> =
     }.onStart{
         emit(LoadState.Loading)
     }.catch{
-        Log.d("catch", it.message?:"")
         emit(LoadState.Error(it))
     }

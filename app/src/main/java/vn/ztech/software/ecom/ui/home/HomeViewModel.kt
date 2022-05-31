@@ -48,6 +48,7 @@ class HomeViewModel(
                     is LoadState.Error -> {
                         _storeDataStatus.value = StoreDataStatus.ERROR
                         error.value = errorMessage(it.e)
+                        Log.d(TAG+" ERROR:", it.e.message.toString())
                     }
                 }
             }
