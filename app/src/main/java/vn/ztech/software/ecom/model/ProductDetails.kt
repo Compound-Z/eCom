@@ -1,4 +1,4 @@
-package vn.ztech.software.ecom.domain.model
+package vn.ztech.software.ecom.model
 
 data class ProductDetails (
     var id: String="-1",

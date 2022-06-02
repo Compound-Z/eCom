@@ -2,8 +2,8 @@ package vn.ztech.software.ecom.domain.use_case.get_product_details
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import vn.ztech.software.ecom.data.repository.IProductRepository
-import vn.ztech.software.ecom.domain.model.ProductDetails
+import vn.ztech.software.ecom.repository.IProductRepository
+import vn.ztech.software.ecom.model.ProductDetails
 
 interface IProductDetailsUseCase{
     suspend fun getProductDetails(productId: String): Flow<ProductDetails>

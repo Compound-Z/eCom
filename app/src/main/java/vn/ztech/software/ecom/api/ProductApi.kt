@@ -1,10 +1,10 @@
-package vn.ztech.software.ecom.data.remote.api
+package vn.ztech.software.ecom.api
 
 import androidx.annotation.Keep
 import retrofit2.http.GET
 import retrofit2.http.Path
-import vn.ztech.software.ecom.domain.model.Product
-import vn.ztech.software.ecom.domain.model.ProductDetails
+import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.model.ProductDetails
 
 @Keep
 interface IProductApi{

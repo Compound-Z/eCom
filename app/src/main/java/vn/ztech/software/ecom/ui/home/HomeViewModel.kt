@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.common.extension.toLoadState
-import vn.ztech.software.ecom.domain.model.Product
+import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.domain.use_case.get_list_product.IListProductUseCase
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage

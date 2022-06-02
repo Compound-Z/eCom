@@ -1,8 +1,8 @@
-package vn.ztech.software.ecom.data.repository
+package vn.ztech.software.ecom.repository
 
-import vn.ztech.software.ecom.data.remote.api.IProductApi
-import vn.ztech.software.ecom.domain.model.Product
-import vn.ztech.software.ecom.domain.model.ProductDetails
+import vn.ztech.software.ecom.api.IProductApi
+import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.model.ProductDetails
 
 interface IProductRepository {
     suspend fun getListProducts(): List<Product>

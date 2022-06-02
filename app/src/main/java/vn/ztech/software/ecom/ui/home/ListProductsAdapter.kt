@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.ItemProductListBinding
 import vn.ztech.software.ecom.databinding.LayoutHomeAdBinding
-import vn.ztech.software.ecom.domain.model.Product
+import vn.ztech.software.ecom.model.Product
 
 class ListProductsAdapter(proList: List<Any>, private val context: Context) :
 	RecyclerView.Adapter<RecyclerView.ViewHolder>() {

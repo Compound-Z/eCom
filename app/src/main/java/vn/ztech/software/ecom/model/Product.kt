@@ -1,4 +1,4 @@
-package vn.ztech.software.ecom.domain.model
+package vn.ztech.software.ecom.model
 
 data class Product(
     val _id: String,
@@ -7,14 +7,11 @@ data class Product(
     val category: String,
     val brand: String,
     val image: String,
-
     val price: Int,
     val saleOffPercentage: Int,
     val freeShipping: Boolean,
-
     val inventory: Int,
     val saleNumber: Int,
-
     val numOfReviews: Int,
     val averageRating: Int,
     val featured: Boolean,

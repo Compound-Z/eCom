@@ -5,8 +5,17 @@ import vn.ztech.software.ecom.domain.use_case.get_list_product.IListProductUseCa
 import vn.ztech.software.ecom.domain.use_case.get_list_product.ListProductsUseCase
 import vn.ztech.software.ecom.domain.use_case.get_product_details.IProductDetailsUseCase
 import vn.ztech.software.ecom.domain.use_case.get_product_details.ProductDetailsUseCase
+import vn.ztech.software.ecom.ui.auth.login.ILogInUseCase
+import vn.ztech.software.ecom.ui.auth.login.LogInUseCase
+import vn.ztech.software.ecom.ui.auth.signup.ISignUpUseCase
+import vn.ztech.software.ecom.ui.auth.signup.SignUpUseCase
+import vn.ztech.software.ecom.ui.splash.ISplashUseCase
+import vn.ztech.software.ecom.ui.splash.SplashUseCase
 
 fun useCaseModule() = module {
+    factory<ISplashUseCase> { SplashUseCase(get()) }
+    factory<ISignUpUseCase> { SignUpUseCase(get()) }
+    factory<ILogInUseCase> { LogInUseCase(get()) }
     factory<IListProductUseCase> { ListProductsUseCase(get()) }
     factory<IProductDetailsUseCase> { ProductDetailsUseCase(get()) }
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.common.extension.toLoadState
-import vn.ztech.software.ecom.domain.model.ProductDetails
+import vn.ztech.software.ecom.model.ProductDetails
 import vn.ztech.software.ecom.domain.use_case.get_product_details.IProductDetailsUseCase;
 
 private const val TAG = "ProductViewModel"

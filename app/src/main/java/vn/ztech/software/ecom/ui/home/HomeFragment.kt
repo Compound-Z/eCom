@@ -18,7 +18,7 @@ import vn.ztech.software.ecom.databinding.FragmentHomeBinding
 import vn.ztech.software.ecom.ui.common.ItemDecorationRecyclerViewPadding
 import vn.ztech.software.ecom.ui.home.ListProductsAdapter.OnClickListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import vn.ztech.software.ecom.domain.model.Product
+import vn.ztech.software.ecom.model.Product
 
 private const val TAG = "HomeFragment"
 
