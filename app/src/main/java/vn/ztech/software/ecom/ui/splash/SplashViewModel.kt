@@ -28,7 +28,7 @@ class SplashViewModel(private val useCase: ISplashUseCase): ViewModel() {
                          * **/
                     }
                     is LoadState.Loaded -> {
-                        page.value = it.data?:ISplashUseCase.PAGE.LOGIN_SIGNUP
+                        page.value = it.data?:ISplashUseCase.PAGE.SIGNUP
                     }
                     is LoadState.Error -> {
 //                        if (it.e is TokenRefreshing) {

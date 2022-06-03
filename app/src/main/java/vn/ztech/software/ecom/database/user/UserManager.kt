@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import androidx.annotation.AnyThread
+import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import java.io.Serializable
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicReference
@@ -182,6 +183,22 @@ class UserManager (context: Context): Serializable {
         try {
             val accessToken = mPrefs.getString(ACCESS_TOKEN, null)
             return (accessToken != null && accessToken.isNotEmpty())
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
+
+    @AnyThread
+    fun nextPage(): ISplashUseCase.PAGE {
+        mPrefsLock.lock()
+        try {
+            val accessToken = mPrefs.getString(ACCESS_TOKEN, null)
+            /**if doesn't has a token, it must be a new user*/
+            if(accessToken == null)  return ISplashUseCase.PAGE.SIGNUP
+            /**if the token if empty, the user has logged out before*/
+            if(accessToken.isEmpty()) return ISplashUseCase.PAGE.LOGIN
+            /**if there is a token exist, well, the user is allowed to continue to use the app*/
+            return ISplashUseCase.PAGE.MAIN
         } finally {
             mPrefsLock.unlock()
         }

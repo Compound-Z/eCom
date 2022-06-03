@@ -9,7 +9,7 @@ import kotlin.system.measureTimeMillis
 
 interface ISplashUseCase{
     enum class PAGE {
-        LOGIN_SIGNUP, MAIN
+        SIGNUP, LOGIN, MAIN
     }
     fun nextPage(): Flow<PAGE>
 
@@ -23,13 +23,8 @@ class SplashUseCase(
 
         lateinit var nextPage: ISplashUseCase.PAGE
         val time = measureTimeMillis {
-            nextPage = if (userManager.isLogin()) {
-                ISplashUseCase.PAGE.MAIN
-            } else {
-                ISplashUseCase.PAGE.LOGIN_SIGNUP
-            }
+            nextPage = userManager.nextPage()
         }
-
 
         // 少なくとも2000msスプラッシュで表示することを保証。
         // 2000ms以上更新に時間かかってるなら、さらに2000秒待たないように無視する。

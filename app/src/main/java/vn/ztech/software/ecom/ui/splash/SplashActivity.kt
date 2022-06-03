@@ -1,16 +1,17 @@
 package vn.ztech.software.ecom.ui.splash
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import vn.ztech.software.ecom.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
 import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
 	private val viewModel: SplashViewModel by viewModel()
@@ -23,31 +24,33 @@ class SplashActivity : AppCompatActivity() {
 			it ?: return@Observer
 			showErrorDialog(it)
 		})
-		viewModel.page.observe(this, Observer { page: ISplashUseCase.PAGE ->
-				when (page) {
-					ISplashUseCase.PAGE.LOGIN_SIGNUP -> {
-						val intent = Intent(this@SplashActivity, LoginSignupActivity::class.java)
-						intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-						startActivity(intent)
-						finish()
-					}
-					ISplashUseCase.PAGE.MAIN -> {
+		viewModel.page.observe(this) { page: ISplashUseCase.PAGE ->
+			when (page) {
+				ISplashUseCase.PAGE.LOGIN,
+				ISplashUseCase.PAGE.SIGNUP -> {
+					val intent = Intent(this@SplashActivity, LoginSignupActivity::class.java)
+					intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+					intent.putExtra("PAGE", page)
+					startActivity(intent)
+					finish()
+				}
+				ISplashUseCase.PAGE.MAIN -> {
 //						if (viewModel.checkNeedToRefreshToken()) {
 //							viewModel.getToken()
 //						} else {
 //							if (viewModel.getAccount()) {
-								startActivity(
-									Intent(
-										this@SplashActivity,
-										MainActivity::class.java
-									)
-								)
+					startActivity(
+						Intent(
+							this@SplashActivity,
+							MainActivity::class.java
+						)
+					)
 //								finish()
 //							}
 //						}
-					}
 				}
-			})
+			}
+		}
 
 //		viewModel.tokenResponse.observe(this, Observer {
 //			it ?: return@Observer
