@@ -1,6 +1,5 @@
 package vn.ztech.software.ecom.common.extension
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
