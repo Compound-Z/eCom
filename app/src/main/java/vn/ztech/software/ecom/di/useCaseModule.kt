@@ -13,7 +13,7 @@ import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import vn.ztech.software.ecom.ui.splash.SplashUseCase
 
 fun useCaseModule() = module {
-    factory<ISplashUseCase> { SplashUseCase(get()) }
+    factory<ISplashUseCase> { SplashUseCase(get(), get()) }
     factory<ISignUpUseCase> { SignUpUseCase(get()) }
     factory<ILogInUseCase> { LogInUseCase(get()) }
     factory<IListProductUseCase> { ListProductsUseCase(get()) }

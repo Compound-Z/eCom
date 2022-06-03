@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import vn.ztech.software.ecom.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
+import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 class SplashActivity : AppCompatActivity() {
@@ -35,12 +36,12 @@ class SplashActivity : AppCompatActivity() {
 //							viewModel.getToken()
 //						} else {
 //							if (viewModel.getAccount()) {
-//								startActivity(
-//									Intent(
-//										this@SplashActivity,
-//										MainActivity::class.java
-//									)
-//								)
+								startActivity(
+									Intent(
+										this@SplashActivity,
+										MainActivity::class.java
+									)
+								)
 //								finish()
 //							}
 //						}
