@@ -2,7 +2,7 @@ package vn.ztech.software.ecom.di
 
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
-import vn.ztech.software.ecom.database.user.UserManager
+import vn.ztech.software.ecom.database.local.user.UserManager
 
 fun applicationModule() = module {
 

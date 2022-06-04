@@ -1,8 +1,7 @@
-package vn.ztech.software.ecom.database.user
+package vn.ztech.software.ecom.database.local.user
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import androidx.annotation.AnyThread
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import java.io.Serializable

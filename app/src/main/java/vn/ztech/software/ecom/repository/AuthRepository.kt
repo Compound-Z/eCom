@@ -1,7 +1,5 @@
 package vn.ztech.software.ecom.repository
 
-import android.os.Build
-import android.os.Debug
 import android.util.Log
 import vn.ztech.software.ecom.api.IAuthApi
 import vn.ztech.software.ecom.api.request.RefreshTokenRequest
@@ -9,12 +7,7 @@ import vn.ztech.software.ecom.api.response.BasicResponse
 import vn.ztech.software.ecom.api.response.LogInResponse
 import vn.ztech.software.ecom.api.response.TokenResponse
 import vn.ztech.software.ecom.common.Constants
-import vn.ztech.software.ecom.database.user.UserManager
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.*
+import vn.ztech.software.ecom.database.local.user.UserManager
 import java.util.concurrent.TimeUnit
 
 interface IAuthRepository {
