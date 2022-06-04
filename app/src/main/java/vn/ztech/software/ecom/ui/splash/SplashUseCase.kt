@@ -3,6 +3,7 @@ package vn.ztech.software.ecom.ui.splash
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import vn.ztech.software.ecom.api.response.TokenResponse
 import vn.ztech.software.ecom.database.user.UserManager
 import vn.ztech.software.ecom.repository.IAuthRepository
 import kotlin.system.measureTimeMillis
@@ -12,6 +13,8 @@ interface ISplashUseCase{
         SIGNUP, LOGIN, MAIN
     }
     fun nextPage(): Flow<PAGE>
+    fun checkNeedToRefreshToken(): Boolean
+    fun getToken(): Flow<TokenResponse>
 
 
 }
@@ -33,6 +36,16 @@ class SplashUseCase(
             delay(delayTime)
         }
         emit(nextPage)
+    }
+
+    override fun checkNeedToRefreshToken(): Boolean {
+        return authRepository.checkNeedToRefreshToken()
+    }
+
+    override fun getToken(): Flow<TokenResponse> = flow {
+        val tokenInfo = authRepository.refreshToken(userManager.getRefreshToken())
+//        userManager.saveLatestTimestamp(System.currentTimeMillis())
+        emit(tokenInfo)
     }
 
 }

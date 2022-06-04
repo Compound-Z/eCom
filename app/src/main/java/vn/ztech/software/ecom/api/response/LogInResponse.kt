@@ -4,6 +4,6 @@ import vn.ztech.software.ecom.model.User
 
 data class LogInResponse (
     val user: User,
-    val accessToken: String,
-    val refreshToken: String
+    val accessToken: Token,
+    val refreshToken: Token
 )

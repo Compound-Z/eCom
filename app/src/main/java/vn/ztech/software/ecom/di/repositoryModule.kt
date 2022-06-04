@@ -8,5 +8,5 @@ import vn.ztech.software.ecom.repository.ProductRepository
 
 fun repositoryModule() = module {
     single<IProductRepository> {ProductRepository(get())}
-    single<IAuthRepository> {AuthRepository(get())}
+    single<IAuthRepository> {AuthRepository(get(), get())}
 }

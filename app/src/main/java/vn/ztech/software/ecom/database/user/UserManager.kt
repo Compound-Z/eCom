@@ -177,16 +177,16 @@ class UserManager (context: Context): Serializable {
 //        }
 //    }
 //
-    @AnyThread
-    fun isLogin(): Boolean {
-        mPrefsLock.lock()
-        try {
-            val accessToken = mPrefs.getString(ACCESS_TOKEN, null)
-            return (accessToken != null && accessToken.isNotEmpty())
-        } finally {
-            mPrefsLock.unlock()
-        }
-    }
+//    @AnyThread
+//    fun isLogin(): Boolean {
+//        mPrefsLock.lock()
+//        try {
+//            val accessToken = mPrefs.getString(ACCESS_TOKEN, null)
+//            return (accessToken != null && accessToken.isNotEmpty())
+//        } finally {
+//            mPrefsLock.unlock()
+//        }
+//    }
 
     @AnyThread
     fun nextPage(): ISplashUseCase.PAGE {
@@ -245,35 +245,34 @@ class UserManager (context: Context): Serializable {
 //        }
 //    }
 //
-//    @AnyThread
-//    fun getRefreshToken(): String {
-//        mPrefsLock.lock()
-//        try {
-//            return mPrefs.getString(REFRESH_TOKEN, null) ?: return ""
-//        } finally {
-//            mPrefsLock.unlock()
-//        }
-//    }
-//
-//    @AnyThread
-//    fun getRefreshTokenExpires(): String {
-//        mPrefsLock.lock()
-//        try {
-//            return mPrefs.getString(REFRESH_TOKEN_EXPIRES, null) ?: return ""
-//        } finally {
-//            mPrefsLock.unlock()
-//        }
-//    }
-//
-//    @AnyThread
-//    fun getAccessTokenExpires(): String {
-//        mPrefsLock.lock()
-//        try {
-//            return mPrefs.getString(ACCESS_TOKEN_EXPIRES, null) ?: return ""
-//        } finally {
-//            mPrefsLock.unlock()
-//        }
-//    }
+    @AnyThread
+    fun getRefreshToken(): String {
+        mPrefsLock.lock()
+        try {
+            return mPrefs.getString(REFRESH_TOKEN, null) ?: return ""
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
+
+    @AnyThread
+    fun getRefreshTokenExpires(): String {
+        mPrefsLock.lock()
+        try {
+            return mPrefs.getString(REFRESH_TOKEN_EXPIRES, null) ?: return ""
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
+    @AnyThread
+    fun getAccessTokenExpires(): String {
+        mPrefsLock.lock()
+        try {
+            return mPrefs.getString(ACCESS_TOKEN_EXPIRES, null) ?: return ""
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
 //
 //    @AnyThread
 //    fun getState(): String {
@@ -336,10 +335,10 @@ class UserManager (context: Context): Serializable {
 //        private const val CODE = "CODE_KEY"
 //        private const val SESSION_ID = "SESSION_ID"
 //        private const val TOKEN_ID = "TOKEN_ID"
-//        private const val REFRESH_TOKEN = "REFRESH_TOKEN"
-//        private const val REFRESH_TOKEN_EXPIRES = "REFRESH_TOKEN_EXPIRES"
+        private const val REFRESH_TOKEN = "REFRESH_TOKEN"
+        private const val REFRESH_TOKEN_EXPIRES = "REFRESH_TOKEN_EXPIRES"
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
-//        private const val ACCESS_TOKEN_EXPIRES = "ACCESS_TOKEN_EXPIRES"
+        private const val ACCESS_TOKEN_EXPIRES = "ACCESS_TOKEN_EXPIRES"
 //        private const val ROOT_PLACE_ID = "ROOT_PLACE_ID"
 //        private const val ITEM_GROUP_ID = "ITEM_GROUP_ID"
 //        private const val LATEST_TIMESTAMP_UPDATE_JWT = "LATEST_TIMESTAMP_UPDATE_JWT"

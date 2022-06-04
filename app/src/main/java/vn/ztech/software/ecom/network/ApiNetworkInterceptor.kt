@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import okhttp3.Interceptor
 import okhttp3.Response
+import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.exception.ResourceException
 import vn.ztech.software.ecom.util.CustomError
 import java.net.HttpURLConnection
@@ -26,9 +27,10 @@ class ApiNetworkInterceptor(private val gson: Gson): Interceptor, CoroutineScope
                 try {
                     responseObj = gson.fromJson(it.string(), ApiErrorMessageModel::class.java)
                 }catch (e: Exception){
-                    throw CustomError()
+                    throw CustomError(customMessage = "Response parsing")
                 }
             }
+//            Log.d("RESPONSE BODY", response.body?.string()?:"")
             when(response.code) {
                 HttpURLConnection.HTTP_BAD_REQUEST -> {
                     throw ResourceException(responseObj?.message?:"Bad request")
@@ -38,6 +40,9 @@ class ApiNetworkInterceptor(private val gson: Gson): Interceptor, CoroutineScope
                 }
                 HttpURLConnection.HTTP_INTERNAL_ERROR -> {
                     throw ResourceException(responseObj?.message?:"System error")
+                }
+                HttpURLConnection.HTTP_UNAUTHORIZED -> {
+                    throw RefreshTokenExpiredException(responseObj?.message?:"Invalid refresh token")
                 }
             }
         }

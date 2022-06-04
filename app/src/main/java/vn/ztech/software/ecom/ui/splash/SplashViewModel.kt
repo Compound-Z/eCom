@@ -40,4 +40,29 @@ class SplashViewModel(private val useCase: ISplashUseCase): ViewModel() {
             }
         }
     }
+
+    fun checkNeedToRefreshToken(): Boolean {
+        return useCase.checkNeedToRefreshToken()
+    }
+
+    fun getToken() {
+        viewModelScope.launch {
+            useCase.getToken().flowOn(Dispatchers.IO).toLoadState().collect {
+                when (it) {
+                    is LoadState.Loading -> {
+                        //何もしない
+                    }
+                    is LoadState.Loaded -> {
+                        tokenResponse.value = it.data!!
+                    }
+                    is LoadState.Error -> {
+//                        if (it.e is TokenRefreshing) {
+//                            return@collect
+//                        }
+                        error.value = errorMessage(it.e)
+                    }
+                }
+            }
+        }
+    }
 }

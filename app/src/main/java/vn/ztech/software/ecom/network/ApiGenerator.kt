@@ -10,6 +10,6 @@ interface IApiGenerator {
 class ApiGenerator(val apiBuilder: Retrofit.Builder) : IApiGenerator {
 
     override fun <T> api(clazz: Class<T>) =
-        apiBuilder.baseUrl(Constants.BASE_URL).build().create(clazz)
+        apiBuilder.baseUrl(Constants.getBaseUrl()).build().create(clazz)
 
 }

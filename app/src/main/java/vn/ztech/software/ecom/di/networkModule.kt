@@ -23,7 +23,7 @@ fun networkModule() = module {
     single<Retrofit.Builder>(API) {
         val contentType = "application/json".toMediaType()
         Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(Constants.getBaseUrl())
             .addConverterFactory(GsonConverterFactory.create(get()))
             .client(get())
     }
