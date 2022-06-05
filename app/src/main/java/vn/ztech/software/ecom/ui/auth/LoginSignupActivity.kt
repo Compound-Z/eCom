@@ -1,6 +1,7 @@
 package vn.ztech.software.ecom.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -14,7 +15,7 @@ class LoginSignupActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		val page = intent.getSerializableExtra("PAGE")
 		setContentView(R.layout.activity_signup)
-
+		Log.d("ERROR:","LoginSignupActivity onCreate")
 		page?.let{
 			when(page){
 				ISplashUseCase.PAGE.LOGIN -> {

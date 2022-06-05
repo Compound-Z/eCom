@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".ui.auth.LoginSignupActivity">
         </activity>
+        <activity android:name=".ui.auth.otp.OtpActivity">
+        </activity>
 
     </application>
 

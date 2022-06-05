@@ -4,22 +4,19 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
-//import com.vishalgaur.shoppingapp.EMAIL_ERROR_TEXT
-//import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
-//import com.vishalgaur.shoppingapp.R
-//import com.vishalgaur.shoppingapp.data.utils.SignUpErrors
-//import com.vishalgaur.shoppingapp.databinding.FragmentSignupBinding
-//import com.vishalgaur.shoppingapp.ui.SignUpViewErrors
 import vn.ztech.software.ecom.databinding.FragmentSignupBinding
 import vn.ztech.software.ecom.ui.BaseFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.ui.SignUpViewErrors
 
-import vn.ztech.software.ecom.ui.home.HomeViewModel
+import vn.ztech.software.ecom.util.EMAIL_ERROR_TEXT
+import vn.ztech.software.ecom.util.MOB_ERROR_TEXT
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 	private val viewModel: SignUpViewModel by viewModel()
@@ -31,11 +28,30 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 	override fun observeView() {
 		super.observeView()
 		viewModel.errorStatus.observe(viewLifecycleOwner) { err ->
-			modifyErrors(err)
+			err?.let{modifyErrors(it)}
+		}
+
+		viewModel.isSignUpSuccessfully.observe(viewLifecycleOwner) {
+			Log.d("ERROR:","viewModel.isSignUpSuccessfully: $it")
+			it?.let {
+				if (it) {
+					val bundle = bundleOf("USER_DATA" to viewModel.userData.value)
+					launchOtpActivity(getString(R.string.signup_fragment_label), bundle)
+				}
+			}
+
+		}
+		viewModel.signUpError.observe(viewLifecycleOwner) {
+			it?.let {
+				Log.d("ERROR:","viewModel.signUpError: $it")
+				showErrorDialog(it)
+			}
 		}
 	}
 	override fun setUpViews() {
 		super.setUpViews()
+		Log.d("ERROR:","SignupFragment setUpViews ${this@SignupFragment}")
+
 		binding.signupErrorTextView.visibility = View.GONE
 
 		binding.signupNameEditText.onFocusChangeListener = focusChangeListener
@@ -46,16 +62,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 
 		binding.signupSignupBtn.setOnClickListener {
 			onSignUp()
-			if (viewModel.errorStatus.value == SignUpViewErrors.NONE) {
-				viewModel.signErrorStatus.observe(viewLifecycleOwner) {
-					if (it == SignUpErrors.NONE) {
-						val bundle = bundleOf("uData" to viewModel.userData.value)
-						launchOtpActivity(getString(R.string.signup_fragment_label), bundle)
-					}
-				}
-			}
-		}
 
+		}
 		setUpClickableLoginText()
 	}
 
@@ -83,33 +91,37 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 		val password1 = binding.signupPasswordEditText.text.toString()
 		val password2 = binding.signupCnfPasswordEditText.text.toString()
 		val isAccepted = binding.signupPolicySwitch.isChecked
-//		val isSeller = binding.signupSellerSwitch.isChecked
+//		val isSeller = binding.signupSellerSwitch.isChecked /**v2*/
 
 		viewModel.signUpSubmitData(name, mobile, email, password1, password2, isAccepted/*, isSeller*/)
 	}
+	private fun modifyErrors(err: SignUpViewErrors) {
+		when (err) {
+			SignUpViewErrors.NONE -> setEditTextsError()
+			SignUpViewErrors.ERR_EMAIL -> setEditTextsError(emailError = EMAIL_ERROR_TEXT)
+			SignUpViewErrors.ERR_MOBILE -> setEditTextsError(mobError = MOB_ERROR_TEXT)
+			SignUpViewErrors.ERR_EMAIL_MOBILE -> setEditTextsError(EMAIL_ERROR_TEXT, MOB_ERROR_TEXT)
+			SignUpViewErrors.ERR_EMPTY -> setErrorText("Fill all details.")
+			SignUpViewErrors.ERR_NOT_ACC -> setErrorText("Accept the Terms.")
+			SignUpViewErrors.ERR_PWD12NS -> setErrorText("Both passwords are not same!")
+		}
+	}
 //
-//	private fun modifyErrors(err: SignUpViewErrors) {
-//		when (err) {
-//			SignUpViewErrors.NONE -> setEditTextsError()
-//			SignUpViewErrors.ERR_EMAIL -> setEditTextsError(emailError = EMAIL_ERROR_TEXT)
-//			SignUpViewErrors.ERR_MOBILE -> setEditTextsError(mobError = MOB_ERROR_TEXT)
-//			SignUpViewErrors.ERR_EMAIL_MOBILE -> setEditTextsError(EMAIL_ERROR_TEXT, MOB_ERROR_TEXT)
-//			SignUpViewErrors.ERR_EMPTY -> setErrorText("Fill all details.")
-//			SignUpViewErrors.ERR_NOT_ACC -> setErrorText("Accept the Terms.")
-//			SignUpViewErrors.ERR_PWD12NS -> setErrorText("Both passwords are not same!")
-//		}
-//	}
-//
-//	private fun setErrorText(errText: String?) {
-//		binding.signupErrorTextView.visibility = View.VISIBLE
-//		if (errText != null) {
-//			binding.signupErrorTextView.text = errText
-//		}
-//	}
-//
-//	private fun setEditTextsError(emailError: String? = null, mobError: String? = null) {
-//		binding.signupEmailEditText.error = emailError
-//		binding.signupMobileEditText.error = mobError
-//		binding.signupErrorTextView.visibility = View.GONE
-//	}
+	private fun setErrorText(errText: String?) {
+		binding.signupErrorTextView.visibility = View.VISIBLE
+		if (errText != null) {
+			binding.signupErrorTextView.text = errText
+		}
+	}
+	private fun setEditTextsError(emailError: String? = null, mobError: String? = null) {
+		binding.signupEmailEditText.error = emailError
+		binding.signupMobileEditText.error = mobError
+		binding.signupErrorTextView.visibility = View.GONE
+	}
+
+	override fun onPause() {
+		super.onPause()
+		viewModel.clearError()
+
+	}
 }

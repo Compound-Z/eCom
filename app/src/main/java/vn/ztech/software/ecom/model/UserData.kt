@@ -16,7 +16,7 @@ data class UserData(
 	@PrimaryKey
 	var userId: String = "",
 	var name: String = "",
-	var mobile: String = "",
+	var phoneNumber: String = "",
 	var email: String = "",
 	var password: String = "",
 	var likes: List<String> = ArrayList(),
@@ -33,7 +33,7 @@ data class UserData(
 			"userId" to userId,
 			"name" to name,
 			"email" to email,
-			"mobile" to mobile,
+			"phoneNumber" to phoneNumber,
 			"password" to password,
 			"likes" to likes,
 			"addresses" to addresses.map { it.toHashMap() },

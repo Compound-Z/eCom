@@ -1,13 +1,17 @@
 package vn.ztech.software.ecom.util.extension
 
 import android.app.Activity
+import android.content.DialogInterface
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import org.koin.android.ext.android.inject
 import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.util.CustomError
 
 
-fun Activity.showErrorDialog(e: CustomError) {
+fun Activity.showErrorDialog(e: CustomError, listener: DialogInterface.OnClickListener? = null) {
+    Log.d("ERROR:", "Activity.showErrorDialog")
 //    if (refreshTokenExpiredError(e)) {
 //        return
 //    }
@@ -17,5 +21,9 @@ fun Activity.showErrorDialog(e: CustomError) {
 //    if (accountPerrmissionError(e)) {
 //        return
 //    }
-    e.showErrorDialog(this)
+    e.showErrorDialog(this, listener)
+}
+
+fun Fragment.showErrorDialog(e: CustomError, listener: DialogInterface.OnClickListener? = null) {
+    requireActivity().showErrorDialog(e, listener)
 }

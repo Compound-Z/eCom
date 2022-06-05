@@ -1,8 +1,16 @@
 package vn.ztech.software.ecom.ui.auth.signup
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import vn.ztech.software.ecom.common.LoadState
+import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.UserData
 import vn.ztech.software.ecom.ui.SignUpViewErrors
 import vn.ztech.software.ecom.ui.UserType
@@ -11,8 +19,16 @@ import vn.ztech.software.ecom.util.isEmailValid
 import vn.ztech.software.ecom.util.isPhoneValid
 
 class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
-    private val _errorStatus = MutableLiveData<SignUpViewErrors>()
-    val errorStatus: LiveData<SignUpViewErrors> get() = _errorStatus
+    init {
+        Log.d("ERROR:","SignUpViewModel created")
+
+    }
+    private val _errorStatus = MutableLiveData<SignUpViewErrors?>()
+    val errorStatus: LiveData<SignUpViewErrors?> get() = _errorStatus
+
+    val signUpError = MutableLiveData<CustomError?>()
+
+    val isSignUpSuccessfully = MutableLiveData<Boolean?>()
 
     private val _userData = MutableLiveData<UserData>()
     val userData: LiveData<UserData> get() = _userData
@@ -24,7 +40,7 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
         pwd1: String,
         pwd2: String,
         isAccepted: Boolean,
-        isSeller: Boolean
+        isSeller: Boolean = false
     ) {
         if (name.isBlank() || mobile.isBlank() || email.isBlank() || pwd1.isBlank() || pwd2.isBlank()) {
             _errorStatus.value = SignUpViewErrors.ERR_EMPTY
@@ -62,6 +78,7 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
                                     UserType.CUSTOMER.name
                                 )
                             _userData.value = newData
+                            sendSignUpRequest(newData)
                         }
                         (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = SignUpViewErrors.ERR_EMAIL
                         (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = SignUpViewErrors.ERR_MOBILE
@@ -71,5 +88,31 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
             }
         }
 
+    }
+
+    private fun sendSignUpRequest(user: UserData) {
+        viewModelScope.launch {
+            useCase.sendSignUpRequest(user).flowOn(Dispatchers.IO).toLoadState().collect{
+                when (it) {
+                    is LoadState.Loading -> {
+                    }
+                    is LoadState.Loaded -> {
+                        Log.d("ERROR:", "LoadState.Loaded $it, id: ${this@launch}")
+                        isSignUpSuccessfully.value = true
+                    }
+                    is LoadState.Error -> {
+//                        if (it.e is TokenRefreshing) {
+//                            return@collect
+//                        }xxx
+                        signUpError.value = errorMessage(it.e)
+                    }
+                }
+            }
+        }
+    }
+    fun clearError(){
+        _errorStatus.value = null
+        isSignUpSuccessfully.value = null
+        signUpError.value = null
     }
 }

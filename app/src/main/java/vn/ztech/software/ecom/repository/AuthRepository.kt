@@ -3,16 +3,20 @@ package vn.ztech.software.ecom.repository
 import android.util.Log
 import vn.ztech.software.ecom.api.IAuthApi
 import vn.ztech.software.ecom.api.request.RefreshTokenRequest
+import vn.ztech.software.ecom.api.request.VerifyOtpRequest
 import vn.ztech.software.ecom.api.response.BasicResponse
 import vn.ztech.software.ecom.api.response.LogInResponse
 import vn.ztech.software.ecom.api.response.TokenResponse
+import vn.ztech.software.ecom.api.response.VerifyOtpResponse
 import vn.ztech.software.ecom.common.Constants
 import vn.ztech.software.ecom.database.local.user.UserManager
+import vn.ztech.software.ecom.model.User
+import vn.ztech.software.ecom.model.UserData
 import java.util.concurrent.TimeUnit
 
 interface IAuthRepository {
-    suspend fun signup(): BasicResponse
-    suspend fun verifyAccount(otp: String, phoneNumber: String): BasicResponse
+    suspend fun sendSignUpRequest(user: UserData): BasicResponse
+    suspend fun verifyOtp(phoneNumber: String, otp: String): VerifyOtpResponse
     suspend fun login(productId: String): LogInResponse
     suspend fun logout(): BasicResponse
     suspend fun refreshToken(refreshToken: String): TokenResponse
@@ -23,12 +27,11 @@ class AuthRepository(
     private val authApi: IAuthApi,
     private val userManager: UserManager
 ): IAuthRepository{
-    override suspend fun signup(): BasicResponse {
-        return authApi.signup()
+    override suspend fun sendSignUpRequest(user: UserData): BasicResponse {
+        return authApi.sendSignUpRequest(user)
     }
-
-    override suspend fun verifyAccount(otp: String, phoneNumber: String): BasicResponse {
-        return authApi.verify()
+    override suspend fun verifyOtp(phoneNumber: String, otp: String): VerifyOtpResponse {
+        return authApi.verify(VerifyOtpRequest(phoneNumber, otp))
     }
 
     override suspend fun login(productId: String): LogInResponse {
@@ -62,4 +65,6 @@ class AuthRepository(
         }
         return false
     }
+
+
 }

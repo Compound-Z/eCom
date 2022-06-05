@@ -26,6 +26,7 @@ class ApiNetworkInterceptor(private val gson: Gson): Interceptor, CoroutineScope
             response.body?.let {
                 try {
                     responseObj = gson.fromJson(it.string(), ApiErrorMessageModel::class.java)
+                    Log.d("RESPONSE", responseObj.toString())
                 }catch (e: Exception){
                     throw CustomError(customMessage = "Response parsing")
                 }
