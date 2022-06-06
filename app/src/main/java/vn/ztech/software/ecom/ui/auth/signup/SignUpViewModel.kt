@@ -33,6 +33,8 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
     private val _userData = MutableLiveData<UserData>()
     val userData: LiveData<UserData> get() = _userData
 
+    val loading = MutableLiveData<Boolean>()
+
     fun signUpSubmitData(
         name: String,
         mobile: String,
@@ -95,16 +97,22 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
             useCase.sendSignUpRequest(user).flowOn(Dispatchers.IO).toLoadState().collect{
                 when (it) {
                     is LoadState.Loading -> {
+                        loading.value = true
                     }
                     is LoadState.Loaded -> {
+                        loading.value = false
                         Log.d("ERROR:", "LoadState.Loaded $it, id: ${this@launch}")
                         isSignUpSuccessfully.value = true
+
                     }
                     is LoadState.Error -> {
 //                        if (it.e is TokenRefreshing) {
 //                            return@collect
 //                        }xxx
+                        Log.d("ERROR:", "LoadState.Error ${it.e.message}")
+                        loading.value = false
                         signUpError.value = errorMessage(it.e)
+
                     }
                 }
             }

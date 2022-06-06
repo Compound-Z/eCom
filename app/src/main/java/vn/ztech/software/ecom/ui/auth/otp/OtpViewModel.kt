@@ -34,7 +34,7 @@ class OtpViewModel(private val useCase: IOtpUseCase) : ViewModel() {
 					}
 					is LoadState.Loaded -> {
 						Log.d("OTP", it.data.toString())
-						otpStatus.value = it.data?: VerifyOtpResponse("x")
+						otpStatus.value = it.data?: VerifyOtpResponse("")
 					}
 					is LoadState.Error -> {
 						Log.d("OTP:ERROR:", it.e.toString())
@@ -44,57 +44,4 @@ class OtpViewModel(private val useCase: IOtpUseCase) : ViewModel() {
 			}
 		}
 	}
-
-//	fun signUp() {
-//		viewModelScope.launch {
-//			authRepository.signUp(uData)
-//		}
-//	}
-//
-//	fun login(rememberMe: Boolean) {
-//		viewModelScope.launch {
-//			authRepository.login(uData, rememberMe)
-//		}
-//	}
-//
-//	private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-//
-//		override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-//			Log.d(TAG, "onVerificationCompleted:$credential")
-//			_otpStatus.value = OTPStatus.CORRECT
-//			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn, application.applicationContext)
-//		}
-//
-//		override fun onVerificationFailed(e: FirebaseException) {
-//			Log.w(TAG, "onVerificationFailed", e)
-//			_otpStatus.value = OTPStatus.INVALID_REQ
-//			if (e is FirebaseAuthInvalidCredentialsException) {
-//				Log.w(TAG, "onVerificationFailed, invalid request, ", e)
-//			} else if (e is FirebaseTooManyRequestsException) {
-//				Log.w(TAG, "onVerificationFailed, sms quota exceeded, ", e)
-//			}
-//		}
-//
-//		override fun onCodeSent(
-//			verificationId: String,
-//			token: PhoneAuthProvider.ForceResendingToken
-//		) {
-//			// Save verification ID and resending token so we can use them later
-//			storedVerificationId = verificationId
-//			resendToken = token
-//			Log.w(TAG, "OTP SENT")
-//			_isOTPSent.value = true
-//			_otpStatus.value = OTPStatus.NONE
-//		}
-//	}
-//
-//	private fun verifyPhoneWithCode(verificationId: String, code: String, isUserLoggedIn: MutableLiveData<Boolean>) {
-//		try {
-//			val credential = PhoneAuthProvider.getCredential(verificationId, code)
-//			authRepository.signInWithPhoneAuthCredential(credential, isUserLoggedIn, getApplication<ShoppingApplication>().applicationContext)
-//		} catch (e: Exception) {
-//			Log.d(TAG, "onVerifyWithCode: Exception Occurred: ${e.message}")
-//			_otpStatus.value = OTPStatus.INVALID_REQ
-//		}
-//	}
 }

@@ -171,7 +171,7 @@
 <!--    My String-->
     <string name="otp_verify_failed">OTP verify failed!</string>
     <string name="otp_verify_expired">OTP code expired, please request another code!</string>
-
+    <string name="signing_up">Signing up...</string>
 
     <string name="error_dialog_tittle">Error</string>
     <string name="ok">OK</string>

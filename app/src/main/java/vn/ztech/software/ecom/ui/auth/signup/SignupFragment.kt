@@ -6,12 +6,16 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.card.MaterialCardView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.databinding.FragmentSignupBinding
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.R
+import vn.ztech.software.ecom.databinding.FragmentHomeBinding
 import vn.ztech.software.ecom.ui.SignUpViewErrors
 
 import vn.ztech.software.ecom.util.EMAIL_ERROR_TEXT
@@ -27,6 +31,16 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 
 	override fun observeView() {
 		super.observeView()
+
+
+		viewModel.loading.observe(viewLifecycleOwner){
+			if(it){
+				handleLoadingDialog(true, R.string.signing_up)
+			}else{
+				handleLoadingDialog(false, R.string.signing_up)
+			}
+		}
+
 		viewModel.errorStatus.observe(viewLifecycleOwner) { err ->
 			err?.let{modifyErrors(it)}
 		}

@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.common.extension
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -12,5 +13,6 @@ fun <T> Flow<T>.toLoadState(): Flow<LoadState<T>> =
     }.onStart{
         emit(LoadState.Loading)
     }.catch{
+        Log.d("ERROR:toLoadState", it.toString())
         emit(LoadState.Error(it))
     }

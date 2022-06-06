@@ -3,7 +3,7 @@ package vn.ztech.software.ecom.common
 object Constants {
 
     val BASE_URL = "https://ecom-z.herokuapp.com"
-    val BASE_URL_DEBUG = "http://192.168.0.104:5000"
+    val BASE_URL_DEBUG = "http://192.168.0.107:5000"
 
     fun getBaseUrl(): String{
         return BASE_URL_DEBUG

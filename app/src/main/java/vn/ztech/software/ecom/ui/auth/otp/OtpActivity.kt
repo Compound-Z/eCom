@@ -1,6 +1,5 @@
 package vn.ztech.software.ecom.ui.auth.otp
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -58,34 +57,14 @@ class OtpActivity : AppCompatActivity() {
 					startActivity(logInIntent)
 					finish()
 				}
-				"expired" -> {
-					//todo: change from catching this way to catching a throw error
-					val contextView = binding.loaderLayout.loaderCard
-					Snackbar.make(contextView, R.string.otp_verify_expired, Snackbar.LENGTH_INDEFINITE).show()
-				}
 			}
 		}
 
-//		viewModel.isUserLoggedIn.observe(this) {
-//			if (it == true) {
-//				if (fromWhere == getString(R.string.signup_fragment_label)) {
-//					viewModel.signUp()
-//				} else {
-//					val rememberMe = intent.getBooleanExtra("loginRememberMe", false)
-//					viewModel.login(rememberMe)
-//				}
-//				launchHome(this)
-//				finish()
-//			}
-//		}
-
-//		viewModel.isOTPSent.observe(this) {
-//			if(it == true) {
-//				binding.loaderLayout.loaderCard.visibility = View.GONE
-//				val contextView = binding.loaderLayout.loaderCard
-//				Snackbar.make(contextView, R.string.otp_sent_msg, Snackbar.LENGTH_SHORT).show()
-//			}
-//		}
+		viewModel.error.observe(this){
+			it?.let {
+				showErrorDialog(it)
+			}
+		}
 	}
 
 	private fun setViews() {
