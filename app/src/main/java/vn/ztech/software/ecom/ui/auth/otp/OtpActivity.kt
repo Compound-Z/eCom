@@ -17,12 +17,14 @@ import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.common.Constants
+import vn.ztech.software.ecom.ui.success.SignUpSuccessFragment
+import vn.ztech.software.ecom.ui.success.SignUpSuccessFragmentListener
 
-class OtpActivity : AppCompatActivity() {
+class OtpActivity : AppCompatActivity(), SignUpSuccessFragmentListener {
 	private lateinit var binding: ActivityOtpBinding
 
 	private val viewModel: OtpViewModel by viewModel()
-
+	val signUpSuccessFragment = SignUpSuccessFragment(this)
 	private lateinit var fromWhere: String
 	private var userData: UserData? = null
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +57,7 @@ class OtpActivity : AppCompatActivity() {
 		viewModel.otpStatus.observe(this) {
 			when (it.status) {
 				Constants.VERIFY_APPROVED -> {
-					val logInIntent = Intent(this, LoginSignupActivity::class.java)
-					logInIntent.putExtra("PAGE", ISplashUseCase.PAGE.LOGIN)
-					logInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-					startActivity(logInIntent)
-					finish()
+					signUpSuccessFragment.show(supportFragmentManager, "SignUpSuccessFragment")
 				}
 				Constants.VERIFY_FAILED ->  {
 					val contextView = binding.loaderLayout.loaderCard
@@ -95,5 +91,16 @@ class OtpActivity : AppCompatActivity() {
 
 		loaderLayout?.visibility =if(show) View.VISIBLE else View.GONE
 		loadingMessage?.text = getString(messageId)
+	}
+
+	private fun moveToLogin(){
+		val logInIntent = Intent(this, LoginSignupActivity::class.java)
+			.putExtra("PAGE", ISplashUseCase.PAGE.LOGIN)
+			.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+		startActivity(logInIntent)
+	}
+
+	override fun onDialogDismiss() {
+		moveToLogin()
 	}
 }

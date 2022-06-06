@@ -172,6 +172,11 @@
     <string name="otp_verify_failed">OTP verify failed!</string>
     <string name="otp_verify_expired">OTP code expired, please request another code!</string>
     <string name="signing_up">Signing up...</string>
+    <string name="redirect_login_timer_text">Redirecting to Login in %s</string>
+    <string name="back_to_login_text">Login</string>
+    <string name="signup_success_label">Sign Up successfully!</string>
+    <string name="signup_success_message_text">Welcome to the shopping world</string>
+
 
     <string name="error_dialog_tittle">Error</string>
     <string name="ok">OK</string>
