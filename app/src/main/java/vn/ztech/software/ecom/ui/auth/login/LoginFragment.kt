@@ -1,17 +1,26 @@
 package vn.ztech.software.ecom.ui.auth.login
 
+import android.content.Intent
+import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputEditText
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentLoginBinding
 import vn.ztech.software.ecom.ui.BaseFragment
+import vn.ztech.software.ecom.ui.LoginViewErrors
+import vn.ztech.software.ecom.ui.auth.otp.OtpActivity
 import vn.ztech.software.ecom.ui.home.HomeViewModel
+import vn.ztech.software.ecom.util.MOB_ERROR_TEXT
+import vn.ztech.software.ecom.util.PASSWORD_ERROR_TEXT
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>() {
@@ -21,21 +30,45 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 		return FragmentLoginBinding.inflate(layoutInflater)
 	}
 
-//	override fun observeView() {
-//		super.observeView()
-//
-//		viewModel.errorStatusLoginFragment.observe(viewLifecycleOwner) { err ->
-//			modifyErrors(err)
-//		}
-//
-//		viewModel.loginErrorStatus.observe(viewLifecycleOwner) { err ->
-//			when (err) {
-//				LogInErrors.LERR -> setErrorText(getString(R.string.login_error_text))
-//				else -> binding.loginErrorTextView.visibility = View.GONE
-//			}
-//		}
-//	}
-//
+	override fun observeView() {
+		super.observeView()
+		viewModel.loading.observe(viewLifecycleOwner){
+			if(it){
+				handleLoadingDialog(true, R.string.logging_in)
+			}else{
+				handleLoadingDialog(false, R.string.logging_in)
+			}
+		}
+
+		viewModel.error.observe(viewLifecycleOwner){
+			it?.let {
+				showErrorDialog(it)
+			}
+		}
+		viewModel.errorInputData.observe(viewLifecycleOwner) { err ->
+			modifyErrors(err)
+		}
+
+		viewModel.isLogInSuccessfully.observe(viewLifecycleOwner) {
+			if (it){
+				val isRemOn = binding.loginRemSwitch.isChecked
+				val bundle = bundleOf(
+					"USER_DATA" to viewModel.userData,
+					"REMEMBER_ME" to isRemOn
+				)
+				goHome(bundle)
+			}
+
+		}
+	}
+
+	private fun goHome(extras: Bundle) {
+		val intent = Intent(context, OtpActivity::class.java)
+			.putExtras(extras)
+		intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+		startActivity(intent)
+	}
+
 	override fun setUpViews() {
 		super.setUpViews()
 
@@ -43,43 +76,32 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 		binding.loginPasswordEditText.onFocusChangeListener = focusChangeListener
 
 		binding.loginLoginBtn.setOnClickListener {
-//			onLogin()
-//			if (viewModel.errorStatusLoginFragment.value == LoginViewErrors.NONE) {
-//				viewModel.loginErrorStatus.observe(viewLifecycleOwner) {
-//					if (it == LogInErrors.NONE) {
-//						val isRemOn = binding.loginRemSwitch.isChecked
-//						val bundle = bundleOf(
-//							"uData" to viewModel.userData.value,
-//							"loginRememberMe" to isRemOn
-//						)
-//						launchOtpActivity(getString(R.string.login_fragment_label), bundle)
-//					}
-//				}
-//			}
+			onLogin()
 		}
 
 	setUpClickableSignUpText()
 	}
-//
-//	private fun modifyErrors(err: LoginViewErrors) {
-//		when (err) {
-//			LoginViewErrors.NONE -> setEditTextErrors()
-//			LoginViewErrors.ERR_EMPTY -> setErrorText("Fill all details")
-//			LoginViewErrors.ERR_MOBILE -> setEditTextErrors(MOB_ERROR_TEXT)
-//		}
-//	}
-//
-//	private fun setErrorText(errText: String?) {
-//		binding.loginErrorTextView.visibility = View.VISIBLE
-//		if (errText != null) {
-//			binding.loginErrorTextView.text = errText
-//		}
-//	}
-//
-//	private fun setEditTextErrors(mobError: String? = null) {
-//		binding.loginErrorTextView.visibility = View.GONE
-//		binding.loginMobileEditText.error = mobError
-//	}
+	private fun modifyErrors(err: LoginViewErrors) {
+		when (err) {
+			LoginViewErrors.NONE -> setEditTextErrors()
+			LoginViewErrors.ERR_EMPTY -> setErrorText("Fill all details")
+			LoginViewErrors.ERR_MOBILE -> setEditTextErrors(MOB_ERROR_TEXT, binding.loginMobileEditText)
+			LoginViewErrors.ERR_PASSWORD -> setEditTextErrors(PASSWORD_ERROR_TEXT, binding.loginPasswordEditText)
+		}
+	}
+	private fun setErrorText(errText: String?) {
+		binding.loginErrorTextView.visibility = View.VISIBLE
+		if (errText != null) {
+			binding.loginErrorTextView.text = errText
+		}
+	}
+	private fun setEditTextErrors(mobError: String? = null, view: TextInputEditText? = null) {
+		view?.let{
+			binding.loginErrorTextView.visibility = View.GONE
+			view.error = mobError
+		}
+
+	}
 //
 	private fun setUpClickableSignUpText() {
 		val signUpText = getString(R.string.login_signup_text)
@@ -96,12 +118,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 			movementMethod = LinkMovementMethod.getInstance()
 		}
 	}
-//
-//	private fun onLogin() {
-//		val mob = binding.loginMobileEditText.text.toString()
-//		val pwd = binding.loginPasswordEditText.text.toString()
-//
-//		viewModel.loginSubmitData(mob, pwd)
-//	}
+
+	private fun onLogin() {
+		val mob = binding.loginMobileEditText.text.toString()
+		val pwd = binding.loginPasswordEditText.text.toString()
+
+		viewModel.login(mob, pwd)
+	}
 
 }

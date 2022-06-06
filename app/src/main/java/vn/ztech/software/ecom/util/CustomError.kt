@@ -7,9 +7,10 @@ import androidx.appcompat.app.AlertDialog
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.ui.auth.otp.OtpActivity
 import java.io.IOException
+import java.io.Serializable
 import kotlin.reflect.typeOf
 
-open class CustomError(private val e: Throwable = Throwable(), open val customMessage: String = "Some error happened!"): IOException(){
+open class CustomError(private val e: Throwable = Throwable(), open val customMessage: String = "Some error happened!"): IOException(), Serializable{
     init {
         Log.d("CustomError", e.message.toString())
     }

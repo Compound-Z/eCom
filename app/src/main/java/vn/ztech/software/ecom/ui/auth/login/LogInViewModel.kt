@@ -1,6 +1,76 @@
 package vn.ztech.software.ecom.ui.auth.login
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import vn.ztech.software.ecom.api.response.LogInResponse
+import vn.ztech.software.ecom.api.response.Token
+import vn.ztech.software.ecom.api.response.TokenResponse
+import vn.ztech.software.ecom.common.LoadState
+import vn.ztech.software.ecom.common.extension.toLoadState
+import vn.ztech.software.ecom.model.UserData
+import vn.ztech.software.ecom.ui.LoginViewErrors
+import vn.ztech.software.ecom.util.CustomError
+import vn.ztech.software.ecom.util.errorMessage
+import vn.ztech.software.ecom.util.isPasswordValid
+import vn.ztech.software.ecom.util.isPhoneValid
 
 class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
+    val loading = MutableLiveData<Boolean>()
+    val error = MutableLiveData<CustomError?>()
+    val errorInputData = MutableLiveData<LoginViewErrors>()
+    val isLogInSuccessfully = MutableLiveData<Boolean>()
+    var tokens: TokenResponse? = null
+    var userData: UserData? = null
+
+    //todo: cache user data
+    fun login(phoneNumber: String, password: String) {
+        if (isLogInInfoValid(phoneNumber, password))
+            viewModelScope.launch {
+                useCase.login("+84$phoneNumber", password).flowOn(Dispatchers.IO).toLoadState().collect {
+                    when (it) {
+                        is LoadState.Loading -> {
+                            loading.value = true
+                        }
+                        is LoadState.Loaded -> {
+                            loading.value = false
+                            isLogInSuccessfully.value = true
+                            userData = it.data.user
+                            tokens = it.data.tokens
+                            Log.d("LOGIN:", "LoadState.Loaded ${it.data}")
+                        }
+                        is LoadState.Error -> {
+//                        if (it.e is TokenRefreshing) {
+//                            return@collect
+//                        }xxx
+                            Log.d("LOGIN:", "LoadState.Error ${it.e.message}")
+                            loading.value = false
+                            error.value = errorMessage(it.e)
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun isLogInInfoValid(phoneNumber: String, password: String): Boolean {
+        if (phoneNumber.isBlank() || password.isBlank()) {
+            errorInputData.value = LoginViewErrors.ERR_EMPTY
+            return false
+        }
+        if (!isPhoneValid(phoneNumber)) {
+            errorInputData.value = LoginViewErrors.ERR_MOBILE
+            return false
+        }
+        if (!isPasswordValid(password)) {
+            errorInputData.value = LoginViewErrors.ERR_PASSWORD
+            return false
+        }
+        errorInputData.value = LoginViewErrors.NONE
+        return true
+    }
 }

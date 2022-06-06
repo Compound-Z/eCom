@@ -19,6 +19,7 @@ data class UserData(
 	var phoneNumber: String = "",
 	var email: String = "",
 	var password: String = "",
+	var role: String = UserType.CUSTOMER.name /**note: this field is "role" in the API*/,
 	var likes: List<String> = ArrayList(),
 	@TypeConverters(ObjectListTypeConvertor::class)
 	var addresses: List<Address> = ArrayList(),
@@ -26,7 +27,6 @@ data class UserData(
 	var cart: List<CartItem> = ArrayList(),
 	@TypeConverters(ObjectListTypeConvertor::class)
 	var orders: List<OrderItem> = ArrayList(),
-	var userType: String = UserType.CUSTOMER.name /**note: this field is "role" in the API*/
 ) : Parcelable {
 	fun toHashMap(): HashMap<String, Any> {
 		return hashMapOf(
@@ -37,7 +37,7 @@ data class UserData(
 			"password" to password,
 			"likes" to likes,
 			"addresses" to addresses.map { it.toHashMap() },
-			"userType" to userType
+			"role" to role
 		)
 	}
 }

@@ -176,6 +176,7 @@
     <string name="back_to_login_text">Login</string>
     <string name="signup_success_label">Sign Up successfully!</string>
     <string name="signup_success_message_text">Welcome to the shopping world</string>
+    <string name="logging_in">Logging in...</string>
 
 
     <string name="error_dialog_tittle">Error</string>

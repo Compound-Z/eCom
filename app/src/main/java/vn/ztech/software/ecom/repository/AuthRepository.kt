@@ -2,6 +2,7 @@ package vn.ztech.software.ecom.repository
 
 import android.util.Log
 import vn.ztech.software.ecom.api.IAuthApi
+import vn.ztech.software.ecom.api.request.LoginRequest
 import vn.ztech.software.ecom.api.request.RefreshTokenRequest
 import vn.ztech.software.ecom.api.request.VerifyOtpRequest
 import vn.ztech.software.ecom.api.response.BasicResponse
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit
 interface IAuthRepository {
     suspend fun sendSignUpRequest(user: UserData): BasicResponse
     suspend fun verifyOtp(phoneNumber: String, otp: String): VerifyOtpResponse
-    suspend fun login(productId: String): LogInResponse
+    suspend fun login(phoneNumber: String, password: String): LogInResponse
     suspend fun logout(): BasicResponse
     suspend fun refreshToken(refreshToken: String): TokenResponse
     fun checkNeedToRefreshToken(): Boolean
@@ -34,8 +35,8 @@ class AuthRepository(
         return authApi.verify(VerifyOtpRequest(phoneNumber, otp))
     }
 
-    override suspend fun login(productId: String): LogInResponse {
-        return authApi.login()
+    override suspend fun login(phoneNumber: String, password: String): LogInResponse {
+        return authApi.login(LoginRequest(phoneNumber, password))
     }
 
     override suspend fun logout(): BasicResponse {

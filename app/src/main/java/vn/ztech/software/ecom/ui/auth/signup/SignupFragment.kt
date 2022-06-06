@@ -32,7 +32,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 	override fun observeView() {
 		super.observeView()
 
-
 		viewModel.loading.observe(viewLifecycleOwner){
 			if(it){
 				handleLoadingDialog(true, R.string.signing_up)

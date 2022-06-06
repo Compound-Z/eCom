@@ -71,13 +71,13 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
                                     "+84" + mobile.trim(),
                                     email.trim(),
                                     pwd1.trim(),
+                                    UserType.CUSTOMER.name,
                                     ArrayList(),
                                     ArrayList(),
                                     ArrayList(),
                                     ArrayList(),
                                     /**if (isSeller) UserType.SELLER.name else */
                                     /**if (isSeller) UserType.SELLER.name else */
-                                    UserType.CUSTOMER.name
                                 )
                             _userData.value = newData
                             sendSignUpRequest(newData)

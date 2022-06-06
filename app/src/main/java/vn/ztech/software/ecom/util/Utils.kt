@@ -3,8 +3,8 @@ package vn.ztech.software.ecom.util
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.math.roundToInt
-
 const val MOB_ERROR_TEXT = "Enter valid mobile number!"
+const val PASSWORD_ERROR_TEXT = "Please enter a stronger password: minimum eight characters, at least one uppercase letter, one lowercase letter and one number!"
 const val EMAIL_ERROR_TEXT = "Enter valid email address!"
 const val ERR_INIT = "ERROR"
 const val ERR_EMAIL = "_EMAIL"
@@ -34,6 +34,15 @@ internal fun isPhoneValid(phone: String): Boolean {
 		false
 	} else {
 		PHONE_PATTERN.matcher(phone).matches()
+	}
+}
+
+internal fun isPasswordValid(password: String): Boolean {
+	val PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=\\S+\$).{8,}$")
+	return if (password.isEmpty()) {
+		false
+	} else {
+		PASSWORD_PATTERN.matcher(password).matches()
 	}
 }
 
