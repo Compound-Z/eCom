@@ -8,15 +8,11 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentLoginBinding
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.home.HomeViewModel
 
-//import com.vishalgaur.shoppingapp.MOB_ERROR_TEXT
-//import com.vishalgaur.shoppingapp.R
-//import com.vishalgaur.shoppingapp.data.utils.LogInErrors
-//import com.vishalgaur.shoppingapp.databinding.FragmentLoginBinding
-//import com.vishalgaur.shoppingapp.ui.LoginViewErrors
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 	private val viewModel: LogInViewModel by viewModel()
@@ -24,10 +20,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 	override fun setViewBinding(): FragmentLoginBinding {
 		return FragmentLoginBinding.inflate(layoutInflater)
 	}
-	//	override fun setViewBinding(): FragmentLoginBinding {
-//		return FragmentLoginBinding.inflate(layoutInflater)
-//	}
-//
+
 //	override fun observeView() {
 //		super.observeView()
 //
@@ -43,34 +36,30 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 //		}
 //	}
 //
-//	override fun setUpViews() {
-//		super.setUpViews()
-//
-//		binding.loginErrorTextView.visibility = View.GONE
-//
-//		binding.loginMobileEditText.onFocusChangeListener = focusChangeListener
-//		binding.loginPasswordEditText.onFocusChangeListener = focusChangeListener
-//
-//		binding.loginLoginBtn.setOnClickListener(object : OnClickListener {
-//			override fun onClick(v: View?) {
-//				onLogin()
-//				if (viewModel.errorStatusLoginFragment.value == LoginViewErrors.NONE) {
-//					viewModel.loginErrorStatus.observe(viewLifecycleOwner) {
-//						if (it == LogInErrors.NONE) {
-//							val isRemOn = binding.loginRemSwitch.isChecked
-//							val bundle = bundleOf(
-//								"uData" to viewModel.userData.value,
-//								"loginRememberMe" to isRemOn
-//							)
-//							launchOtpActivity(getString(R.string.login_fragment_label), bundle)
-//						}
+	override fun setUpViews() {
+		super.setUpViews()
+
+		binding.loginMobileEditText.onFocusChangeListener = focusChangeListener
+		binding.loginPasswordEditText.onFocusChangeListener = focusChangeListener
+
+		binding.loginLoginBtn.setOnClickListener {
+//			onLogin()
+//			if (viewModel.errorStatusLoginFragment.value == LoginViewErrors.NONE) {
+//				viewModel.loginErrorStatus.observe(viewLifecycleOwner) {
+//					if (it == LogInErrors.NONE) {
+//						val isRemOn = binding.loginRemSwitch.isChecked
+//						val bundle = bundleOf(
+//							"uData" to viewModel.userData.value,
+//							"loginRememberMe" to isRemOn
+//						)
+//						launchOtpActivity(getString(R.string.login_fragment_label), bundle)
 //					}
 //				}
 //			}
-//		})
-//
-//		setUpClickableSignUpText()
-//	}
+		}
+
+	setUpClickableSignUpText()
+	}
 //
 //	private fun modifyErrors(err: LoginViewErrors) {
 //		when (err) {
@@ -92,21 +81,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 //		binding.loginMobileEditText.error = mobError
 //	}
 //
-//	private fun setUpClickableSignUpText() {
-//		val signUpText = getString(R.string.login_signup_text)
-//		val ss = SpannableString(signUpText)
-//		val clickableSpan = object : ClickableSpan() {
-//			override fun onClick(widget: View) {
-//				findNavController().navigateUp()
-//			}
-//		}
-//
-//		ss.setSpan(clickableSpan, 10, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-//		binding.loginSignupTextView.apply {
-//			text = ss
-//			movementMethod = LinkMovementMethod.getInstance()
-//		}
-//	}
+	private fun setUpClickableSignUpText() {
+		val signUpText = getString(R.string.login_signup_text)
+		val ss = SpannableString(signUpText)
+		val clickableSpan = object : ClickableSpan() {
+			override fun onClick(widget: View) {
+				findNavController().navigate(R.id.action_login_to_signup)
+			}
+		}
+
+		ss.setSpan(clickableSpan, 10, 17, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+		binding.loginSignupTextView.apply {
+			text = ss
+			movementMethod = LinkMovementMethod.getInstance()
+		}
+	}
 //
 //	private fun onLogin() {
 //		val mob = binding.loginMobileEditText.text.toString()

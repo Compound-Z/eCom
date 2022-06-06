@@ -101,6 +101,8 @@
 
         <TextView
             android:id="@+id/login_error_text_view"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.MyTheme.Subtitle2"
             android:textColor="?attr/colorError"

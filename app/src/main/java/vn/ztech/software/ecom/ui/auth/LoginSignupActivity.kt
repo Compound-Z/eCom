@@ -3,11 +3,8 @@ package vn.ztech.software.ecom.ui.auth
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import vn.ztech.software.ecom.R
-import vn.ztech.software.ecom.ui.auth.login.LoginFragment
-import vn.ztech.software.ecom.ui.auth.signup.SignupFragment
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 
 class LoginSignupActivity : AppCompatActivity() {
@@ -19,10 +16,10 @@ class LoginSignupActivity : AppCompatActivity() {
 		page?.let{
 			when(page){
 				ISplashUseCase.PAGE.LOGIN -> {
-					supportFragmentManager.
-					beginTransaction().
-					replace(R.id.nav_host_fragment, LoginFragment(), "LoginFragment").
-					commit()
+					val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+					val navController = navHostFragment.navController
+					navController.navigate(R.id.action_signup_to_login)
+
 				}
 				else -> {}
 			}
