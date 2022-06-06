@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.Snackbar
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.ActivityOtpBinding
@@ -14,6 +16,7 @@ import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.common.Constants
 
 class OtpActivity : AppCompatActivity() {
 	private lateinit var binding: ActivityOtpBinding
@@ -42,13 +45,16 @@ class OtpActivity : AppCompatActivity() {
 
 
 	private fun setObservers() {
+		viewModel.loading.observe(this){
+			if(it){
+				handleLoadingDialog(true, R.string.signing_up)
+			}else{
+				handleLoadingDialog(false, R.string.signing_up)
+			}
+		}
 		viewModel.otpStatus.observe(this) {
-			when (it.message) {
-				"pending" ->  {
-					val contextView = binding.loaderLayout.loaderCard
-					Snackbar.make(contextView, R.string.otp_verify_failed, Snackbar.LENGTH_INDEFINITE).show()
-				}
-				"approved" -> {
+			when (it.status) {
+				Constants.VERIFY_APPROVED -> {
 					val logInIntent = Intent(this, LoginSignupActivity::class.java)
 					logInIntent.putExtra("PAGE", ISplashUseCase.PAGE.LOGIN)
 					logInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -56,6 +62,10 @@ class OtpActivity : AppCompatActivity() {
 						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 					startActivity(logInIntent)
 					finish()
+				}
+				Constants.VERIFY_FAILED ->  {
+					val contextView = binding.loaderLayout.loaderCard
+					Snackbar.make(contextView, R.string.otp_verify_failed, Snackbar.LENGTH_INDEFINITE).show()
 				}
 			}
 		}
@@ -78,5 +88,12 @@ class OtpActivity : AppCompatActivity() {
 		val otp = binding.otpOtpEditText.text.toString()
 		viewModel.verifyOTP(userData?.phoneNumber!!, otp)
 
+	}
+	private fun handleLoadingDialog(show: Boolean, messageId: Int){
+		val loaderLayout = findViewById<ConstraintLayout>(R.id.loader_layout)
+		val loadingMessage = loaderLayout?.findViewById<TextView>(R.id.loading_message)
+
+		loaderLayout?.visibility =if(show) View.VISIBLE else View.GONE
+		loadingMessage?.text = getString(messageId)
 	}
 }

@@ -24,6 +24,7 @@ class OtpViewModel(private val useCase: IOtpUseCase) : ViewModel() {
 	}
 	val otpStatus = MutableLiveData<VerifyOtpResponse>()
 	val error = MutableLiveData<CustomError>()
+	val loading = MutableLiveData<Boolean>()
 
 	fun verifyOTP(phoneNumber: String, otp: String) {
 		viewModelScope.launch {
@@ -31,12 +32,15 @@ class OtpViewModel(private val useCase: IOtpUseCase) : ViewModel() {
 				when(it){
 					LoadState.Loading -> {
 						Log.d("OTP", "loading")
+						loading.value = true
 					}
 					is LoadState.Loaded -> {
+						loading.value = false
 						Log.d("OTP", it.data.toString())
 						otpStatus.value = it.data?: VerifyOtpResponse("")
 					}
 					is LoadState.Error -> {
+						loading.value = false
 						Log.d("OTP:ERROR:", it.e.toString())
 						error.value = errorMessage(it.e)
 					}

@@ -46,8 +46,9 @@ class ApiNetworkInterceptor(private val gson: Gson): Interceptor, CoroutineScope
                     throw RefreshTokenExpiredException(responseObj?.message?:"Invalid refresh token")
                 }
                 HttpURLConnection.HTTP_UNAVAILABLE -> {
-                    if(responseObj?.message == "Verify OTP failed"){
-                        throw ResourceException("Verify OTP failed")
+                    if(responseObj?.message == "Verify OTP failed"
+                        || responseObj?.message == "Can not send OTP code"){
+                        throw ResourceException(responseObj?.message.toString())
                     }else{
                         throw ResourceException("Service unavailable")
                     }
