@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.ui.splash
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -46,6 +47,7 @@ class SplashViewModel(private val useCase: ISplashUseCase): ViewModel() {
     }
 
     fun getToken() {
+        Log.d("LOGIN", "SplashViewModel getToken")
         viewModelScope.launch {
             useCase.getToken().flowOn(Dispatchers.IO).toLoadState().collect {
                 when (it) {
@@ -53,6 +55,7 @@ class SplashViewModel(private val useCase: ISplashUseCase): ViewModel() {
                         //何もしない
                     }
                     is LoadState.Loaded -> {
+                        useCase.saveLogs(it.data.accessToken)
                         tokenResponse.value = it.data!!
                     }
                     is LoadState.Error -> {

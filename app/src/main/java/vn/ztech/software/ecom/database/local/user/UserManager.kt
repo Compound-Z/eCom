@@ -3,6 +3,9 @@ package vn.ztech.software.ecom.database.local.user
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.AnyThread
+import vn.ztech.software.ecom.api.response.Token
+import vn.ztech.software.ecom.api.response.TokenResponse
+import vn.ztech.software.ecom.model.UserData
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import java.io.Serializable
 import java.lang.ref.WeakReference
@@ -17,6 +20,28 @@ class UserManager (context: Context): Serializable {
     init {
         mPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         mPrefsLock = ReentrantLock()
+    }
+    @AnyThread
+    fun saveLogs(userData: UserData? = null, accessToken: Token? = null, refreshToken: Token? = null) {
+        mPrefsLock.lock()
+        try {
+            val editor = mPrefs.edit()
+            /**Maybe we don't need to store userData, the userData will be fetched from server each time the user use the app, at the Splash Screen*/
+            accessToken?.let {
+                editor.putString(ACCESS_TOKEN, accessToken.token)
+                editor.putString(ACCESS_TOKEN_EXPIRES, accessToken.exp)
+            }
+            refreshToken?.let {
+                editor.putString(REFRESH_TOKEN, refreshToken.token)
+                editor.putString(REFRESH_TOKEN_EXPIRES, refreshToken.exp)
+            }
+
+            if (!editor.commit()) {
+                throw IllegalStateException("Failed to write login to shared prefs")
+            }
+        } finally {
+            mPrefsLock.unlock()
+        }
     }
 //
 //    @AnyThread

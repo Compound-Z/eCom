@@ -16,8 +16,7 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentLoginBinding
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.LoginViewErrors
-import vn.ztech.software.ecom.ui.auth.otp.OtpActivity
-import vn.ztech.software.ecom.ui.home.HomeViewModel
+import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.util.MOB_ERROR_TEXT
 import vn.ztech.software.ecom.util.PASSWORD_ERROR_TEXT
 import vn.ztech.software.ecom.util.extension.showErrorDialog
@@ -63,7 +62,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 	}
 
 	private fun goHome(extras: Bundle) {
-		val intent = Intent(context, OtpActivity::class.java)
+		Log.d("LOGIN","Go HOME")
+		val intent = Intent(context, MainActivity::class.java)
 			.putExtras(extras)
 		intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 		startActivity(intent)

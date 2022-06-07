@@ -38,11 +38,12 @@ class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
                             loading.value = true
                         }
                         is LoadState.Loaded -> {
-                            loading.value = false
-                            isLogInSuccessfully.value = true
+                            Log.d("LOGIN:", "LoadState.Loaded ${it.data}")
                             userData = it.data.user
                             tokens = it.data.tokens
-                            Log.d("LOGIN:", "LoadState.Loaded ${it.data}")
+                            loading.value = false
+                            saveLogInInfo(userData, tokens)
+                            isLogInSuccessfully.value = true
                         }
                         is LoadState.Error -> {
 //                        if (it.e is TokenRefreshing) {
@@ -55,6 +56,13 @@ class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
                     }
                 }
             }
+    }
+
+    private fun saveLogInInfo(userData: UserData?, tokens: TokenResponse?) {
+        if(userData != null && tokens != null){
+            Log.d("LOGIN", "LogInViewModel saveLogInInfo")
+            useCase.saveLogInInfo(userData, tokens)
+        }
     }
 
     private fun isLogInInfoValid(phoneNumber: String, password: String): Boolean {
