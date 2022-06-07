@@ -5,6 +5,8 @@ import java.util.regex.Pattern
 import kotlin.math.roundToInt
 const val MOB_ERROR_TEXT = "Enter valid mobile number!"
 const val PASSWORD_ERROR_TEXT = "Please enter a stronger password: minimum eight characters, at least one uppercase letter, one lowercase letter and one number!"
+const val RETYPE_PASSWORD_ERROR_TEXT = "Retype password must be identical!"
+
 const val EMAIL_ERROR_TEXT = "Enter valid email address!"
 const val ERR_INIT = "ERROR"
 const val ERR_EMAIL = "_EMAIL"
@@ -38,7 +40,7 @@ internal fun isPhoneValid(phone: String): Boolean {
 }
 
 internal fun isPasswordValid(password: String): Boolean {
-	val PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=\\S+\$).{8,}$")
+	val PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
 	return if (password.isEmpty()) {
 		false
 	} else {

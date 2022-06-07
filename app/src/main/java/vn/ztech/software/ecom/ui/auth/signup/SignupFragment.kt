@@ -20,6 +20,7 @@ import vn.ztech.software.ecom.ui.SignUpViewErrors
 
 import vn.ztech.software.ecom.util.EMAIL_ERROR_TEXT
 import vn.ztech.software.ecom.util.MOB_ERROR_TEXT
+import vn.ztech.software.ecom.util.PASSWORD_ERROR_TEXT
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 class SignupFragment : BaseFragment<FragmentSignupBinding>() {
@@ -117,6 +118,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 			SignUpViewErrors.ERR_EMPTY -> setErrorText("Fill all details.")
 			SignUpViewErrors.ERR_NOT_ACC -> setErrorText("Accept the Terms.")
 			SignUpViewErrors.ERR_PWD12NS -> setErrorText("Both passwords are not same!")
+			SignUpViewErrors.ERR_PW_INVALID -> setErrorText(PASSWORD_ERROR_TEXT)
 		}
 	}
 //

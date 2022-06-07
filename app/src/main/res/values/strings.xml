@@ -6,6 +6,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="login_fragment_label">Login Fragment</string>
     <string name="signup_fragment_label">Signup Fragment</string>
+    <string name="forgot_password_fragment_label">ForgetPasswrod Fragment</string>
     <string name="otp_fragment_label">Otp Fragment</string>
     <string name="signup_welcome_hello">Hello,</string>
     <string name="signup_welcome_text">Sign Up!</string>
@@ -168,7 +169,7 @@
     <string name="price_card_status_label_string">Order Status</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-<!--    My String-->
+    <!--    My String-->
     <string name="otp_verify_failed">OTP verify failed!</string>
     <string name="otp_verify_expired">OTP code expired, please request another code!</string>
     <string name="signing_up">Signing up...</string>
@@ -178,8 +179,22 @@
     <string name="signup_success_message_text">Welcome to the shopping world</string>
     <string name="logging_in">Logging in...</string>
 
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="reset_password">Reset\npassword</string>
+    <string name="reset_password_hint">NEW PASSWORD</string>
+    <string name="back_to_login">Back to Login</string>
 
+    <string name="reset_btn_text">Reset</string>
+    <string name="retype_reset_password_hint">RETYPE NEW PASSWORD</string>
+    <string name="retype_reset_password_ph">Retype Password</string>
+    <string name="reset_success_label">Reset password successfully!</string>
+    <string name="reset_success_message_text">Congratulation!\nDon\'t forget it! Okey?</string>
+    <string name="resetting">Resetting password…</string>
+    <string name="verifying_otp">Verifying OTP...</string>
     <string name="error_dialog_tittle">Error</string>
     <string name="ok">OK</string>
+    <string name="verify_successfully">Verify Successfully!</string>
+    <string name="reset_password_successfully">Reset password Successfully!</string>
+    <string name="signup_successfully">Sign Up Successfully!</string>
 
 </resources>

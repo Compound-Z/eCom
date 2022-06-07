@@ -57,7 +57,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 				)
 				goHome(bundle)
 			}
-
 		}
 	}
 
@@ -79,7 +78,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 			onLogin()
 		}
 
-	setUpClickableSignUpText()
+		binding.loginForgotTv.setOnClickListener {
+			findNavController().navigate(R.id.action_login_to_forgot_password)
+		}
+
+		setUpClickableSignUpText()
 	}
 	private fun modifyErrors(err: LoginViewErrors) {
 		when (err) {

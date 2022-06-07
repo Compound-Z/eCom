@@ -2,16 +2,13 @@ package vn.ztech.software.ecom.repository
 
 import android.util.Log
 import vn.ztech.software.ecom.api.IAuthApi
-import vn.ztech.software.ecom.api.request.LoginRequest
-import vn.ztech.software.ecom.api.request.RefreshTokenRequest
-import vn.ztech.software.ecom.api.request.VerifyOtpRequest
+import vn.ztech.software.ecom.api.request.*
 import vn.ztech.software.ecom.api.response.BasicResponse
 import vn.ztech.software.ecom.api.response.LogInResponse
 import vn.ztech.software.ecom.api.response.TokenResponse
 import vn.ztech.software.ecom.api.response.VerifyOtpResponse
 import vn.ztech.software.ecom.common.Constants
 import vn.ztech.software.ecom.database.local.user.UserManager
-import vn.ztech.software.ecom.model.User
 import vn.ztech.software.ecom.model.UserData
 import java.util.concurrent.TimeUnit
 
@@ -20,6 +17,8 @@ interface IAuthRepository {
     suspend fun verifyOtp(phoneNumber: String, otp: String): VerifyOtpResponse
     suspend fun login(phoneNumber: String, password: String): LogInResponse
     suspend fun logout(): BasicResponse
+    suspend fun sendResetPasswordRequest(phoneNumber: String, password: String): BasicResponse
+    suspend fun verifyOtpResetPassword(phoneNumber: String, password: String, otp: String): BasicResponse
     suspend fun refreshToken(refreshToken: String): TokenResponse
     fun checkNeedToRefreshToken(): Boolean
 }
@@ -41,6 +40,18 @@ class AuthRepository(
 
     override suspend fun logout(): BasicResponse {
         return authApi.logout()
+    }
+
+    override suspend fun sendResetPasswordRequest(phoneNumber: String, password: String): BasicResponse {
+        return authApi.sendResetPasswordRequest(ForgotPasswordRequest(phoneNumber, password))
+    }
+
+    override suspend fun verifyOtpResetPassword(
+        phoneNumber: String,
+        password: String,
+        otp: String
+    ):BasicResponse {
+        return authApi.resetPassword(ResetPasswordRequest(phoneNumber, password, otp))
     }
 
     override suspend fun refreshToken(refreshToken: String): TokenResponse {

@@ -14,6 +14,9 @@
             app:destination="@id/SignupFragment"
             app:popUpTo="@id/SignupFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_login_to_forgot_password"
+            app:destination="@id/ForgetPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/SignupFragment"
@@ -23,5 +26,16 @@
         <action
             android:id="@+id/action_signup_to_login"
             app:destination="@id/LoginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ForgetPasswordFragment"
+        android:name="vn.ztech.software.ecom.ui.auth.forgot_password.ForgotPasswordFragment"
+        android:label="@string/forgot_password_fragment_label"
+        tools:layout="@layout/fragment_forgot_password">
+        <action
+            android:id="@+id/action_forgot_password_to_login"
+            app:destination="@id/LoginFragment"
+            app:popUpTo="@id/ForgetPasswordFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

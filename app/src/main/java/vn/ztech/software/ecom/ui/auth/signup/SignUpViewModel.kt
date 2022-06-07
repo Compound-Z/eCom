@@ -50,41 +50,45 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
             if (pwd1 != pwd2) {
                 _errorStatus.value = SignUpViewErrors.ERR_PWD12NS
             } else {
-                if (!isAccepted) {
-                    _errorStatus.value = SignUpViewErrors.ERR_NOT_ACC
-                } else {
-                    var err = ERR_INIT
-                    if (!isEmailValid(email)) {
-                        err += ERR_EMAIL
-                    }
-                    if (!isPhoneValid(mobile)) {
-                        err += ERR_MOBILE
-                    }
-                    when (err) {
-                        ERR_INIT -> {
-                            _errorStatus.value = SignUpViewErrors.NONE
-                            val uId = getRandomString(32, "84" + mobile.trim(), 6)
-                            val newData =
-                                UserData(
-                                    uId,
-                                    name.trim(),
-                                    "+84" + mobile.trim(),
-                                    email.trim(),
-                                    pwd1.trim(),
-                                    UserType.CUSTOMER.name,
-                                    ArrayList(),
-                                    ArrayList(),
-                                    ArrayList(),
-                                    ArrayList(),
-                                    /**if (isSeller) UserType.SELLER.name else */
-                                    /**if (isSeller) UserType.SELLER.name else */
-                                )
-                            _userData.value = newData
-                            sendSignUpRequest(newData)
+                if(!isPasswordValid(pwd1) || !isPasswordValid(pwd2)){
+                    _errorStatus.value = SignUpViewErrors.ERR_PW_INVALID
+                }else{
+                    if (!isAccepted) {
+                        _errorStatus.value = SignUpViewErrors.ERR_NOT_ACC
+                    } else {
+                        var err = ERR_INIT
+                        if (!isEmailValid(email)) {
+                            err += ERR_EMAIL
                         }
-                        (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = SignUpViewErrors.ERR_EMAIL
-                        (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = SignUpViewErrors.ERR_MOBILE
-                        (ERR_INIT + ERR_EMAIL + ERR_MOBILE) -> _errorStatus.value = SignUpViewErrors.ERR_EMAIL_MOBILE
+                        if (!isPhoneValid(mobile)) {
+                            err += ERR_MOBILE
+                        }
+                        when (err) {
+                            ERR_INIT -> {
+                                _errorStatus.value = SignUpViewErrors.NONE
+                                val uId = getRandomString(32, "84" + mobile.trim(), 6)
+                                val newData =
+                                    UserData(
+                                        uId,
+                                        name.trim(),
+                                        "+84" + mobile.trim(),
+                                        email.trim(),
+                                        pwd1.trim(),
+                                        UserType.CUSTOMER.name,
+                                        ArrayList(),
+                                        ArrayList(),
+                                        ArrayList(),
+                                        ArrayList(),
+                                        /**if (isSeller) UserType.SELLER.name else */
+                                        /**if (isSeller) UserType.SELLER.name else */
+                                    )
+                                _userData.value = newData
+                                sendSignUpRequest(newData)
+                            }
+                            (ERR_INIT + ERR_EMAIL) -> _errorStatus.value = SignUpViewErrors.ERR_EMAIL
+                            (ERR_INIT + ERR_MOBILE) -> _errorStatus.value = SignUpViewErrors.ERR_MOBILE
+                            (ERR_INIT + ERR_EMAIL + ERR_MOBILE) -> _errorStatus.value = SignUpViewErrors.ERR_EMAIL_MOBILE
+                        }
                     }
                 }
             }

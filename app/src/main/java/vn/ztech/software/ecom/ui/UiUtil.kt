@@ -4,10 +4,10 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 
-enum class SignUpViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR_EMPTY, ERR_NOT_ACC, ERR_PWD12NS }
-enum class LoginViewErrors { NONE, ERR_EMPTY, ERR_MOBILE, ERR_PASSWORD }
+enum class SignUpViewErrors { NONE, ERR_EMAIL, ERR_MOBILE, ERR_EMAIL_MOBILE, ERR_EMPTY, ERR_NOT_ACC, ERR_PWD12NS, ERR_PW_INVALID }
+enum class LoginViewErrors { NONE, ERR_EMPTY, ERR_MOBILE, ERR_PASSWORD, ERR_RETYPE_PASSWORD }
 enum class UserType { CUSTOMER, SELLER }
-
+enum class OTPErrors { NONE, ERROR}
 class MyOnFocusChangeListener : View.OnFocusChangeListener {
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
         if (v != null) {

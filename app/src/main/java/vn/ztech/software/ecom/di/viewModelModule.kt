@@ -2,6 +2,7 @@ package vn.ztech.software.ecom.di
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import vn.ztech.software.ecom.ui.auth.login.ForgotPasswordViewModel
 import vn.ztech.software.ecom.ui.auth.login.LogInViewModel
 import vn.ztech.software.ecom.ui.auth.otp.OtpViewModel
 import vn.ztech.software.ecom.ui.auth.signup.SignUpViewModel
@@ -16,5 +17,6 @@ fun viewModelModule() = module {
     viewModel { HomeViewModel(get())}
     viewModel { ProductDetailsViewModel(get()) }
     viewModel { OtpViewModel(get()) }
+    viewModel { ForgotPasswordViewModel(get()) }
 
 }

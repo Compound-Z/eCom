@@ -13,23 +13,23 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import vn.ztech.software.ecom.R
-import vn.ztech.software.ecom.databinding.FragmentSignupSuccessBinding
+import vn.ztech.software.ecom.databinding.FragmentSuccessBinding
 import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 
-interface SignUpSuccessFragmentListener{
+interface SuccessFragmentListener{
 	fun onDialogDismiss()
 }
-class SignUpSuccessFragment(val listener: SignUpSuccessFragmentListener) : DialogFragment() {
+class SuccessFragment(val listener: SuccessFragmentListener, val fromWhere: String) : DialogFragment() {
 
-	private lateinit var binding: FragmentSignupSuccessBinding
-
+	private lateinit var binding: FragmentSuccessBinding
+	var redirectStringId: Int = -1
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		binding = FragmentSignupSuccessBinding.inflate(layoutInflater)
+		binding = FragmentSuccessBinding.inflate(layoutInflater)
 		return binding.root
 	}
 
@@ -44,6 +44,19 @@ class SignUpSuccessFragment(val listener: SignUpSuccessFragmentListener) : Dialo
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
+		when(fromWhere){
+			""->{
+				binding.orderSuccessLabelTv.text = getString(R.string.verify_successfully)
+				binding.redirectHomeTimerTv.text = getString(R.string.back_to_login)
+			}
+			getString(R.string.forgot_password_fragment_label)->{
+				binding.orderSuccessLabelTv.text = getString(R.string.reset_password_successfully)
+			}
+			getString(R.string.signup_fragment_label)->{
+				binding.orderSuccessLabelTv.text = getString(R.string.signup_successfully)
+			}
+		}
+
 		binding.redirectHomeTimerTv.text =
 			getString(R.string.redirect_login_timer_text, "5")
 		countDownTimer.start()
@@ -51,7 +64,6 @@ class SignUpSuccessFragment(val listener: SignUpSuccessFragmentListener) : Dialo
 		binding.backToHomeBtn.setOnClickListener {
 			countDownTimer.cancel()
 			listener.onDialogDismiss()
-
 		}
 	}
 

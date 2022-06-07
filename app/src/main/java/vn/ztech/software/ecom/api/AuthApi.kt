@@ -3,9 +3,7 @@ package vn.ztech.software.ecom.api
 import androidx.annotation.Keep
 import retrofit2.http.Body
 import retrofit2.http.POST
-import vn.ztech.software.ecom.api.request.LoginRequest
-import vn.ztech.software.ecom.api.request.RefreshTokenRequest
-import vn.ztech.software.ecom.api.request.VerifyOtpRequest
+import vn.ztech.software.ecom.api.request.*
 import vn.ztech.software.ecom.api.response.BasicResponse
 import vn.ztech.software.ecom.api.response.LogInResponse
 import vn.ztech.software.ecom.api.response.TokenResponse
@@ -26,6 +24,14 @@ interface IAuthApi{
     @POST("/api/v1/auth/logout")
     suspend fun logout(): BasicResponse
 
+    @POST("/api/v1/auth/forgot-password")
+    suspend fun sendResetPasswordRequest(@Body request: ForgotPasswordRequest): BasicResponse
+
+    @POST("/api/v1/auth/reset-password")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): BasicResponse
+
     @POST("/api/v1/auth/refresh-token")
     suspend fun refreshToken(@Body request: RefreshTokenRequest): TokenResponse
+
+
 }

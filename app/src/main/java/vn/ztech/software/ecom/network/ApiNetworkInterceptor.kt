@@ -8,6 +8,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.exception.ResourceException
+import vn.ztech.software.ecom.exception.UnauthenticatedException
 import vn.ztech.software.ecom.util.CustomError
 import java.net.HttpURLConnection
 import kotlin.coroutines.CoroutineContext
@@ -40,13 +41,16 @@ class ApiNetworkInterceptor(private val gson: Gson): Interceptor, CoroutineScope
                     throw ResourceException(responseObj?.message?:"Not found")
                 }
                 HttpURLConnection.HTTP_INTERNAL_ERROR -> {
-                    throw ResourceException(responseObj?.message?:"System error")
+                    throw ResourceException("System error")
                 }
                 HttpURLConnection.HTTP_UNAUTHORIZED -> {
-                    throw RefreshTokenExpiredException(responseObj?.message?:"Invalid refresh token")
+                    when(responseObj?.message){
+                        "Invalid Credentials" -> throw UnauthenticatedException()
+                        "Invalid refresh token" -> throw RefreshTokenExpiredException(responseObj?.message?:"Invalid refresh token")
+                    }
                 }
                 HttpURLConnection.HTTP_UNAVAILABLE -> {
-                    if(responseObj?.message == "Verify OTP failed"
+                    if(responseObj?.message == "Verify OTP failed!"
                         || responseObj?.message == "Can not send OTP code"){
                         throw ResourceException(responseObj?.message.toString())
                     }else{
