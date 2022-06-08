@@ -33,7 +33,7 @@ fun networkModule() = module {
 
     single<OkHttpClient> {
         OkHttpClient.Builder()
-            .addInterceptor(ApiNetworkInterceptor(get()))
+            .addInterceptor(ApiNetworkInterceptor(get(), get()))
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)

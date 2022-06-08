@@ -36,9 +36,10 @@ class SplashActivity : AppCompatActivity() {
 					openLogInSignUpActivity(page)
 				}
 				ISplashUseCase.PAGE.MAIN -> {
-					if (viewModel.checkNeedToRefreshToken()) {
-						viewModel.getToken()
-					} else {
+					/**for testing only. todo: uncomment this*/
+//					if (viewModel.checkNeedToRefreshToken()) {
+//						viewModel.getToken()
+//					} else {
 						startActivity(
 							Intent(
 								this@SplashActivity,
@@ -46,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
 							)
 						)
 						finish()
-					}
+//					}
 				}
 			}
 		}

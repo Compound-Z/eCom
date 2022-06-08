@@ -5,6 +5,8 @@ import vn.ztech.software.ecom.domain.use_case.get_list_product.IListProductUseCa
 import vn.ztech.software.ecom.domain.use_case.get_list_product.ListProductsUseCase
 import vn.ztech.software.ecom.domain.use_case.get_product_details.IProductDetailsUseCase
 import vn.ztech.software.ecom.domain.use_case.get_product_details.ProductDetailsUseCase
+import vn.ztech.software.ecom.ui.account.logout.AccountUseCase
+import vn.ztech.software.ecom.ui.account.logout.IAccountUseCase
 import vn.ztech.software.ecom.ui.auth.forgot_password.IResetPasswordUseCase
 import vn.ztech.software.ecom.ui.auth.forgot_password.ResetPasswordUseCase
 import vn.ztech.software.ecom.ui.auth.login.ILogInUseCase
@@ -24,5 +26,6 @@ fun useCaseModule() = module {
     factory<IListProductUseCase> { ListProductsUseCase(get()) }
     factory<IProductDetailsUseCase> { ProductDetailsUseCase(get()) }
     factory<IOtpUseCase> { OtpUseCase(get()) }
+    factory<IAccountUseCase> { AccountUseCase(get(), get()) }
 
 }

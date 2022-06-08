@@ -24,6 +24,5 @@ class LoginSignupActivity : AppCompatActivity() {
 				else -> {}
 			}
 		}
-
 	}
 }

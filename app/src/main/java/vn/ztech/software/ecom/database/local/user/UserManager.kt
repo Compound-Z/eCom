@@ -43,6 +43,44 @@ class UserManager (context: Context): Serializable {
             mPrefsLock.unlock()
         }
     }
+
+    @AnyThread
+    fun clearLogs() {
+        mPrefsLock.lock()
+        try {
+            val editor = mPrefs.edit()
+                editor.putString(ACCESS_TOKEN, "")
+                editor.putString(ACCESS_TOKEN_EXPIRES, "")
+                editor.putString(REFRESH_TOKEN, "")
+                editor.putString(REFRESH_TOKEN_EXPIRES, "")
+            if (!editor.commit()) {
+                throw IllegalStateException("Failed to write login to shared prefs")
+            }
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
+
+    @AnyThread
+    fun getAccessToken(): String {
+        mPrefsLock.lock()
+        try {
+
+            return mPrefs.getString(ACCESS_TOKEN, null) ?: return ""
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
+    @AnyThread
+    fun getRefreshToken(): String {
+        mPrefsLock.lock()
+        try {
+
+            return mPrefs.getString(REFRESH_TOKEN, null) ?: return ""
+        } finally {
+            mPrefsLock.unlock()
+        }
+    }
 //
 //    @AnyThread
 //    fun saveCodeVerifier(authRequest: AuthorizationRequest?) {
@@ -269,15 +307,6 @@ class UserManager (context: Context): Serializable {
 //        }
 //    }
 //
-    @AnyThread
-    fun getRefreshToken(): String {
-        mPrefsLock.lock()
-        try {
-            return mPrefs.getString(REFRESH_TOKEN, null) ?: return ""
-        } finally {
-            mPrefsLock.unlock()
-        }
-    }
 
     @AnyThread
     fun getRefreshTokenExpires(): String {

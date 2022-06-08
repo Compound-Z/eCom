@@ -2,6 +2,7 @@ package vn.ztech.software.ecom.api
 
 import androidx.annotation.Keep
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.POST
 import vn.ztech.software.ecom.api.request.*
 import vn.ztech.software.ecom.api.response.BasicResponse
@@ -21,7 +22,7 @@ interface IAuthApi{
     @POST("/api/v1/auth/login")
     suspend fun login(@Body request: LoginRequest): LogInResponse
 
-    @POST("/api/v1/auth/logout")
+    @DELETE("/api/v1/auth/logout")
     suspend fun logout(): BasicResponse
 
     @POST("/api/v1/auth/forgot-password")

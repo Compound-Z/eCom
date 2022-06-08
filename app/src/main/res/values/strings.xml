@@ -196,5 +196,6 @@
     <string name="verify_successfully">Verify Successfully!</string>
     <string name="reset_password_successfully">Reset password Successfully!</string>
     <string name="signup_successfully">Sign Up Successfully!</string>
+    <string name="logging_out">Logging out...</string>
 
 </resources>
