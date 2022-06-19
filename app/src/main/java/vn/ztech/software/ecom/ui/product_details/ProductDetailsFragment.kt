@@ -125,7 +125,7 @@ class ProductDetailsFragment : Fragment() {
             binding.proDetailsImagesRecyclerview.isNestedScrollingEnabled = false
             val adapter = ProductImagesAdapter(
                 requireContext(),
-                viewModel.productData.value?.images ?: emptyList()
+                viewModel.productData.value?.imageUrls ?: emptyList()
             )
             binding.proDetailsImagesRecyclerview.adapter = adapter
             val rad = resources.getDimension(R.dimen.radius)

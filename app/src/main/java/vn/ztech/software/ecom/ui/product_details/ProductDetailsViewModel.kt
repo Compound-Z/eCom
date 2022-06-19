@@ -41,7 +41,7 @@ class ProductDetailsViewModel(
                     }
                     is LoadState.Error -> {
                         _storeDataStatus.value = StoreDataStatus.ERROR
-                        _productData.value = ProductDetails()
+                        _productData.value = null
                     }
                 }
             }

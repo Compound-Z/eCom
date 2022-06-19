@@ -48,8 +48,8 @@ class ListProductsAdapter(proList: List<Any>, private val context: Context) :
 				context.getString(R.string.pro_details_price_value, productData.price.toString())
 			proRatingBar.rating = productData.averageRating.toFloat()
 
-			if (productData.image.isNotEmpty()) {
-				val imgUrl = productData.image.toUri().buildUpon().scheme("https").build()
+			if (productData.imageUrl.isNotEmpty()) {
+				val imgUrl = productData.imageUrl.toUri().buildUpon().scheme("https").build()
 				Glide.with(context)
 					.asBitmap()
 					.load(imgUrl)
