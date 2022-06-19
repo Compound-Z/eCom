@@ -26,11 +26,23 @@
         <!--            android:id="@+id/action_goto_addProduct"-->
         <!--            app:destination="@id/addEditProductFragment" />-->
         <action
-            android:id="@+id/action_seeProduct"
-            app:destination="@id/productDetailsFragment" />
+            android:id="@+id/action_category_2_list_products"
+            app:destination="@id/listProductsInCategoryFragment" />
         <action
             android:id="@+id/action_category_home"
             app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listProductsInCategoryFragment"
+        android:name="vn.ztech.software.ecom.ui.category.ListProductsInCategoryFragment"
+        android:label="fragment_list_products_in_category"
+        tools:layout="@layout/fragment_list_products_in_category">
+        <action
+            android:id="@+id/action_list_pro_in_cart_2_pro_details"
+            app:destination="@id/productDetailsFragment" />
+        <!--        <action-->
+        <!--            android:id="@+id/action_goto_addProduct"-->
+        <!--            app:destination="@id/addEditProductFragment" />-->
     </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/addEditProductFragment"-->

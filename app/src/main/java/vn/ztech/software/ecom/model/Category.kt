@@ -1,5 +1,9 @@
 package vn.ztech.software.ecom.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Category(
     val __v: Int,
     val _id: String,
@@ -8,4 +12,4 @@ data class Category(
     val name: String,
     val numberOfProduct: Int,
     val updatedAt: String
-)
+): Parcelable

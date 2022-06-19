@@ -141,14 +141,14 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
 
     private fun setUpCategoryAdapter(categoriesList: List<Category>?) {
         listCategoriesAdapter = ListCategoriesAdapter(categoriesList ?: emptyList(), requireContext())
-//        listCategoriesAdapter.onClickListener =  object : listCategoriesAdapter.OnClickListener {
-//            override fun onClick(productData: Product) {
-//                findNavController().navigate(
-//                    R.id.action_seeProductsInCategory,
-//                    bundleOf("product" to productData)
-//                )
-//            }
-//        }
+        listCategoriesAdapter.onClickListener =  object : ListCategoriesAdapter.OnClickListener {
+            override fun onClick(categoryData: Category) {
+                findNavController().navigate(
+                    R.id.action_category_2_list_products,
+                    bundleOf("category" to categoryData)
+                )
+            }
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.repository
 
+import android.util.Log
 import vn.ztech.software.ecom.api.ICategoryApi
 import vn.ztech.software.ecom.api.request.SearchProductInCategoryRequest
 import vn.ztech.software.ecom.model.Category
@@ -7,6 +8,7 @@ import vn.ztech.software.ecom.model.Product
 
 interface ICategoryRepository {
     suspend fun getListCategories(): List<Category>
+    suspend fun getListProductsInCategory(category: String): List<Product>
     suspend fun search(searchWords: String, searchWordsProduct: String): List<Product>
 }
 
@@ -15,7 +17,12 @@ class CategoryRepository(private val CategoryApi: ICategoryApi): ICategoryReposi
         return CategoryApi.getListCategories()
     }
 
+    override suspend fun getListProductsInCategory(category: String): List<Product> {
+        return CategoryApi.getListProductsInCategory(category)
+    }
+
     override suspend fun search(searchWordsCategory: String, searchWordsProduct: String): List<Product> {
+        Log.d("x","search ${searchWordsCategory}")
         return CategoryApi.search(searchWordsCategory, SearchProductInCategoryRequest(searchWordsProduct))
     }
 

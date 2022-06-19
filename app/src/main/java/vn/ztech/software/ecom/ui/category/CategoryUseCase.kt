@@ -8,6 +8,7 @@ import vn.ztech.software.ecom.repository.ICategoryRepository
 
 interface IListCategoriesUseCase{
     suspend fun getListCategories(): Flow<List<Category>>
+    suspend fun getListProductsInCategory(category: String): Flow<List<Product>>
     suspend fun search(searchWordsCategory: String, searchWordsProduct: String): Flow<List<Product>>
 }
 
@@ -16,8 +17,12 @@ class ListCategoriesUseCase(private val categoryRepository: ICategoryRepository)
         val listCategories = categoryRepository.getListCategories()
         emit(listCategories)
     }
-
+    override suspend fun getListProductsInCategory(category: String): Flow<List<Product>> = flow {
+        emit(categoryRepository.getListProductsInCategory(category))
+    }
     override suspend fun search(searchWordsCategory: String, searchWordsProduct: String): Flow<List<Product>> = flow{
         emit(categoryRepository.search(searchWordsCategory, searchWordsProduct))
     }
+
+
 }
