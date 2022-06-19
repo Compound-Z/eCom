@@ -1,4 +1,4 @@
-package vn.ztech.software.ecom.domain.use_case.get_list_product
+package vn.ztech.software.ecom.ui.home
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -7,12 +7,17 @@ import vn.ztech.software.ecom.model.Product
 
 interface IListProductUseCase{
     suspend fun getListProducts(): Flow<List<Product>>
+    suspend fun search(searchWords: String): Flow<List<Product>>
 }
 
-class ListProductsUseCase(private val productRepository: IProductRepository): IListProductUseCase{
+class ListProductsUseCase(private val productRepository: IProductRepository): IListProductUseCase {
     override suspend fun getListProducts(): Flow<List<Product>> = flow{
         val listProducts = productRepository.getListProducts()
         emit(listProducts)
+    }
+
+    override suspend fun search(searchWords: String): Flow<List<Product>> = flow{
+        emit(productRepository.search(searchWords))
     }
 
 }

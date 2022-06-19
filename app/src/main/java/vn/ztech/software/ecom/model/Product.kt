@@ -1,5 +1,10 @@
 package vn.ztech.software.ecom.model
 
+import android.os.Parcelable
+import androidx.annotation.Keep
+import kotlinx.android.parcel.Parcelize
+@Keep
+@Parcelize
 data class Product(
     val _id: String,
     val name: String,
@@ -11,7 +16,7 @@ data class Product(
     val saleNumber: Int,
     val weight: Int,
     val averageRating: Int,
-)
+) : Parcelable
 //data class Product(
 //    val _id: String,
 //    val name: String,

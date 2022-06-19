@@ -1,6 +1,7 @@
 package vn.ztech.software.ecom.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -19,6 +22,7 @@ import vn.ztech.software.ecom.ui.common.ItemDecorationRecyclerViewPadding
 import vn.ztech.software.ecom.ui.home.ListProductsAdapter.OnClickListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.ui.MyOnFocusChangeListener
 
 private const val TAG = "HomeFragment"
 
@@ -27,6 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var listProductsAdapter: ListProductsAdapter
+    protected val focusChangeListener = MyOnFocusChangeListener()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,6 +106,7 @@ class HomeFragment : Fragment() {
         }
         viewModel.allProducts.observe(viewLifecycleOwner) { listProducts->
             if (listProducts.isNotEmpty()) {
+                binding.tvNoProductFound.visibility = View.GONE
                 binding.loaderLayout.circularLoader.hideAnimationBehavior
                 binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
                 binding.productsRecyclerView.visibility = View.VISIBLE
@@ -109,16 +115,18 @@ class HomeFragment : Fragment() {
                         getMixedDataList(listProducts, getAdsList())
                     notifyDataSetChanged()
                 }
+            }else{
+                binding.tvNoProductFound.visibility = View.VISIBLE
             }
         }
     }
 
     private fun setHomeTopAppBar() {
-//        var lastInput = ""
+        var lastInput = ""
 //        val debounceJob: Job? = null
 //        val uiScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 //        binding.homeTopAppBar.topAppBar.inflateMenu(R.menu.home_app_bar_menu)
-//        binding.homeTopAppBar.homeSearchEditText.onFocusChangeListener = focusChangeListener
+        binding.homeTopAppBar.homeSearchEditText.onFocusChangeListener = focusChangeListener
 //        binding.homeTopAppBar.homeSearchEditText.doAfterTextChanged { editable ->
 //            if (editable != null) {
 //                val newtInput = editable.toString()
@@ -134,29 +142,34 @@ class HomeFragment : Fragment() {
 //                }
 //            }
 //        }
-//        binding.homeTopAppBar.homeSearchEditText.setOnEditorActionListener { textView, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                textView.clearFocus()
-//                val inputManager =
-//                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//                inputManager.hideSoftInputFromWindow(textView.windowToken, 0)
-//                performSearch(textView.text.toString())
-//                true
-//            } else {
-//                false
-//            }
-//        }
-//        binding.homeTopAppBar.searchOutlinedTextLayout.setEndIconOnClickListener {
-//            it.clearFocus()
-//            binding.homeTopAppBar.homeSearchEditText.setText("")
-//            val inputManager =
-//                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            inputManager.hideSoftInputFromWindow(it.windowToken, 0)
-////			viewModel.filterProducts("All")
-//        }
+        binding.homeTopAppBar.homeSearchEditText.setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                textView.clearFocus()
+                val inputManager =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(textView.windowToken, 0)
+                performSearch(textView.text.toString())
+                true
+            } else {
+                false
+            }
+        }
+        binding.homeTopAppBar.searchOutlinedTextLayout.setEndIconOnClickListener {
+            Log.d("SEARCH", "setEndIconOnClickListener")
+            it.clearFocus()
+            binding.homeTopAppBar.homeSearchEditText.setText("")
+            val inputManager =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(it.windowToken, 0)
+//			viewModel.filterProducts("All")
+        }
 //        binding.homeTopAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
 //            setAppBarItemClicks(menuItem)
 //        }
+    }
+
+    private fun performSearch(searchWords: String) {
+        viewModel.search(searchWords)
     }
 
     private fun setAppBarItemClicks(menuItem: MenuItem): Boolean {
@@ -179,7 +192,7 @@ class HomeFragment : Fragment() {
             override fun onClick(productData: Product) {
                 findNavController().navigate(
                     R.id.action_seeProduct,
-                    bundleOf("productId" to productData._id)
+                    bundleOf("product" to productData)
                 )
             }
 

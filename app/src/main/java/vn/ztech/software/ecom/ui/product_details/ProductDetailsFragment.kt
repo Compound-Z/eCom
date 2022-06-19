@@ -1,6 +1,7 @@
 package vn.ztech.software.ecom.ui.product_details
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentProductDetailsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.component.getScopeId
 import vn.ztech.software.ecom.common.StoreDataStatus
+import vn.ztech.software.ecom.model.Product
 
 class ProductDetailsFragment : Fragment() {
     private lateinit var binding: FragmentProductDetailsBinding
@@ -57,8 +60,9 @@ class ProductDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val productId = arguments?.getString("productId")
-        viewModel.getProductDetails(productId?:"")
+        val product = arguments?.getParcelable("product") as Product?
+        viewModel.product.value = product
+        viewModel.getProductDetails(product?._id?:"")
     }
 
     private fun setObservers() {
@@ -74,7 +78,7 @@ class ProductDetailsFragment : Fragment() {
                 }
             }
         }
-        viewModel.productData.observe(viewLifecycleOwner){
+        viewModel.productDetails.observe(viewLifecycleOwner){
             setViews()
         }
 //        viewModel.isItemInCart.observe(viewLifecycleOwner) {
@@ -95,7 +99,7 @@ class ProductDetailsFragment : Fragment() {
     private fun setViews() {
         binding.layoutViewsGroup.visibility = View.VISIBLE
         binding.proDetailsAddCartBtn.visibility = View.VISIBLE
-//        binding.addProAppBar.topAppBar.title = viewModel.productData.value?.productGeneralInfo?.name
+        binding.addProAppBar.topAppBar.title = viewModel.product.value?.name
         binding.addProAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -109,14 +113,21 @@ class ProductDetailsFragment : Fragment() {
 
         setImagesView()
 
-//        binding.proDetailsTitleTv.text = viewModel.productData.value?.productGeneralInfo?.name ?: ""
+        binding.proDetailsTitleTv.text = viewModel.product.value?.name.toString()
 //
-//        binding.proDetailsRatingBar.rating = (viewModel.productData.value?.productGeneralInfo?.avgRating ?: 0.0).toFloat()
-//        binding.proDetailsPriceTv.text = resources.getString(
-//            R.string.pro_details_price_value,
-//            viewModel.productData.value?.productGeneralInfo?.salePrice.toString()
-//        )
-        binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
+        binding.proDetailsRatingBar.rating = (viewModel.product.value?.averageRating ?: 0.0).toFloat()
+        binding.tvNumberOfReviews.text = "(${viewModel.productDetails.value?.numOfReviews.toString()})"
+        binding.tvSoldNumber.text = "Sold: ${viewModel.product.value?.saleNumber.toString()}"
+
+        binding.proDetailsPriceTv.text = resources.getString(
+            R.string.pro_details_price_value,
+            viewModel.product.value?.price
+        )
+        binding.proDetailsSpecificsText.text = viewModel.productDetails.value?.description ?: ""
+        binding.categoryValue.text = viewModel.product.value?.category
+        binding.unitValue.text = viewModel.productDetails.value?.unit
+        binding.brandValue.text = viewModel.productDetails.value?.brandName
+        binding.originValue.text = viewModel.productDetails.value?.origin
         //todo: add provider textview
     }
 
@@ -125,7 +136,7 @@ class ProductDetailsFragment : Fragment() {
             binding.proDetailsImagesRecyclerview.isNestedScrollingEnabled = false
             val adapter = ProductImagesAdapter(
                 requireContext(),
-                viewModel.productData.value?.imageUrls ?: emptyList()
+                viewModel.productDetails.value?.imageUrls ?: emptyList()
             )
             binding.proDetailsImagesRecyclerview.adapter = adapter
             val rad = resources.getDimension(R.dimen.radius)

@@ -62,6 +62,7 @@
     <string name="pro_details_select_size_lable_text">Select Size</string>
     <string name="pro_details_select_color_label_text">Select Color</string>
     <string name="pro_details_specif_label_text">Descriptions</string>
+    <string name="pro_details_information_label_text">Detailed information</string>
     <string name="pro_details_price_value">$%s</string>
     <string name="pro_details_actual_strike_value">$%s</string>
     <string name="add_pro_images_label_text">Product Images (Max: 3)</string>
@@ -124,6 +125,7 @@
     <string name="no_likes_text">No Products Liked Yet!</string>
     <string name="home_ad_image_desc">Advertisement</string>
     <string name="bottom_nav_home_label">Home</string>
+    <string name="bottom_nav_category_label">Category</string>
     <string name="bottom_nav_cart_label">Cart</string>
     <string name="bottom_nav_account_label">Account</string>
     <string name="pay_by_title">Choose Payment Method</string>

@@ -13,15 +13,17 @@ import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.ProductDetails
 import vn.ztech.software.ecom.domain.use_case.get_product_details.IProductDetailsUseCase;
+import vn.ztech.software.ecom.model.Product
 
 private const val TAG = "ProductViewModel"
 
 class ProductDetailsViewModel(
     private val productDetailsUseCase: IProductDetailsUseCase
     ) : ViewModel(){
-    private val _productData = MutableLiveData<ProductDetails?>()
-    val productData: LiveData<ProductDetails?> get() = _productData
-
+    private val _productDetails = MutableLiveData<ProductDetails?>()
+    val productDetails: LiveData<ProductDetails?> get() = _productDetails
+    
+    val product = MutableLiveData<Product>()
     private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
     val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
 
@@ -37,11 +39,11 @@ class ProductDetailsViewModel(
                     }
                     is LoadState.Loaded -> {
                         _storeDataStatus.value = StoreDataStatus.DONE
-                        _productData.value = it.data
+                        _productDetails.value = it.data
                     }
                     is LoadState.Error -> {
                         _storeDataStatus.value = StoreDataStatus.ERROR
-                        _productData.value = null
+                        _productDetails.value = null
                     }
                 }
             }

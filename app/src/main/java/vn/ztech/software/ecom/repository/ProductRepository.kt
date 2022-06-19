@@ -7,6 +7,7 @@ import vn.ztech.software.ecom.model.ProductDetails
 interface IProductRepository {
     suspend fun getListProducts(): List<Product>
     suspend fun getProductDetails(productId: String): ProductDetails
+    suspend fun search(searchWords: String): List<Product>
 }
 
 class ProductRepository(private val productApi: IProductApi): IProductRepository{
@@ -16,6 +17,10 @@ class ProductRepository(private val productApi: IProductApi): IProductRepository
 
     override suspend fun getProductDetails(productId: String): ProductDetails {
         return productApi.getProductDetails(productId)
+    }
+
+    override suspend fun search(searchWords: String): List<Product> {
+        return productApi.search(searchWords)
     }
 
 }

@@ -7,6 +7,7 @@ import vn.ztech.software.ecom.ui.auth.login.ForgotPasswordViewModel
 import vn.ztech.software.ecom.ui.auth.login.LogInViewModel
 import vn.ztech.software.ecom.ui.auth.otp.OtpViewModel
 import vn.ztech.software.ecom.ui.auth.signup.SignUpViewModel
+import vn.ztech.software.ecom.ui.category.CategoryViewModel
 import vn.ztech.software.ecom.ui.home.HomeViewModel
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
 import vn.ztech.software.ecom.ui.splash.SplashViewModel
@@ -20,5 +21,6 @@ fun viewModelModule() = module {
     viewModel { OtpViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }
     viewModel { AccountViewModel(get()) }
+    viewModel { CategoryViewModel(get(), get()) }
 
 }

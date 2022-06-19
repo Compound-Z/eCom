@@ -17,6 +17,21 @@
             android:id="@+id/action_seeProduct"
             app:destination="@id/productDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="vn.ztech.software.ecom.ui.category.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category">
+        <!--        <action-->
+        <!--            android:id="@+id/action_goto_addProduct"-->
+        <!--            app:destination="@id/addEditProductFragment" />-->
+        <action
+            android:id="@+id/action_seeProduct"
+            app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_category_home"
+            app:destination="@id/homeFragment" />
+    </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/addEditProductFragment"-->
 <!--        android:name="com.vishalgaur.shoppingapp.ui.home.AddEditProductFragment"-->
@@ -141,7 +156,7 @@
 <!--        <action-->
 <!--            android:id="@+id/action_ordersFragment_to_orderDetailsFragment"-->
 <!--            app:destination="@id/orderDetailsFragment" />-->
-<!--    </fragment>-->
+<!--    </fragment-->>-->
 <!--    <fragment-->
 <!--        android:id="@+id/orderDetailsFragment"-->
 <!--        android:name="com.vishalgaur.shoppingapp.ui.home.OrderDetailsFragment"-->

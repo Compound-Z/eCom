@@ -90,6 +90,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 			LoginViewErrors.ERR_EMPTY -> setErrorText("Fill all details")
 			LoginViewErrors.ERR_MOBILE -> setEditTextErrors(MOB_ERROR_TEXT, binding.loginMobileEditText)
 			LoginViewErrors.ERR_PASSWORD -> setEditTextErrors(PASSWORD_ERROR_TEXT, binding.loginPasswordEditText)
+			else -> setEditTextErrors()
 		}
 	}
 	private fun setErrorText(errText: String?) {

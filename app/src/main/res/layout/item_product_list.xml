@@ -49,6 +49,8 @@
             android:gravity="end|top"
             android:layoutDirection="rtl"
             app:buttonTint="@color/gray"
+            android:visibility="gone"
+            android:clickable="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -92,6 +94,7 @@
             tools:text="$2000" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/product_actual_price_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,6 +106,7 @@
             tools:text="@string/product_actual_price_text" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/product_offer_value_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -129,6 +133,8 @@
 
         <ImageView
             android:id="@+id/product_add_to_cart_button"
+            android:visibility="gone"
+            android:clickable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round_button"
