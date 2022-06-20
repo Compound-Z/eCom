@@ -11,6 +11,6 @@ object Constants {
 
     val TOKEN_NEAR_EXPIRED_TIME_IN_SECOND = 5*60 /**five minutes, consider the internet delay time*/
 
-    val VERIFY_FAILED = "pending"
-    val VERIFY_APPROVED = "approved"
+    const val VERIFY_FAILED = "pending"
+    const val VERIFY_APPROVED = "approved"
 }

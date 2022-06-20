@@ -33,9 +33,6 @@ class ProductDetailsFragment : Fragment() {
 //        } else {
             binding.proDetailsAddCartBtn.visibility = View.VISIBLE
             binding.proDetailsAddCartBtn.setOnClickListener {
-//                if (viewModel.isItemInCart.value == true) {
-//                    navigateToCartFragment()
-//                } else {
 //                    onAddToCart()
 //                    if (viewModel.errorStatus.value?.isEmpty() == true) {
 //                        viewModel.addItemStatus.observe(viewLifecycleOwner) { status ->
@@ -44,7 +41,6 @@ class ProductDetailsFragment : Fragment() {
 //                                viewModel.checkIfInCart()
 //                            }
 //                        }
-//                    }
 //                }
             }
 //        }
@@ -114,7 +110,6 @@ class ProductDetailsFragment : Fragment() {
         setImagesView()
 
         binding.proDetailsTitleTv.text = viewModel.product.value?.name.toString()
-//
         binding.proDetailsRatingBar.rating = (viewModel.product.value?.averageRating ?: 0.0).toFloat()
         binding.tvNumberOfReviews.text = "(${viewModel.productDetails.value?.numOfReviews.toString()})"
         binding.tvSoldNumber.text = "Sold: ${viewModel.product.value?.saleNumber.toString()}"
@@ -128,7 +123,6 @@ class ProductDetailsFragment : Fragment() {
         binding.unitValue.text = viewModel.productDetails.value?.unit
         binding.brandValue.text = viewModel.productDetails.value?.brandName
         binding.originValue.text = viewModel.productDetails.value?.origin
-        //todo: add provider textview
     }
 
     private fun setImagesView() {

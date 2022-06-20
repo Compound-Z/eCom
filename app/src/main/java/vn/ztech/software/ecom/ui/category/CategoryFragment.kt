@@ -41,7 +41,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
     }
     override fun setUpViews() {
         super.setUpViews()
-        setHomeTopAppBar()
         if (context != null) {
             setUpCategoryAdapter(viewModel.allCategories.value)
             binding.categoriesRecyclerView.apply {
@@ -108,29 +107,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
                     notifyDataSetChanged()
                 }
             }
-        }
-    }
-//
-    private fun setHomeTopAppBar() {
-        var lastInput = ""
-        binding.categoryTopAppBar.homeSearchEditText.setOnEditorActionListener { textView, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                textView.clearFocus()
-                val inputManager =
-                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputManager.hideSoftInputFromWindow(textView.windowToken, 0)
-                performSearch(textView.text.toString())
-                true
-            } else {
-                false
-            }
-        }
-        binding.categoryTopAppBar.searchOutlinedTextLayout.setEndIconOnClickListener {
-            it.clearFocus()
-            binding.categoryTopAppBar.homeSearchEditText.setText("")
-            val inputManager =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputManager.hideSoftInputFromWindow(it.windowToken, 0)
+            binding.tvNumberOfCategories.text = "${listCategories.size} categories"
         }
     }
 
