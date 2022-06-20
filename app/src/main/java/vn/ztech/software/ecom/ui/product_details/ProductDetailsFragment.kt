@@ -1,7 +1,6 @@
 package vn.ztech.software.ecom.ui.product_details
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,14 +12,17 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentProductDetailsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.component.getScopeId
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.ui.cart.CartViewModel
+import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 class ProductDetailsFragment : Fragment() {
+    val TAG = "ProductDetailsFragment"
     private lateinit var binding: FragmentProductDetailsBinding
     private val viewModel: ProductDetailsViewModel by viewModel()
-
+    private val cartViewModel: CartViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,25 +35,18 @@ class ProductDetailsFragment : Fragment() {
 //        } else {
             binding.proDetailsAddCartBtn.visibility = View.VISIBLE
             binding.proDetailsAddCartBtn.setOnClickListener {
-//                    onAddToCart()
-//                    if (viewModel.errorStatus.value?.isEmpty() == true) {
-//                        viewModel.addItemStatus.observe(viewLifecycleOwner) { status ->
-//                            if (status == AddObjectStatus.DONE) {
-//                                makeToast("Product Added To Cart")
-//                                viewModel.checkIfInCart()
-//                            }
-//                        }
-//                }
+                    addToCart(viewModel.product.value?._id)
             }
 //        }
-
-        binding.loaderLayout.loaderFrameLayout.background =
-            ResourcesCompat.getDrawable(resources, R.color.white, null)
 
         binding.layoutViewsGroup.visibility = View.GONE
         binding.proDetailsAddCartBtn.visibility = View.GONE
         setObservers()
         return binding.root
+    }
+
+    private fun addToCart(_id: String?) {
+        cartViewModel.addProductToCart(_id)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +64,7 @@ class ProductDetailsFragment : Fragment() {
                     binding.proDetailsLayout.visibility = View.VISIBLE
                 }
                 else -> {
-                    binding.proDetailsLayout.visibility = View.GONE
+//                    binding.proDetailsLayout.visibility = View.GONE
                     binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
                 }
             }
@@ -77,19 +72,33 @@ class ProductDetailsFragment : Fragment() {
         viewModel.productDetails.observe(viewLifecycleOwner){
             setViews()
         }
-//        viewModel.isItemInCart.observe(viewLifecycleOwner) {
-//            if (it == true) {
-//                binding.proDetailsAddCartBtn.text =
-//                    getString(R.string.pro_details_go_to_cart_btn_text)
-//            } else {
-//                binding.proDetailsAddCartBtn.text =
-//                    getString(R.string.pro_details_add_to_cart_btn_text)
-//            }
-//        }
-//        viewModel.errorStatus.observe(viewLifecycleOwner) {
-//            if (it.isNotEmpty())
-//                modifyErrors(it)
-//        }
+        cartViewModel.loading.observe(viewLifecycleOwner){
+            it?.let {
+                if (it){
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                }else{
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                }
+            }
+        }
+        cartViewModel.addProductStatus.observe(viewLifecycleOwner){
+            it?.let {
+                if (it){
+                    showBottomDialogSuccess()
+                }
+            }
+        }
+        cartViewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                showErrorDialog(it)
+            }
+        }
+    }
+
+    private fun showBottomDialogSuccess() {
+        viewModel.product.value?.let {
+            DialogAddToCartSuccessFragment(it).show(parentFragmentManager,"DialogAddToCartSuccessFragment")
+        }
     }
 
     private fun setViews() {

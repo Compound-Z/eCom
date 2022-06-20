@@ -23,6 +23,4 @@ class ListCategoriesUseCase(private val categoryRepository: ICategoryRepository)
     override suspend fun search(searchWordsCategory: String, searchWordsProduct: String): Flow<List<Product>> = flow{
         emit(categoryRepository.search(searchWordsCategory, searchWordsProduct))
     }
-
-
 }

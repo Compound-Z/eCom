@@ -15,6 +15,8 @@ import vn.ztech.software.ecom.ui.auth.otp.IOtpUseCase
 import vn.ztech.software.ecom.ui.auth.otp.OtpUseCase
 import vn.ztech.software.ecom.ui.auth.signup.ISignUpUseCase
 import vn.ztech.software.ecom.ui.auth.signup.SignUpUseCase
+import vn.ztech.software.ecom.ui.cart.CartUseCase
+import vn.ztech.software.ecom.ui.cart.ICartUseCase
 import vn.ztech.software.ecom.ui.category.IListCategoriesUseCase
 import vn.ztech.software.ecom.ui.category.ListCategoriesUseCase
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
@@ -30,5 +32,5 @@ fun useCaseModule() = module {
     factory<IOtpUseCase> { OtpUseCase(get()) }
     factory<IAccountUseCase> { AccountUseCase(get(), get()) }
     factory<IListCategoriesUseCase> { ListCategoriesUseCase(get()) }
-
+    factory<ICartUseCase>{CartUseCase(get())}
 }

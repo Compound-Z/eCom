@@ -7,4 +7,5 @@ fun repositoryModule() = module {
     single<IProductRepository> {ProductRepository(get())}
     single<IAuthRepository> {AuthRepository(get(), get())}
     single<ICategoryRepository> {CategoryRepository(get())}
+    single<ICartRepository> {CartRepository(get())}
 }
