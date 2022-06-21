@@ -15,6 +15,7 @@ data class Product(
     val category: String,
     val saleNumber: Int,
     val weight: Int,
+    val quantity: Int,
     val averageRating: Int,
 ) : Parcelable
 //data class Product(

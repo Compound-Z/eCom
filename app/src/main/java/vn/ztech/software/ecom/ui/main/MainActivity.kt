@@ -1,16 +1,22 @@
 package vn.ztech.software.ecom.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +32,9 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.home_nav_host_fragment) as NavHostFragment
         NavigationUI.setupWithNavController(binding.homeBottomNavigation, navHostFragment.navController)
-
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.d("MENU destination", destination.id.toString())
+            Log.d("MENU:QUEUE", navHostFragment.navController.backQueue.toString())
             when (destination.id) {
                 R.id.homeFragment -> setBottomNavVisibility(View.VISIBLE)
                 R.id.cartFragment -> setBottomNavVisibility(View.VISIBLE)

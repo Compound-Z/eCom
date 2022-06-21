@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.PagerSnapHelper
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentProductDetailsBinding
@@ -16,9 +17,11 @@ import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
+import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
-class ProductDetailsFragment : Fragment() {
+class ProductDetailsFragment : Fragment(),
+    DialogAddToCartSuccessFragment.OnClick {
     val TAG = "ProductDetailsFragment"
     private lateinit var binding: FragmentProductDetailsBinding
     private val viewModel: ProductDetailsViewModel by viewModel()
@@ -29,7 +32,6 @@ class ProductDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProductDetailsBinding.inflate(layoutInflater)
-
 //        if (viewModel.isSeller()) {
 //            binding.proDetailsAddCartBtn.visibility = View.GONE
 //        } else {
@@ -97,7 +99,7 @@ class ProductDetailsFragment : Fragment() {
 
     private fun showBottomDialogSuccess() {
         viewModel.product.value?.let {
-            DialogAddToCartSuccessFragment(it).show(parentFragmentManager,"DialogAddToCartSuccessFragment")
+            DialogAddToCartSuccessFragment(it, this@ProductDetailsFragment).show(parentFragmentManager,"DialogAddToCartSuccessFragment")
         }
     }
 
@@ -149,7 +151,14 @@ class ProductDetailsFragment : Fragment() {
             val itemDecoration =
                 DotsIndicatorDecoration(rad, rad * 4, dotsHeight, inactiveColor, activeColor)
             binding.proDetailsImagesRecyclerview.addItemDecoration(itemDecoration)
+            binding.proDetailsImagesRecyclerview.adapter
+            binding.proDetailsImagesRecyclerview.onFlingListener = null;
             PagerSnapHelper().attachToRecyclerView(binding.proDetailsImagesRecyclerview)
         }
+    }
+
+    override fun onButtonGoToCartClicked() {
+        cartViewModel.addProductStatus.value = false /**refresh live data value to the original, so that the bottom sheet will not show up when navigate back to this fragment*/
+        (activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.cartFragment
     }
 }

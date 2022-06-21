@@ -12,7 +12,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import vn.ztech.software.ecom.databinding.FragmentDialogAddToCartSuccessBinding
 import vn.ztech.software.ecom.model.Product
 
-class DialogAddToCartSuccessFragment(val product: Product) : BottomSheetDialogFragment() {
+class DialogAddToCartSuccessFragment(val product: Product, val onClickListener: OnClick) : BottomSheetDialogFragment() {
+    interface OnClick{
+        fun onButtonGoToCartClicked()
+    }
     private lateinit var binding: FragmentDialogAddToCartSuccessBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,5 +36,9 @@ class DialogAddToCartSuccessFragment(val product: Product) : BottomSheetDialogFr
             .load(imgUrl)
             .into(binding.ivImage)
         binding.ivImage.clipToOutline = true
+        binding.btGoToCart.setOnClickListener {
+            onClickListener.onButtonGoToCartClicked()
+            dismiss()
+        }
     }
 }

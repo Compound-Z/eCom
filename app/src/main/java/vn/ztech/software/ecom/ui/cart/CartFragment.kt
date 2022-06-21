@@ -7,288 +7,224 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.TypedValue
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.setMargins
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.PagerSnapHelper
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentCartBinding
+import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
+import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.BaseFragment
 
+private const val TAG = "CartFragment"
 
 class CartFragment : BaseFragment<FragmentCartBinding>() {
 
+    private val viewModel: CartViewModel by viewModel()
+    private lateinit var itemsAdapter: CartItemAdapter
 
 
     override fun setViewBinding(): FragmentCartBinding {
         return FragmentCartBinding.inflate(layoutInflater)
     }
 
-//    inner class ProductViewModelFactory(
-//        private val productId: String,
-//        private val application: Application
-//    ) : ViewModelProvider.Factory {
-//        @Suppress("UNCHECKED_CAST")
-//        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//            if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
-//                return ProductViewModel(productId, application) as T
-//            }
-//            throw IllegalArgumentException("Unknown ViewModel Class")
-//        }
-//    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getListProductsInCart()
+    }
+
+    override fun setUpViews() {
+        super.setUpViews()
+        binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+        binding.loaderLayout.circularLoader.showAnimationBehavior
+        binding.cartAppBar.topAppBar.title = getString(R.string.cart_fragment_label)
+        binding.cartEmptyTextView.visibility = View.GONE
+        binding.cartCheckOutBtn.setOnClickListener {
+//            navigateToSelectAddress()
+        }
+        if (context != null) {
+            setItemsAdapter(viewModel.products.value?: emptyList())
+//            concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter())
+            binding.cartProductsRecyclerView.adapter = itemsAdapter
+        }
+    }
+    override fun observeView() {
+        super.observeView()
+        viewModel.loading.observe(viewLifecycleOwner){
+            when (it) {
+                true -> {
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                }
+                false -> {
+                    binding.loaderLayout.circularLoader.hideAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                }
+            }
+        }
+        viewModel.products.observe(viewLifecycleOwner) { products ->
+                updateAdapter(products)
+        }
+        viewModel.deleteProductStatus.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it){
+                    viewModel.getListProductsInCart(false)
+                }
+            }
+        }
+
+    }
+    private fun setItemsAdapter(products: List<Product>) {
+        itemsAdapter = CartItemAdapter(requireContext(), products)
+        itemsAdapter.onClickListener = object : CartItemAdapter.OnClickListener {
+
+            override fun onDeleteClick(itemId: String, itemBinding: LayoutCircularLoaderBinding) {
+                Log.d(TAG, "onDelete: initiated")
+                showDeleteDialog(itemId, itemBinding)
+            }
+
+            override fun onPlusClick(itemId: String) {
+                Log.d(TAG, "onPlus: Increasing quantity")
+//                orderViewModel.setQuantityOfItem(itemId, 1)
+            }
+
+            override fun onMinusClick(itemId: String, currQuantity: Int,itemBinding: LayoutCircularLoaderBinding) {
+                Log.d(TAG, "onMinus: decreasing quantity")
+                if (currQuantity == 1) {
+//                    showDeleteDialog(itemId, itemBinding)
+                } else {
+//                    orderViewModel.setQuantityOfItem(itemId, -1)
+                }
+            }
+        }
+    }
+
+    private fun updateAdapter(products: List<Product>) {
+        itemsAdapter.apply {
+            this.products = products
+        }
+//        concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter())
+        binding.cartProductsRecyclerView.adapter = itemsAdapter
+        binding.cartProductsRecyclerView.adapter?.notifyDataSetChanged()
+    }
+
 //
-//    private lateinit var binding: FragmentProductDetailsBinding
-//    private lateinit var viewModel: ProductViewModel
-//    private var selectedSize: Int? = null
-//    private var selectedColor: String? = null
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        binding = FragmentProductDetailsBinding.inflate(layoutInflater)
-//        val productId = arguments?.getString("productId")
-//
-//        if (activity != null && productId != null) {
-//            val viewModelFactory = ProductViewModelFactory(productId, requireActivity().application)
-//            viewModel = ViewModelProvider(this, viewModelFactory).get(ProductViewModel::class.java)
-//        }
-//
-//        if (viewModel.isSeller()) {
-//            binding.proDetailsAddCartBtn.visibility = View.GONE
-//        } else {
-//            binding.proDetailsAddCartBtn.visibility = View.VISIBLE
-//            binding.proDetailsAddCartBtn.setOnClickListener {
-//                if (viewModel.isItemInCart.value == true) {
-//                    navigateToCartFragment()
-//                } else {
-//                    onAddToCart()
-//                    if (viewModel.errorStatus.value?.isEmpty() == true) {
-//                        viewModel.addItemStatus.observe(viewLifecycleOwner) { status ->
-//                            if (status == AddObjectStatus.DONE) {
-//                                makeToast("Product Added To Cart")
-//                                viewModel.checkIfInCart()
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        binding.loaderLayout.loaderFrameLayout.background =
-//            ResourcesCompat.getDrawable(resources, R.color.white, null)
-//
-//        binding.layoutViewsGroup.visibility = View.GONE
-//        binding.proDetailsAddCartBtn.visibility = View.GONE
-//        setObservers()
-//        return binding.root
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        viewModel.setLike()
-//        viewModel.checkIfInCart()
-//        selectedSize = null
-//        selectedColor = null
-//    }
-//
-//    private fun setObservers() {
-//        viewModel.dataStatus.observe(viewLifecycleOwner) {
-//            when (it) {
-//                StoreDataStatus.DONE -> {
-//                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-//                    binding.proDetailsLayout.visibility = View.VISIBLE
-//                    setViews()
+//        orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
+//            when (status) {
+//                StoreDataStatus.LOADING -> {
+//                    binding.cartProductsRecyclerView.visibility = View.GONE
+//                    binding.cartCheckOutBtn.visibility = View.GONE
+//                    binding.cartEmptyTextView.visibility = View.GONE
+//                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+//                    binding.loaderLayout.circularLoader.showAnimationBehavior
 //                }
 //                else -> {
-//                    binding.proDetailsLayout.visibility = View.GONE
-//                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+//                    binding.loaderLayout.circularLoader.hideAnimationBehavior
+//                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 //                }
 //            }
 //        }
-//        viewModel.isLiked.observe(viewLifecycleOwner) {
-//            if (it == true) {
-//                binding.proDetailsLikeBtn.setImageResource(R.drawable.liked_heart_drawable)
-//            } else {
-//                binding.proDetailsLikeBtn.setImageResource(R.drawable.heart_icon_drawable)
-//            }
-//        }
-//        viewModel.isItemInCart.observe(viewLifecycleOwner) {
-//            if (it == true) {
-//                binding.proDetailsAddCartBtn.text =
-//                    getString(R.string.pro_details_go_to_cart_btn_text)
-//            } else {
-//                binding.proDetailsAddCartBtn.text =
-//                    getString(R.string.pro_details_add_to_cart_btn_text)
-//            }
-//        }
-//        viewModel.errorStatus.observe(viewLifecycleOwner) {
-//            if (it.isNotEmpty())
-//                modifyErrors(it)
-//        }
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private fun modifyErrors(errList: List<AddItemErrors>) {
-//        makeToast("Please Select Size and Color.")
-//        if (!errList.isNullOrEmpty()) {
-//            errList.forEach { err ->
-//                when (err) {
-//                    AddItemErrors.ERROR_SIZE -> {
-//                        binding.proDetailsSelectSizeLabel.setTextColor(R.color.red_600)
-//                    }
-//                    AddItemErrors.ERROR_COLOR -> {
-//                        binding.proDetailsSelectColorLabel.setTextColor(R.color.red_600)
+//        orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
+//            if (status != null && status != StoreDataStatus.LOADING) {
+//                orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
+//                    if (itemList.isNotEmpty()) {
+//                        updateAdapter()
+//                        binding.cartEmptyTextView.visibility = View.GONE
+//                        binding.cartProductsRecyclerView.visibility = View.VISIBLE
+//                        binding.cartCheckOutBtn.visibility = View.VISIBLE
+//                    } else if (itemList.isEmpty()) {
+//                        binding.cartProductsRecyclerView.visibility = View.GONE
+//                        binding.cartCheckOutBtn.visibility = View.GONE
+//                        binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+//                        binding.loaderLayout.circularLoader.hideAnimationBehavior
+//                        binding.cartEmptyTextView.visibility = View.VISIBLE
 //                    }
 //                }
 //            }
 //        }
+//        orderViewModel.cartItems.observe(viewLifecycleOwner) { items ->
+//            if (items.isNotEmpty()) {
+//                updateAdapter()
+//            }
+//        }
+//        orderViewModel.priceList.observe(viewLifecycleOwner) {
+//            if (it.isNotEmpty()) {
+//                updateAdapter()
+//            }
+//        }
+//        orderViewModel.userLikes.observe(viewLifecycleOwner) {
+//            if (it.isNotEmpty()) {
+//                updateAdapter()
+//            }
+//        }
+
+//    private lateinit var itemsAdapter: CartItemAdapter
+//    private lateinit var concatAdapter: ConcatAdapter
+//
+
+
+//
+
+//
+//
+//
+//    private fun navigateToSelectAddress() {
+//        findNavController().navigate(R.id.action_cartFragment_to_selectAddressFragment)
 //    }
 //
-//    private fun setViews() {
-//        binding.layoutViewsGroup.visibility = View.VISIBLE
-//        binding.proDetailsAddCartBtn.visibility = View.VISIBLE
-//        binding.addProAppBar.topAppBar.title = viewModel.productData.value?.name
-//        binding.addProAppBar.topAppBar.setNavigationOnClickListener {
-//            findNavController().navigateUp()
+    private fun showDeleteDialog(itemId: String, itemBinding: LayoutCircularLoaderBinding) {
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle(getString(R.string.delete_dialog_title_text))
+                .setMessage(getString(R.string.delete_cart_item_message_text))
+                .setNegativeButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+                    dialog.cancel()
+                    itemBinding.loaderFrameLayout.visibility = View.GONE
+                }
+                .setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
+                    viewModel.deleteProductFromCart(itemId)
+                    dialog.cancel()
+                }.setOnCancelListener {
+                    itemBinding.loaderFrameLayout.visibility = View.GONE
+                }
+                .show()
+        }
+    }
+//
+//    inner class PriceCardAdapter : RecyclerView.Adapter<PriceCardAdapter.ViewHolder>() {
+//
+//        inner class ViewHolder(private val priceCardBinding: LayoutPriceCardBinding) :
+//            RecyclerView.ViewHolder(priceCardBinding.root) {
+//            fun bind() {
+//                priceCardBinding.priceItemsLabelTv.text = getString(
+//                    R.string.price_card_items_string,
+//                    orderViewModel.getItemsCount().toString()
+//                )
+//                priceCardBinding.priceItemsAmountTv.text =
+//                    getString(R.string.price_text, orderViewModel.getItemsPriceTotal().toString())
+//                priceCardBinding.priceShippingAmountTv.text = getString(R.string.price_text, "0")
+//                priceCardBinding.priceChargesAmountTv.text = getString(R.string.price_text, "0")
+//                priceCardBinding.priceTotalAmountTv.text =
+//                    getString(R.string.price_text, orderViewModel.getItemsPriceTotal().toString())
+//            }
 //        }
-//        binding.addProAppBar.topAppBar.inflateMenu(R.menu.app_bar_menu)
-//        binding.addProAppBar.topAppBar.overflowIcon?.setTint(
-//            ContextCompat.getColor(
-//                requireContext(),
-//                R.color.gray
+//
+//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+//            return ViewHolder(
+//                LayoutPriceCardBinding.inflate(
+//                    LayoutInflater.from(parent.context),
+//                    parent,
+//                    false
+//                )
 //            )
-//        )
-//
-//        setImagesView()
-//
-//        binding.proDetailsTitleTv.text = viewModel.productData.value?.name ?: ""
-//        binding.proDetailsLikeBtn.apply {
-//            setOnClickListener {
-//                viewModel.toggleLikeProduct()
-//            }
 //        }
-//        binding.proDetailsRatingBar.rating = (viewModel.productData.value?.rating ?: 0.0).toFloat()
-//        binding.proDetailsPriceTv.text = resources.getString(
-//            R.string.pro_details_price_value,
-//            viewModel.productData.value?.price.toString()
-//        )
-//        setShoeSizeButtons()
-//        setShoeColorsButtons()
-//        binding.proDetailsSpecificsText.text = viewModel.productData.value?.description ?: ""
-//    }
 //
-//    private fun onAddToCart() {
-//        viewModel.addToCart(selectedSize, selectedColor)
-//    }
-//
-//    private fun navigateToCartFragment() {
-//        findNavController().navigate(R.id.action_productDetailsFragment_to_cartFragment)
-//    }
-//
-//    private fun makeToast(text: String) {
-//        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
-//    }
-//
-//    private fun setImagesView() {
-//        if (context != null) {
-//            binding.proDetailsImagesRecyclerview.isNestedScrollingEnabled = false
-//            val adapter = ProductImagesAdapter(
-//                requireContext(),
-//                viewModel.productData.value?.images ?: emptyList()
-//            )
-//            binding.proDetailsImagesRecyclerview.adapter = adapter
-//            val rad = resources.getDimension(R.dimen.radius)
-//            val dotsHeight = resources.getDimensionPixelSize(R.dimen.dots_height)
-//            val inactiveColor = ContextCompat.getColor(requireContext(), R.color.gray)
-//            val activeColor = ContextCompat.getColor(requireContext(), R.color.blue_accent_300)
-//            val itemDecoration =
-//                DotsIndicatorDecoration(rad, rad * 4, dotsHeight, inactiveColor, activeColor)
-//            binding.proDetailsImagesRecyclerview.addItemDecoration(itemDecoration)
-//            PagerSnapHelper().attachToRecyclerView(binding.proDetailsImagesRecyclerview)
+//        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//            holder.bind()
 //        }
-//    }
 //
-//    private fun setShoeSizeButtons() {
-//        binding.proDetailsSizesRadioGroup.apply {
-//            for ((_, v) in ShoeSizes) {
-//                if (viewModel.productData.value?.availableSizes?.contains(v) == true) {
-//                    val radioButton = RadioButton(context)
-//                    radioButton.id = v
-//                    radioButton.tag = v
-//                    val param =
-//                        binding.proDetailsSizesRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
-//                    param.setMargins(resources.getDimensionPixelSize(R.dimen.radio_margin_size))
-//                    param.width = ViewGroup.LayoutParams.WRAP_CONTENT
-//                    param.height = ViewGroup.LayoutParams.WRAP_CONTENT
-//                    radioButton.layoutParams = param
-//                    radioButton.background =
-//                        ContextCompat.getDrawable(context, R.drawable.radio_selector)
-//                    radioButton.setButtonDrawable(R.color.transparent)
-//                    radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
-//                    radioButton.setTextColor(Color.BLACK)
-//                    radioButton.setTypeface(null, Typeface.BOLD)
-//                    radioButton.textAlignment = View.TEXT_ALIGNMENT_CENTER
-//                    radioButton.text = "$v"
-//                    radioButton.setOnCheckedChangeListener { buttonView, isChecked ->
-//                        val tag = buttonView.tag.toString().toInt()
-//                        if (isChecked) {
-//                            selectedSize = tag
-//                        }
-//                    }
-//                    addView(radioButton)
-//                }
-//            }
-//            invalidate()
-//        }
-//    }
-//
-//    private fun setShoeColorsButtons() {
-//        binding.proDetailsColorsRadioGroup.apply {
-//            var ind = 1
-//            for ((k, v) in ShoeColors) {
-//                if (viewModel.productData.value?.availableColors?.contains(k) == true) {
-//                    val radioButton = RadioButton(context)
-//                    radioButton.id = ind
-//                    radioButton.tag = k
-//                    val param =
-//                        binding.proDetailsColorsRadioGroup.layoutParams as ViewGroup.MarginLayoutParams
-//                    param.setMargins(resources.getDimensionPixelSize(R.dimen.radio_margin_size))
-//                    param.width = ViewGroup.LayoutParams.WRAP_CONTENT
-//                    param.height = ViewGroup.LayoutParams.WRAP_CONTENT
-//                    radioButton.layoutParams = param
-//                    radioButton.background =
-//                        ContextCompat.getDrawable(context, R.drawable.color_radio_selector)
-//                    radioButton.setButtonDrawable(R.color.transparent)
-//                    radioButton.backgroundTintList = ColorStateList.valueOf(Color.parseColor(v))
-//                    if (k == "white") {
-//                        radioButton.backgroundTintMode = PorterDuff.Mode.MULTIPLY
-//                    } else {
-//                        radioButton.backgroundTintMode = PorterDuff.Mode.ADD
-//                    }
-//                    radioButton.setOnCheckedChangeListener { buttonView, isChecked ->
-//                        val tag = buttonView.tag.toString()
-//                        if (isChecked) {
-//                            selectedColor = tag
-//                        }
-//                    }
-//                    addView(radioButton)
-//                    ind++
-//                }
-//            }
-//            invalidate()
-//        }
+//        override fun getItemCount() = 1
 //    }
 
 }
