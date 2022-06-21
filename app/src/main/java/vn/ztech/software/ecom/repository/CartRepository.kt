@@ -6,17 +6,18 @@ import vn.ztech.software.ecom.api.ICartApi
 import vn.ztech.software.ecom.api.request.AddProductToCartRequest
 import vn.ztech.software.ecom.api.request.AdjustProductQuantityRequest
 import vn.ztech.software.ecom.api.response.BasicResponse
+import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.model.Product
 
 interface ICartRepository{
-    suspend fun getListProductsInCart(): List<Product>
+    suspend fun getListProductsInCart(): List<CartProductResponse>
     suspend fun addProductToCart(productId: String): BasicResponse
     suspend fun adjustQuantityOfProductInCart(productId: String, quantity: Int): BasicResponse
     suspend fun deleteProductFromCart(productId: String): BasicResponse
 }
 
 class CartRepository(private val cartApi: ICartApi): ICartRepository{
-    override suspend fun getListProductsInCart(): List<Product> {
+    override suspend fun getListProductsInCart(): List<CartProductResponse> {
         return cartApi.getListProductsInCart()
     }
 

@@ -12,6 +12,7 @@ import android.view.View
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
+import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.databinding.FragmentCartBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
 import vn.ztech.software.ecom.model.Product
@@ -73,9 +74,23 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
                 }
             }
         }
+        viewModel.addProductStatus.observe(viewLifecycleOwner){
+            it?.let {
+                if (it){
+                    viewModel.getListProductsInCart(false)
+                }
+            }
+        }
+        viewModel.adjustProductStatus.observe(viewLifecycleOwner){
+            it?.let {
+                if (it){
+                    viewModel.getListProductsInCart(false)
+                }
+            }
+        }
 
     }
-    private fun setItemsAdapter(products: List<Product>) {
+    private fun setItemsAdapter(products: List<CartProductResponse>) {
         itemsAdapter = CartItemAdapter(requireContext(), products)
         itemsAdapter.onClickListener = object : CartItemAdapter.OnClickListener {
 
@@ -85,28 +100,44 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
             }
 
             override fun onPlusClick(itemId: String) {
-                Log.d(TAG, "onPlus: Increasing quantity")
-//                orderViewModel.setQuantityOfItem(itemId, 1)
+                Log.d(TAG, "onPlus: Increasing quantity ${itemId}")
+                viewModel.addProductToCart(itemId, false)
             }
 
             override fun onMinusClick(itemId: String, currQuantity: Int,itemBinding: LayoutCircularLoaderBinding) {
-                Log.d(TAG, "onMinus: decreasing quantity")
+                Log.d(TAG, "onMinus: decreasing quantity ${itemId} ${currQuantity}")
                 if (currQuantity == 1) {
-//                    showDeleteDialog(itemId, itemBinding)
+                    showDeleteDialog(itemId, itemBinding)
                 } else {
-//                    orderViewModel.setQuantityOfItem(itemId, -1)
+                    viewModel.adjustProductQuantity(itemId, currQuantity - 1)
                 }
             }
         }
     }
 
-    private fun updateAdapter(products: List<Product>) {
+    private fun updateAdapter(products: List<CartProductResponse>) {
+        Log.d(TAG, "update"+ products.size.toString())
+        if(products.isEmpty()){
+            binding.cartProductsRecyclerView.visibility = View.GONE
+            binding.cartEmptyTextView.visibility = View.VISIBLE
+
+        }else{
+            binding.cartProductsRecyclerView.visibility = View.VISIBLE
+            binding.cartEmptyTextView.visibility = View.GONE
+        }
         itemsAdapter.apply {
             this.products = products
         }
 //        concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter())
         binding.cartProductsRecyclerView.adapter = itemsAdapter
         binding.cartProductsRecyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.deleteProductStatus.value = false
+        viewModel.adjustProductStatus.value = false
+        viewModel.addProductStatus.value = false
     }
 
 //
@@ -183,8 +214,9 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
                     itemBinding.loaderFrameLayout.visibility = View.GONE
                 }
                 .setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
+                    itemBinding.loaderFrameLayout.visibility = View.VISIBLE
                     viewModel.deleteProductFromCart(itemId)
-                    dialog.cancel()
+                    dialog.dismiss()
                 }.setOnCancelListener {
                     itemBinding.loaderFrameLayout.visibility = View.GONE
                 }

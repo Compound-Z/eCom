@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.common.extension.toLoadState
@@ -19,18 +20,19 @@ import vn.ztech.software.ecom.util.errorMessage
 
 class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
     val loading = MutableLiveData<Boolean>()
-    val products = MutableLiveData<MutableList<Product>>()
+    val products = MutableLiveData<MutableList<CartProductResponse>>()
     val addProductStatus = MutableLiveData<Boolean>()
     val deleteProductStatus = MutableLiveData<Boolean>()
+    val adjustProductStatus = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()
 
-    fun addProductToCart(productId: String?) {
+    fun addProductToCart(productId: String?, isLoadingEnabled: Boolean = true) {
         productId?:throw CustomError(customMessage = "System error")
         viewModelScope.launch {
             cartUseCase.addProductToCart(productId).flowOn(Dispatchers.IO).toLoadState().collect {
                 when(it){
                     LoadState.Loading -> {
-                        loading.value = true
+                        if(isLoadingEnabled) loading.value = true
                     }
                     is LoadState.Loaded -> {
                         loading.value = false
@@ -50,20 +52,36 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
             cartUseCase.deleteProductFromCart(productId).flowOn(Dispatchers.IO).toLoadState().collect {
                 when(it){
                     LoadState.Loading -> {
-                        loading.value = true
                     }
                     is LoadState.Loaded -> {
-                        loading.value = false
-
                         //remove the product from cart in local memory
                         val deletedProductIdx = products.value?.indexOfFirst { it._id == productId }
                         deletedProductIdx?.let {products.value?.removeAt(deletedProductIdx)}
+
                         Log.d("PRODUCT", products.value.toString())
                         deleteProductStatus.value = true
                     }
                     is LoadState.Error -> {
-                        loading.value = false
                         deleteProductStatus.value = false
+                    }
+                }
+            }
+        }
+    }
+
+    fun adjustProductQuantity(productId: String?, currQuantity: Int) {
+        productId?:throw CustomError(customMessage = "System error")
+        viewModelScope.launch {
+            cartUseCase.adjustQuantityOfProductInCart(productId, currQuantity).flowOn(Dispatchers.IO).toLoadState().collect {
+                when(it){
+                    LoadState.Loading -> {
+                    }
+                    is LoadState.Loaded -> {
+                        Log.d("PRODUCT", products.value.toString())
+                        adjustProductStatus.value = true
+                    }
+                    is LoadState.Error -> {
+                        adjustProductStatus.value = false
                     }
                 }
             }

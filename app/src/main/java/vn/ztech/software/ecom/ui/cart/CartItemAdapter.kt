@@ -8,21 +8,22 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import vn.ztech.software.ecom.R
+import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.databinding.CartListItemBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
 import vn.ztech.software.ecom.model.Product
 
 
 class CartItemAdapter(
-	private val context: Context, products: List<Product>
+	private val context: Context, products: List<CartProductResponse>
 ) : RecyclerView.Adapter<CartItemAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
-	var products: List<Product> = products
+	var products: List<CartProductResponse> = products
 
 	inner class ViewHolder(private val binding: CartListItemBinding) :
 		RecyclerView.ViewHolder(binding.root) {
-		fun bind(product: Product) {
+		fun bind(product: CartProductResponse) {
 			binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 			binding.cartProductTitleTv.text = product.name
 			binding.cartProductPriceTv.text =
@@ -38,16 +39,17 @@ class CartItemAdapter(
 			binding.cartProductQuantityTextView.text = product.quantity.toString()
 
 			binding.cartProductDeleteBtn.setOnClickListener {
-				onClickListener.onDeleteClick(product._id, binding.loaderLayout)
+				onClickListener.onDeleteClick(product.productId, binding.loaderLayout)
 			}
-//			binding.cartProductPlusBtn.setOnClickListener {
-//				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
-//				onClickListener.onPlusClick(product.itemId)
-//			}
-//			binding.cartProductMinusBtn.setOnClickListener {
-//				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
-//				onClickListener.onMinusClick(product.itemId, product.quantity, binding.loaderLayout)
-//			}
+			binding.cartProductPlusBtn.setOnClickListener {
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+				onClickListener.onPlusClick(product.productId)
+			}
+			binding.cartProductMinusBtn.setOnClickListener {
+				binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+				onClickListener.onMinusClick(product.productId, product.quantity, binding.loaderLayout)
+
+			}
 
 		}
 	}

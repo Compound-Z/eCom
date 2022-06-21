@@ -190,6 +190,7 @@ class HomeFragment : Fragment() {
         listProductsAdapter = ListProductsAdapter(productsList ?: emptyList(), requireContext())
         listProductsAdapter.onClickListener =  object : OnClickListener {
             override fun onClick(productData: Product) {
+                Log.d("XXXX", productData.toString())
                 findNavController().navigate(
                     R.id.action_seeProduct,
                     bundleOf("product" to productData)

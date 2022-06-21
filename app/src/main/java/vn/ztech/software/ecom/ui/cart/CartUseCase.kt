@@ -3,18 +3,19 @@ package vn.ztech.software.ecom.ui.cart
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import vn.ztech.software.ecom.api.response.BasicResponse
+import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.repository.ICartRepository
 
 interface ICartUseCase{
-    suspend fun getListProductsInCart(): Flow<List<Product>>
+    suspend fun getListProductsInCart(): Flow<List<CartProductResponse>>
     suspend fun addProductToCart(productId: String): Flow<BasicResponse>
     suspend fun adjustQuantityOfProductInCart(productId: String, quantity: Int): Flow<BasicResponse>
     suspend fun deleteProductFromCart(productId: String): Flow<BasicResponse>
 }
 
 class CartUseCase(private val cartRepository: ICartRepository): ICartUseCase{
-    override suspend fun getListProductsInCart(): Flow<List<Product>> = flow{
+    override suspend fun getListProductsInCart(): Flow<List<CartProductResponse>> = flow{
         val listProducts = cartRepository.getListProductsInCart()
         emit(listProducts)
     }

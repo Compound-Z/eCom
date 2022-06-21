@@ -5,12 +5,13 @@ import retrofit2.http.*
 import vn.ztech.software.ecom.api.request.AddProductToCartRequest
 import vn.ztech.software.ecom.api.request.AdjustProductQuantityRequest
 import vn.ztech.software.ecom.api.response.BasicResponse
+import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.model.Product
 
 @Keep
 interface ICartApi{
     @GET("/api/v1/cart")
-    suspend fun getListProductsInCart(): List<Product>
+    suspend fun getListProductsInCart(): List<CartProductResponse>
 
     @POST("/api/v1/cart")
     suspend fun addProductToCart(@Body request: AddProductToCartRequest): BasicResponse
