@@ -15,6 +15,7 @@ import vn.ztech.software.ecom.model.Address
 import vn.ztech.software.ecom.model.AddressItem
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.address.AddressViewModel
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 private const val TAG = "OrdersFragment"
 class OrderFragment : BaseFragment<FragmentOrderBinding>() {
@@ -49,9 +50,16 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
         binding.orderDetailAppBar.topAppBar.title = getString(R.string.order_details_fragment_title)
         binding.orderDetailAppBar.topAppBar.setNavigationOnClickListener { findNavController().navigateUp() }
         binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+        binding.segmentAddress.addressCard.setOnClickListener{
+            navigateToAddressFragment()
+        }
 //        binding.orderDetailsConstraintGroup.visibility = View.GONE
 
 
+    }
+
+    private fun navigateToAddressFragment() {
+        findNavController().navigate(R.id.action_orderFragment_to_addressFragment)
     }
 
     override fun observeView() {
@@ -70,6 +78,12 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
         }
         addressViewModel.addresses.observe(viewLifecycleOwner){
             updateSegmentAddress(it)
+        }
+
+        addressViewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                showErrorDialog(it)
+            }
         }
 
     }

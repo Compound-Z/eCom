@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.Address
+import vn.ztech.software.ecom.model.AddressItem
+import vn.ztech.software.ecom.ui.AddAddressViewErrors
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 
@@ -21,7 +23,9 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
     val deleteAddressStatus = MutableLiveData<Boolean>()
     val editAddressStatus = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()
-
+    val uiError = MutableLiveData<List<AddAddressViewErrors>>()
+    val isEdit = MutableLiveData<Boolean>()
+    val currentSelectedAddress = MutableLiveData<AddressItem>()
 
 //    fun addAddress(productId: String?, isLoadingEnabled: Boolean = true) {
 //        productId?:throw CustomError(customMessage = "System error")

@@ -2,15 +2,15 @@ package vn.ztech.software.ecom.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-
+@Parcelize
 data class Address(
     val __v: Int,
     val _id: String,
     val addresses: List<AddressItem>,
     val defaultAddressId: String,
     val userId: String
-)
-
+):Parcelable
+@Parcelize
 data class AddressItem(
     val _id: String,
     val addressType: String,
@@ -20,7 +20,7 @@ data class AddressItem(
     val receiverName: String,
     val receiverPhoneNumber: String,
     val ward: Ward
-)
+):Parcelable
 
 data class District(
     val _id: String,

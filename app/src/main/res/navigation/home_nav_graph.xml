@@ -149,9 +149,21 @@
         android:name="vn.ztech.software.ecom.ui.order.OrderFragment"
         android:label="fragment_order"
         tools:layout="@layout/fragment_order" >
+        <action
+            android:id="@+id/action_orderFragment_to_addressFragment"
+            app:destination="@+id/addressFragment"
+            >
+        </action>
 <!--        <action-->
 <!--            android:id="@+id/action_ordersFragment_to_orderDetailsFragment"-->
 <!--            app:destination="@id/orderDetailsFragment" />-->
+    </fragment>
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="vn.ztech.software.ecom.ui.address.AddressFragment"
+        android:label="fragment_order"
+        tools:layout="@layout/fragment_order"
+        >
     </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/orderDetailsFragment"-->
