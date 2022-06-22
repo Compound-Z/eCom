@@ -51,6 +51,14 @@ class CartItemAdapter(
 
 			}
 
+			binding.cartProductTitleTv.setOnClickListener {
+				onClickListener.onItemClick(product)
+			}
+			binding.productImageView.setOnClickListener {
+				onClickListener.onItemClick(product)
+			}
+
+
 		}
 	}
 
@@ -69,6 +77,7 @@ class CartItemAdapter(
 	override fun getItemCount() = products.size
 
 	interface OnClickListener {
+		fun onItemClick(product: CartProductResponse)
 		fun onDeleteClick(itemId: String, itemBinding: LayoutCircularLoaderBinding)
 		fun onPlusClick(itemId: String)
 		fun onMinusClick(itemId: String, currQuantity: Int, itemBinding: LayoutCircularLoaderBinding)

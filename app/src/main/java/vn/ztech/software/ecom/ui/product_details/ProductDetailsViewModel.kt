@@ -14,6 +14,8 @@ import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.ProductDetails
 import vn.ztech.software.ecom.domain.use_case.get_product_details.IProductDetailsUseCase;
 import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.util.CustomError
+import vn.ztech.software.ecom.util.errorMessage
 
 private const val TAG = "ProductViewModel"
 
@@ -26,6 +28,7 @@ class ProductDetailsViewModel(
     val product = MutableLiveData<Product>()
     private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
     val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
+    val error = MutableLiveData<CustomError>()
 
 //    private val _errorStatus = MutableLiveData<List<AddItemErrors>>()
 //    val errorStatus: LiveData<List<AddItemErrors>> get() = _errorStatus
@@ -44,6 +47,8 @@ class ProductDetailsViewModel(
                     is LoadState.Error -> {
                         _storeDataStatus.value = StoreDataStatus.ERROR
                         _productDetails.value = null
+                        error.value = errorMessage(it.e)
+
                     }
                 }
             }

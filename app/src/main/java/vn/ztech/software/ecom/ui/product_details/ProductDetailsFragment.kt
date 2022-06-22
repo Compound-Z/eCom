@@ -1,6 +1,7 @@
 package vn.ztech.software.ecom.ui.product_details
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ class ProductDetailsFragment : Fragment(),
     private lateinit var binding: FragmentProductDetailsBinding
     private val viewModel: ProductDetailsViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
+    var isAddToCartButtonEnabled = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +56,10 @@ class ProductDetailsFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val product = arguments?.getParcelable("product") as Product?
+        isAddToCartButtonEnabled = arguments?.getBoolean("ADD_TO_CART_BUTTON_ENABLED")?:true
+        if(!isAddToCartButtonEnabled) {
+            binding.proDetailsAddCartBtn.visibility = View.GONE
+        }
         viewModel.product.value = product
         viewModel.getProductDetails(product?._id?:"")
     }
@@ -95,6 +101,11 @@ class ProductDetailsFragment : Fragment(),
                 showErrorDialog(it)
             }
         }
+        viewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                showErrorDialog(it)
+            }
+        }
     }
 
     private fun showBottomDialogSuccess() {
@@ -105,7 +116,7 @@ class ProductDetailsFragment : Fragment(),
 
     private fun setViews() {
         binding.layoutViewsGroup.visibility = View.VISIBLE
-        binding.proDetailsAddCartBtn.visibility = View.VISIBLE
+        if(isAddToCartButtonEnabled)binding.proDetailsAddCartBtn.visibility = View.VISIBLE
         binding.addProAppBar.topAppBar.title = viewModel.product.value?.name
         binding.addProAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()

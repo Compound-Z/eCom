@@ -41,6 +41,7 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
                     is LoadState.Error -> {
                         loading.value = false
                         addProductStatus.value = false
+                        error.value = errorMessage(it.e)
                     }
                 }
             }
@@ -63,6 +64,8 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
                     }
                     is LoadState.Error -> {
                         deleteProductStatus.value = false
+                        error.value = errorMessage(it.e)
+
                     }
                 }
             }
@@ -82,6 +85,8 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
                     }
                     is LoadState.Error -> {
                         adjustProductStatus.value = false
+                        error.value = errorMessage(it.e)
+
                     }
                 }
             }

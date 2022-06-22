@@ -9,20 +9,26 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.api.response.CartProductResponse
+import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.FragmentCartBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.BaseFragment
+import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 private const val TAG = "CartFragment"
 
 class CartFragment : BaseFragment<FragmentCartBinding>() {
 
     private val viewModel: CartViewModel by viewModel()
+    private val productDetailsViewModel: ProductDetailsViewModel by viewModel()
     private lateinit var itemsAdapter: CartItemAdapter
 
 
@@ -64,9 +70,11 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
                 }
             }
         }
+
         viewModel.products.observe(viewLifecycleOwner) { products ->
                 updateAdapter(products)
         }
+
         viewModel.deleteProductStatus.observe(viewLifecycleOwner) {
             it?.let {
                 if (it){
@@ -89,10 +97,29 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
             }
         }
 
+        viewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                showErrorDialog(it)
+            }
+        }
+        productDetailsViewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                showErrorDialog(it)
+            }
+        }
     }
     private fun setItemsAdapter(products: List<CartProductResponse>) {
         itemsAdapter = CartItemAdapter(requireContext(), products)
         itemsAdapter.onClickListener = object : CartItemAdapter.OnClickListener {
+
+            override fun onItemClick(product: CartProductResponse) {
+
+                        findNavController().navigate(
+                            R.id.action_cartFragment_to_productDetailsFragment,
+                            bundleOf("product" to Product(_id = product.productId,product.name,"",true, product.price, "", "", 0, product.weight, 0 , 0),
+                            "ADD_TO_CART_BUTTON_ENABLED" to false)
+                        )
+            }
 
             override fun onDeleteClick(itemId: String, itemBinding: LayoutCircularLoaderBinding) {
                 Log.d(TAG, "onDelete: initiated")
