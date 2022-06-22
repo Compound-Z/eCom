@@ -7,16 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.databinding.FragmentOrderBinding
+import vn.ztech.software.ecom.model.Address
+import vn.ztech.software.ecom.model.AddressItem
 import vn.ztech.software.ecom.ui.BaseFragment
+import vn.ztech.software.ecom.ui.address.AddressViewModel
+
 private const val TAG = "OrdersFragment"
 class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
     private lateinit var productsAdapter: OrderProductsAdapter
     private lateinit var products: List<CartProductResponse>
-
+    private val addressViewModel: AddressViewModel by viewModel()
     override fun setViewBinding(): FragmentOrderBinding {
         return FragmentOrderBinding.inflate(layoutInflater)
     }
@@ -33,7 +38,9 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
                 binding.orderDetailsProRecyclerView.adapter = productsAdapter
             }
         }
-            Log.d(TAG, products.size.toString())
+
+        //get list address
+        addressViewModel.getAddresses()
     }
 
 
@@ -49,9 +56,52 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
     override fun observeView() {
         super.observeView()
+        addressViewModel.loading.observe(viewLifecycleOwner){
+            when (it) {
+                true -> {
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                }
+                false -> {
+                    binding.loaderLayout.circularLoader.hideAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                }
+            }
+        }
+        addressViewModel.addresses.observe(viewLifecycleOwner){
+            updateSegmentAddress(it)
+        }
+
+    }
+
+    private fun updateSegmentAddress(it: Address?) {
+        it?.let {
+            if (it.addresses.isEmpty()){
+                //show remind note
+                binding.segmentAddress.tvNoAddress.visibility = View.VISIBLE
+            }else{
+                binding.segmentAddress.tvNoAddress.visibility = View.GONE
+                val defaultAddress = it.getDefaultAddress()
+                defaultAddress?.let {
+                    binding.segmentAddress.tvNameAndPhoneNumber.text = "${defaultAddress.receiverName} | ${defaultAddress.receiverPhoneNumber}"
+                    binding.segmentAddress.tvDetailedAddress.text = defaultAddress.detailedAddress
+                }
+            }
+        }
     }
 
     private fun setProductsAdapter(products: List<CartProductResponse>) {
         productsAdapter = OrderProductsAdapter(requireContext(), products)
     }
 }
+
+private fun Address.getDefaultAddress(): AddressItem? {
+    val defaultAddressId = this.defaultAddressId
+    this.addresses.forEach { addressItem ->
+        if (addressItem._id.equals(defaultAddressId)){
+            return addressItem
+        }
+    }
+    return null
+}
+

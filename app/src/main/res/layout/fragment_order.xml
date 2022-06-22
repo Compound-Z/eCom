@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     tools:context=".ui.order.OrderFragment">
 
     <include
@@ -21,6 +22,7 @@
         android:layout_below="@id/order_detail_app_bar" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/recyclerViewListItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/order_detail_app_bar"
@@ -31,14 +33,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/order_detail_app_bar"
-            android:paddingBottom="72dp">
+            android:paddingBottom="12dp">
 
 <!--            <androidx.constraintlayout.widget.Group-->
 <!--                android:id="@+id/order_details_constraint_group"-->
 <!--                android:layout_width="wrap_content"-->
 <!--                android:layout_height="wrap_content"-->
 <!--                app:constraint_referenced_ids="order_details_payment_label_tv,-->
-<!--                order_details_pro_label_tv,order_details_ship_label_tv,-->
+<!--                order_details_pro_label_tv,tvOrderShipping,-->
 <!--                order_details_payment_layout,order_details_shipping_add_layout,-->
 <!--                order_details_pro_recycler_view,order_change_status_btn" />-->
 
@@ -76,21 +78,32 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-<!--            <TextView-->
-<!--                android:id="@+id/order_details_ship_label_tv"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:layout_marginEnd="16dp"-->
-<!--                android:text="@string/shipping_details_label_text"-->
-<!--                android:textAlignment="viewStart"-->
-<!--                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textStyle="bold"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/order_details_pro_recycler_view" />-->
+            <TextView
+                android:id="@+id/tvOrderShipping"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/shipping_details_label_text"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/order_details_pro_recycler_view" />
+            <include
+                android:id="@+id/segmentAddress"
+                layout="@layout/segment_address"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvOrderShipping"
+                android:layout_height="wrap_content"/>
+
 
 <!--            <ImageButton-->
 <!--                android:id="@+id/order_change_status_btn"-->
@@ -101,9 +114,9 @@
 <!--                android:contentDescription="@string/change_status_label_text"-->
 <!--                android:scaleType="centerCrop"-->
 <!--                android:tint="@color/white"-->
-<!--                app:layout_constraintBottom_toBottomOf="@+id/order_details_ship_label_tv"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/tvOrderShipping"-->
 <!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="@+id/order_details_ship_label_tv"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/tvOrderShipping"-->
 <!--                app:srcCompat="@drawable/ic_edit_24" />-->
 
 <!--            <include-->
@@ -116,7 +129,7 @@
 <!--                android:layout_marginEnd="16dp"-->
 <!--                app:layout_constraintEnd_toEndOf="parent"-->
 <!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/order_details_ship_label_tv" />-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tvOrderShipping" />-->
 
 <!--            <TextView-->
 <!--                android:id="@+id/order_details_payment_label_tv"-->
@@ -149,4 +162,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+
+
 </RelativeLayout>

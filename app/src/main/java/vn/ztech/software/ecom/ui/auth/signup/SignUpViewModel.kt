@@ -78,7 +78,7 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
                                         ArrayList(),
                                         ArrayList(),
                                         ArrayList(),
-                                        ArrayList(),
+//                                        ArrayList(),
                                         /**if (isSeller) UserType.SELLER.name else */
                                         /**if (isSeller) UserType.SELLER.name else */
                                     )
