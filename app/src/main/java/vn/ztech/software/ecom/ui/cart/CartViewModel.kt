@@ -26,6 +26,8 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
     val adjustProductStatus = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()
 
+    val priceData = MutableLiveData<PriceData>()
+
     fun addProductToCart(productId: String?, isLoadingEnabled: Boolean = true) {
         productId?:throw CustomError(customMessage = "System error")
         viewModelScope.launch {
@@ -100,6 +102,7 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
                         if(isLoadingEnabled) loading.value = true
                     }
                     is LoadState.Loaded -> {
+                        updatePriceData(it.data.toMutableList())
                         loading.value = false
                         products.value = it.data.toMutableList()
                         Log.d("getListProductsInCart", products.value.toString())
@@ -112,4 +115,20 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
             }
         }
     }
+
+    private fun updatePriceData(products: MutableList<CartProductResponse>?) {
+        var sum = 0
+        products?.let{
+            it.forEach {
+                sum+=it.price*it.quantity
+            }
+            priceData.value = PriceData(it.size, sum)
+            Log.d("CartViewModel", priceData.value?.subTotal.toString())
+        }
+    }
+
+    inner class PriceData(
+        var numberOfItem: Int,
+        var subTotal: Int,
+    )
 }

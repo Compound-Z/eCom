@@ -26,6 +26,7 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_list_product_in_category.xml" value="0.161231884057971" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_list_products_in_category.xml" value="0.161231884057971" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_login.xml" value="0.22" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order.xml" value="0.11979166666666667" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order_success.xml" value="0.1" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_product_details.xml" value="0.1962962962962963" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_signup.xml" value="0.25" />
@@ -41,7 +42,9 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_list_products_in_category_top_app_bar.xml" value="0.161231884057971" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_loader_card.xml" value="0.22" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_no_icon_app_bar.xml" value="0.16354166666666667" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_price_card.xml" value="0.22" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_top_bar.xml" value="0.1" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/order_list_item.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/menu/app_bar_menu.xml" value="0.1" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.22" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/menu/home_app_bar_menu.xml" value="0.12916666666666668" />

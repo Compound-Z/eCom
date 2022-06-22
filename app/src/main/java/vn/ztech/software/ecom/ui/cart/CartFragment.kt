@@ -6,11 +6,16 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Typeface
+import androidx.recyclerview.widget.ConcatAdapter
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
@@ -18,6 +23,7 @@ import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.FragmentCartBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
+import vn.ztech.software.ecom.databinding.LayoutPriceCardBinding
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
@@ -30,7 +36,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
     private val viewModel: CartViewModel by viewModel()
     private val productDetailsViewModel: ProductDetailsViewModel by viewModel()
     private lateinit var itemsAdapter: CartItemAdapter
-
+    private lateinit var concatAdapter: ConcatAdapter
 
     override fun setViewBinding(): FragmentCartBinding {
         return FragmentCartBinding.inflate(layoutInflater)
@@ -48,14 +54,27 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
         binding.cartAppBar.topAppBar.title = getString(R.string.cart_fragment_label)
         binding.cartEmptyTextView.visibility = View.GONE
         binding.cartCheckOutBtn.setOnClickListener {
-//            navigateToSelectAddress()
+            navigateToOrderFragment(viewModel.products.value?: emptyList())
         }
         if (context != null) {
             setItemsAdapter(viewModel.products.value?: emptyList())
-//            concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter())
-            binding.cartProductsRecyclerView.adapter = itemsAdapter
+            concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter(viewModel.priceData.value))
+            binding.cartProductsRecyclerView.adapter = concatAdapter
         }
     }
+
+    private fun navigateToOrderFragment(products: List<CartProductResponse>) {
+        if (products.isEmpty()){
+            Toast.makeText(context, "Cart is empty, please go shopping!", Toast.LENGTH_LONG).show()
+        }else{
+            Log.d("xxxxx", ArrayList(products).toString())
+            findNavController().navigate(
+                R.id.action_cartFragment_to_orderFragment,
+                bundleOf("products" to ArrayList(products))
+            )
+        }
+    }
+
     override fun observeView() {
         super.observeView()
         viewModel.loading.observe(viewLifecycleOwner){
@@ -155,8 +174,8 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
         itemsAdapter.apply {
             this.products = products
         }
-//        concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter())
-        binding.cartProductsRecyclerView.adapter = itemsAdapter
+        concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter(viewModel.priceData.value))
+        binding.cartProductsRecyclerView.adapter = concatAdapter
         binding.cartProductsRecyclerView.adapter?.notifyDataSetChanged()
     }
 
@@ -167,70 +186,6 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
         viewModel.addProductStatus.value = false
     }
 
-//
-//        orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
-//            when (status) {
-//                StoreDataStatus.LOADING -> {
-//                    binding.cartProductsRecyclerView.visibility = View.GONE
-//                    binding.cartCheckOutBtn.visibility = View.GONE
-//                    binding.cartEmptyTextView.visibility = View.GONE
-//                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
-//                    binding.loaderLayout.circularLoader.showAnimationBehavior
-//                }
-//                else -> {
-//                    binding.loaderLayout.circularLoader.hideAnimationBehavior
-//                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-//                }
-//            }
-//        }
-//        orderViewModel.dataStatus.observe(viewLifecycleOwner) { status ->
-//            if (status != null && status != StoreDataStatus.LOADING) {
-//                orderViewModel.cartProducts.observe(viewLifecycleOwner) { itemList ->
-//                    if (itemList.isNotEmpty()) {
-//                        updateAdapter()
-//                        binding.cartEmptyTextView.visibility = View.GONE
-//                        binding.cartProductsRecyclerView.visibility = View.VISIBLE
-//                        binding.cartCheckOutBtn.visibility = View.VISIBLE
-//                    } else if (itemList.isEmpty()) {
-//                        binding.cartProductsRecyclerView.visibility = View.GONE
-//                        binding.cartCheckOutBtn.visibility = View.GONE
-//                        binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-//                        binding.loaderLayout.circularLoader.hideAnimationBehavior
-//                        binding.cartEmptyTextView.visibility = View.VISIBLE
-//                    }
-//                }
-//            }
-//        }
-//        orderViewModel.cartItems.observe(viewLifecycleOwner) { items ->
-//            if (items.isNotEmpty()) {
-//                updateAdapter()
-//            }
-//        }
-//        orderViewModel.priceList.observe(viewLifecycleOwner) {
-//            if (it.isNotEmpty()) {
-//                updateAdapter()
-//            }
-//        }
-//        orderViewModel.userLikes.observe(viewLifecycleOwner) {
-//            if (it.isNotEmpty()) {
-//                updateAdapter()
-//            }
-//        }
-
-//    private lateinit var itemsAdapter: CartItemAdapter
-//    private lateinit var concatAdapter: ConcatAdapter
-//
-
-
-//
-
-//
-//
-//
-//    private fun navigateToSelectAddress() {
-//        findNavController().navigate(R.id.action_cartFragment_to_selectAddressFragment)
-//    }
-//
     private fun showDeleteDialog(itemId: String, itemBinding: LayoutCircularLoaderBinding) {
         context?.let {
             MaterialAlertDialogBuilder(it)
@@ -250,40 +205,37 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
                 .show()
         }
     }
-//
-//    inner class PriceCardAdapter : RecyclerView.Adapter<PriceCardAdapter.ViewHolder>() {
-//
-//        inner class ViewHolder(private val priceCardBinding: LayoutPriceCardBinding) :
-//            RecyclerView.ViewHolder(priceCardBinding.root) {
-//            fun bind() {
-//                priceCardBinding.priceItemsLabelTv.text = getString(
-//                    R.string.price_card_items_string,
-//                    orderViewModel.getItemsCount().toString()
-//                )
-//                priceCardBinding.priceItemsAmountTv.text =
-//                    getString(R.string.price_text, orderViewModel.getItemsPriceTotal().toString())
-//                priceCardBinding.priceShippingAmountTv.text = getString(R.string.price_text, "0")
-//                priceCardBinding.priceChargesAmountTv.text = getString(R.string.price_text, "0")
-//                priceCardBinding.priceTotalAmountTv.text =
-//                    getString(R.string.price_text, orderViewModel.getItemsPriceTotal().toString())
-//            }
-//        }
-//
-//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-//            return ViewHolder(
-//                LayoutPriceCardBinding.inflate(
-//                    LayoutInflater.from(parent.context),
-//                    parent,
-//                    false
-//                )
-//            )
-//        }
-//
-//        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//            holder.bind()
-//        }
-//
-//        override fun getItemCount() = 1
-//    }
+
+    inner class PriceCardAdapter(val priceData: CartViewModel.PriceData?) : RecyclerView.Adapter<PriceCardAdapter.ViewHolder>() {
+
+        inner class ViewHolder(private val priceCardBinding: LayoutPriceCardBinding) :
+            RecyclerView.ViewHolder(priceCardBinding.root) {
+            fun bind() {
+                priceCardBinding.priceItemsLabelTv.text = getString(
+                    R.string.price_card_items_string,
+                    priceData?.numberOfItem.toString()
+                )
+                priceCardBinding.priceItemsAmountTv.text =
+                    getString(R.string.price_text, priceData?.subTotal.toString())
+                priceCardBinding.priceTotalAmountTv.text = getString(R.string.price_text, viewModel.priceData.value?.subTotal.toString())
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            return ViewHolder(
+                LayoutPriceCardBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bind()
+        }
+
+        override fun getItemCount() = 1
+    }
 
 }

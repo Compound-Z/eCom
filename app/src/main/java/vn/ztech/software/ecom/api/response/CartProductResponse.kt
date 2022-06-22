@@ -1,5 +1,9 @@
 package vn.ztech.software.ecom.api.response
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 class CartProductResponse(
     val _id: String,
     val name: String,
@@ -13,4 +17,4 @@ class CartProductResponse(
     val quantity: Int,
     val averageRating: Int,
     val productId: String,
-)
+): Parcelable

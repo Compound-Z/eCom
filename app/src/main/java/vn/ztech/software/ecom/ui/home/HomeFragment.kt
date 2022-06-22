@@ -193,7 +193,7 @@ class HomeFragment : Fragment() {
                 Log.d("XXXX", productData.toString())
                 findNavController().navigate(
                     R.id.action_seeProduct,
-                    bundleOf("product" to productData)
+                    bundleOf("product" to productData, "ADD_TO_CART_BUTTON_ENABLED" to true)
                 )
             }
 
