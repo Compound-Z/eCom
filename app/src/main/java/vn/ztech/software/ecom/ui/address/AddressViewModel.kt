@@ -22,12 +22,14 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
     val loading = MutableLiveData<Boolean>()
     val addresses = MutableLiveData<Address>()
     val addAddressStatus = MutableLiveData<Boolean>()
+    val updateAddressStatus = MutableLiveData<Boolean>()
+
     val deleteAddressStatus = MutableLiveData<Boolean>()
     val editAddressStatus = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()
     val uiError = MutableLiveData<List<AddAddressViewErrors>>()
     val isEdit = MutableLiveData<Boolean>()
-    val currentSelectedAddress = MutableLiveData<AddressItem>()
+    val currentSelectedAddressItem = MutableLiveData<AddressItem>()
     val provinces = MutableLiveData<List<Province>>()
     val districts = MutableLiveData<List<District>>()
     val wards = MutableLiveData<List<Ward>>()
@@ -225,7 +227,7 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
                 isDefaultAddress = isSelectedAsDefaultAddress
                 )
             if (isEdit.value == true) {
-                updateAddress(addressRequest)
+                updateAddress(currentSelectedAddressItem.value?._id?:"x", addressRequest)
             } else {
                 addAddress(addressRequest)
             }
@@ -252,8 +254,25 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
             }
         }
     }
-    private fun updateAddress(addressRequest: AddAddressRequest){
-        Log.d("ADDRESS", "update ${addressRequest}")
-
+    private fun updateAddress(addressItemId: String, addressRequest: AddAddressRequest, isLoadingEnabled: Boolean = true){
+        viewModelScope.launch {
+            addressUseCase.updateAddress(addressItemId, addressRequest).flowOn(Dispatchers.IO).toLoadState().collect {
+                when(it){
+                    LoadState.Loading -> {
+                        if(isLoadingEnabled) loading.value = true
+                    }
+                    is LoadState.Loaded -> {
+                        loading.value = false
+                        updateAddressStatus.value = true
+                        addresses.value = it.data
+                    }
+                    is LoadState.Error -> {
+                        loading.value = false
+                        updateAddressStatus.value = false
+                        error.value = errorMessage(it.e)
+                    }
+                }
+            }
+        }
     }
 }

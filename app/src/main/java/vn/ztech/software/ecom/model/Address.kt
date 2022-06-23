@@ -25,21 +25,27 @@ data class AddressItem(
 data class District(
     val _id: String,
     val code: String,
+    val districtId: Int,
     val district_id: Int,
     val name: String,
+    val provinceId: Int,
     val province_id: Int
+
 ):Parcelable
 @Parcelize
 data class Province(
     val _id: String,
     val code: String,
     val name: String,
+    val provinceId: Int,
     val province_id: Int
+
 ):Parcelable
 @Parcelize
 data class Ward(
     val _id: String,
     val code: String,
+    val districtId: Int,
     val district_id: Int,
     val name: String
 ):Parcelable

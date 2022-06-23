@@ -16,8 +16,8 @@ interface IAddressUseCase{
     suspend fun getDistricts(provinceId: Int): Flow<List<District>>
     suspend fun getWards(districtId: Int): Flow<List<Ward>>
     suspend fun addAddress(addAddressRequest: AddAddressRequest): Flow<Address>
-//    suspend fun editAddress(productId: String, quantity: Int): Flow<BasicResponse>
-//    suspend fun deleteAddress(productId: String): Flow<BasicResponse>
+    suspend fun updateAddress(addressItemId: String, addAddressRequest: AddAddressRequest): Flow<Address>
+    suspend fun deleteAddress(addressItemId: String): Flow<BasicResponse>
 }
 
 class AddressUseCase(private val addressRepository: IAddressRepository): IAddressUseCase{
@@ -43,15 +43,12 @@ class AddressUseCase(private val addressRepository: IAddressRepository): IAddres
         emit(addressRepository.addAddress(addAddressRequest))
     }
 //
-//    override suspend fun editAddress(
-//        productId: String,
-//        quantity: Int
-//    ): Flow<BasicResponse> = flow {
-//        emit(addressRepository.editAddress(productId, quantity))
-//    }
-//
-//    override suspend fun deleteAddress(productId: String): Flow<BasicResponse> = flow {
-//        emit(addressRepository.deleteAddress(productId))
-//    }
+    override suspend fun updateAddress(addressItemId: String, addAddressRequest: AddAddressRequest): Flow<Address> = flow {
+        emit(addressRepository.updateAddress(addressItemId, addAddressRequest))
+    }
+
+    override suspend fun deleteAddress(addressItemId: String): Flow<BasicResponse> = flow {
+        emit(addressRepository.deleteAddress(addressItemId))
+    }
 
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
@@ -17,12 +18,14 @@ private const val TAG = "AddressAdapter"
 class AddressAdapter(
 	private val context: Context,
 	addressItems: List<AddressItem>,
+	defaultAddressId: String,
 	private val isSelect: Boolean
 ) :
 	RecyclerView.Adapter<AddressAdapter.ViewHolder>() {
 
 	lateinit var onClickListener: OnClickListener
 	var data: List<AddressItem> = addressItems
+	var defaultAddressId = defaultAddressId
 
 	var lastCheckedAddress: String? = null
 	private var lastCheckedCard: MaterialCardView? = null
@@ -41,8 +44,15 @@ class AddressAdapter(
 					onCardClick(position, address._id, it as MaterialCardView)
 				}
 			}
+			if (defaultAddressId == address._id){
+				binding.ivFlag.visibility = View.VISIBLE
+				binding.tvDefaultAddressLabel.visibility = View.VISIBLE
+			}else{
+				binding.ivFlag.visibility = View.GONE
+				binding.tvDefaultAddressLabel.visibility = View.GONE
+			}
 			binding.addressEditBtn.setOnClickListener {
-				onClickListener.onEditClick(address._id)
+				onClickListener.onEditClick(address)
 			}
 			binding.addressDeleteBtn.setOnClickListener {
 				onClickListener.onDeleteClick(address._id)
@@ -68,7 +78,7 @@ class AddressAdapter(
 	override fun getItemCount(): Int = data.size
 
 	interface OnClickListener {
-		fun onEditClick(addressId: String)
+		fun onEditClick(addressItem: AddressItem)
 		fun onDeleteClick(addressId: String)
 	}
 	

@@ -12,6 +12,7 @@ import vn.ztech.software.ecom.ui.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.model.Address
 import vn.ztech.software.ecom.model.AddressItem
+import vn.ztech.software.ecom.util.extension.checkIsDefaultAddress
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 
@@ -47,11 +48,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
         if (context != null) {
             val addressItems = viewModel.addresses.value?.addresses ?: emptyList<AddressItem>()
-            addressAdapter = AddressAdapter(requireContext(), addressItems, false)
+            val defaultAddressId = viewModel.addresses.value?.defaultAddressId?:""
+            addressAdapter = AddressAdapter(requireContext(), addressItems, defaultAddressId,false)
             addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
-                override fun onEditClick(addressId: String) {
-                    Log.d(TAG, "onEditAddress: initiated")
-                    navigateToAddEditAddress(true, addressId)
+
+                override fun onEditClick(addressItem: AddressItem) {
+                    navigateToAddEditAddress(true, addressItem)
                 }
 
                 override fun onDeleteClick(addressId: String) {
@@ -85,6 +87,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
             it?.let {
                 if(it.addresses.isNotEmpty()){
                     addressAdapter.data = it.addresses
+                    addressAdapter.defaultAddressId = it.defaultAddressId
                     binding.addressAddressesRecyclerView.adapter = addressAdapter
                     binding.addressAddressesRecyclerView.adapter?.notifyDataSetChanged()
                 }else {
@@ -120,10 +123,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 //        }
     }
 
-    private fun navigateToAddEditAddress(isEdit: Boolean, addressId: String? = null) {
+    private fun navigateToAddEditAddress(isEdit: Boolean, addressItem: AddressItem? = null) {
         findNavController().navigate(
             R.id.action_addressFragment_to_addEditAddressFragment,
-            bundleOf("isEdit" to isEdit, "addressId" to addressId)
+            bundleOf("isEdit" to isEdit,
+                "ADDRESS_ITEM" to addressItem,
+                "IS_DEFAULT_ADDRESS" to viewModel.addresses.value?.checkIsDefaultAddress(addressItem))
         )
         android.util.Patterns.PHONE
     }

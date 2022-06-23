@@ -10,12 +10,10 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_add_edit_address.view.*
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentAddEditAddressBinding
-import vn.ztech.software.ecom.model.AddressItem
-import vn.ztech.software.ecom.model.District
-import vn.ztech.software.ecom.model.Province
-import vn.ztech.software.ecom.model.Ward
+import vn.ztech.software.ecom.model.*
 import vn.ztech.software.ecom.ui.AddAddressViewErrors
 import vn.ztech.software.ecom.ui.BaseFragment
+import vn.ztech.software.ecom.util.extension.findPos
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 private const val TAG = "AddAddressFragment"
@@ -25,6 +23,11 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 	private val viewModel:AddressViewModel by viewModel()
 
 	private  var isEdit = false
+	private  var isDefaultAddress = false
+
+	private var isAddedSelectedAddressToProvinces = false
+	private var isAddedSelectedAddressToDistricts = false
+	private var isAddedSelectedAddressToWards = false
 
 	override fun setViewBinding(): FragmentAddEditAddressBinding {
 		return FragmentAddEditAddressBinding.inflate(layoutInflater)
@@ -34,21 +37,29 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 		super.onViewCreated(view, savedInstanceState)
 
 		isEdit = arguments?.getBoolean("isEdit")?:false
+		isDefaultAddress = arguments?.getBoolean("IS_DEFAULT_ADDRESS")?:false
 		if(isEdit){
 			viewModel.isEdit.value = isEdit
 			val addressItem = arguments?.getParcelable("ADDRESS_ITEM") as AddressItem?
 			addressItem?.let {
-				viewModel.currentSelectedAddress.value = addressItem
+				viewModel.currentSelectedAddressItem.value = addressItem
+				fillDataInViews(addressItem)
 			}
+		}else{
+			isAddedSelectedAddressToProvinces = true
+			isAddedSelectedAddressToDistricts = true
+			isAddedSelectedAddressToWards = true
 		}
 		if (!isEdit) {
 			binding.addAddressTopAppBar.topAppBar.title = "Add Address"
+			binding.addAddressSaveBtn.text = "Add Address"
 		} else {
 			binding.addAddressTopAppBar.topAppBar.title = "Edit Address"
+			binding.addAddressSaveBtn.text = "Update Address"
 		}
 
-		// get list provinces
-		viewModel.getProvinces()
+		if(viewModel.provinces.value == null) viewModel.getProvinces()
+
 	}
 
 	override fun setUpViews() {
@@ -110,7 +121,7 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 						if(binding.spinnerProvinces.getItemAtPosition(p2).toString().isNotEmpty()
 							&& p2!=preSelectedPos){
 							preSelectedPos = p2
-							viewModel.getDistricts(viewModel.provinces.value?.get(p2)?.province_id?:-1)
+							viewModel.getDistricts(viewModel.provinces.value?.get(p2-1)?.province_id?:-1)
 							//clear values in district, ward spinner
 							binding.spinnerDistricts.adapter = null
 							binding.spinnerWards.adapter = null
@@ -131,7 +142,7 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 					override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
 						if(binding.spinnerDistricts.getItemAtPosition(p2).toString().isNotEmpty()
 							&& p2!=preSelectedPos){
-							viewModel.getWards(viewModel.districts.value?.get(p2)?.district_id?:-1)
+							viewModel.getWards(viewModel.districts.value?.get(p2-1)?.district_id?:-1)
 							//clear data in spinnerWard
 							binding.spinnerWards.adapter = null
 						}
@@ -158,6 +169,21 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 			}
 		}
 		viewModel.addAddressStatus.observe(viewLifecycleOwner){
+			it?.let {
+				if(it){
+					binding.etName.onFocusChangeListener = null
+					binding.etPhoneNumber.onFocusChangeListener = null
+					binding.etDetailedAddress.onFocusChangeListener = null
+					//navigate back to list address, send an Address obj with
+					findNavController().navigate(
+						R.id.action_addEditAddressFragment_to_addressFragment,
+						bundleOf(
+							"address" to viewModel.addresses.value
+						))
+				}
+			}
+		}
+		viewModel.updateAddressStatus.observe(viewLifecycleOwner){
 			it?.let {
 				if(it){
 					binding.etName.onFocusChangeListener = null
@@ -218,49 +244,79 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 	private fun populateProvinceToSpinner(spinnerProvinces: Spinner, it: List<Province>, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
 		val listProvinces = mutableListOf<String>()
 		it.forEach { listProvinces.add(it.name) }
-		listProvinces.add("")
-		val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
-		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-		spinnerProvinces.adapter = adapter
-		spinnerProvinces.onItemSelectedListener = onItemSelectedListener
-		spinnerProvinces.setSelection(listProvinces.size-1)
+		if (isAddedSelectedAddressToProvinces){
+			listProvinces.add(0,"")
+			val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
+			adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+			spinnerProvinces.adapter = adapter
+			spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+			spinnerProvinces.setSelection(0)
+		}else{
+			val currentProvincePos = it.findPos(viewModel.currentSelectedAddressItem.value?.province?.provinceId!!)
+			listProvinces.add(0,"")
+			val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
+			adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+			spinnerProvinces.adapter = adapter
+			spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+			if(!isAddedSelectedAddressToProvinces)spinnerProvinces.setSelection(currentProvincePos+1)
+			isAddedSelectedAddressToProvinces = true
+		}
 	}
 	private fun populateDistrictToSpinner(spinnerProvinces: Spinner, it: List<District>, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
-		val listProvinces = mutableListOf<String>()
-		it.forEach { listProvinces.add(it.name) }
-		listProvinces.add("")
-		val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
-		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-		spinnerProvinces.adapter = adapter
-		spinnerProvinces.onItemSelectedListener = onItemSelectedListener
-		spinnerProvinces.setSelection(listProvinces.size-1)
+		val listDistricts = mutableListOf<String>()
+		it.forEach { listDistricts.add(it.name) }
+		if (isAddedSelectedAddressToDistricts){
+			listDistricts.add(0,"")
+			val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listDistricts.toTypedArray())
+			adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+			spinnerProvinces.adapter = adapter
+			spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+			spinnerProvinces.setSelection(0)
+		}else{
+			val currentDistrictPos = it.findPos(viewModel.currentSelectedAddressItem.value?.district?.districtId!!)
+			//this flag ensure that only one item is added to the list, otherwise this will lead to an infinite loop
+			listDistricts.add(0,"")
+			val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listDistricts.toTypedArray())
+			adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+			spinnerProvinces.adapter = adapter
+			spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+			if(!isAddedSelectedAddressToDistricts) spinnerProvinces.setSelection(currentDistrictPos+1)
+			isAddedSelectedAddressToDistricts = true
+		}
 	}
 	private fun populateWardToSpinner(spinnerProvinces: Spinner, it: List<Ward>, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
-		val listProvinces = mutableListOf<String>()
-		it.forEach { listProvinces.add(it.name) }
-		listProvinces.add("")
-		val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
-		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
-		spinnerProvinces.adapter = adapter
-		spinnerProvinces.onItemSelectedListener = onItemSelectedListener
-		spinnerProvinces.setSelection(listProvinces.size-1)
+		val listWards = mutableListOf<String>()
+		it.forEach { listWards.add(it.name) }
+		if (isAddedSelectedAddressToWards){
+			listWards.add(0,"")
+			val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listWards.toTypedArray())
+			adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+			spinnerProvinces.adapter = adapter
+			spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+			spinnerProvinces.setSelection(0)
+		}else{
+			val currentWardPos = it.findPos(viewModel.currentSelectedAddressItem.value?.ward?.code!!)
+			//this flag ensure that only one item is added to the list, otherwise this will lead to an infinite loop
+			listWards.add(0,"")
+			val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listWards.toTypedArray())
+			adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+			spinnerProvinces.adapter = adapter
+			spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+			if(!isAddedSelectedAddressToWards) spinnerProvinces.setSelection(currentWardPos+1)
+			isAddedSelectedAddressToWards = true
+		}
 	}
-//		private fun fillDataInViews() {
-//			viewModel.addressData.value?.let { address ->
-//				binding.addAddressTopAppBar.topAppBar.title = "Edit Address"
-//				val countryName = getISOCountriesMap()[address.countryISOCode]
-//				binding.addressCountryEditText.setText(countryName, false)
-//				binding.addressFirstNameEditText.setText(address.fName)
-//				binding.addressLastNameEditText.setText(address.lName)
-//				binding.addressStreetAddEditText.setText(address.streetAddress)
-//				binding.addressStreetAdd2EditText.setText(address.streetAddress2)
-//				binding.addressCityEditText.setText(address.city)
-//				binding.addressStateEditText.setText(address.state)
-//				binding.addressZipcodeEditText.setText(address.zipCode)
-//				binding.addressPhoneEditText.setText(address.phoneNumber.substringAfter("+91"))
-//				binding.addAddressSaveBtn.setText(R.string.save_address_btn_text)
-//			}
-//		}
+	private fun fillDataInViews(addressItem: AddressItem?) {
+		addressItem?.let {
+			binding.addAddressTopAppBar.topAppBar.title = "Edit Address"
+			binding.etName.setText(addressItem.receiverName)
+			binding.etPhoneNumber.setText(addressItem.receiverPhoneNumber)
+			binding.etDetailedAddress.setText(addressItem.detailedAddress)
+			binding.addAddressSaveBtn.setText(R.string.save_address_btn_text)
+			binding.cbIsDefaultAddress.isChecked = isDefaultAddress
+		}
+
+	}
 //
 //		private fun makeToast(errText: String) {
 //			Toast.makeText(context, errText, Toast.LENGTH_LONG).show()
@@ -278,11 +334,11 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 		private fun onAddAddress() {
 			val receiverName = binding.etName.text.toString()
 			val receiverPhoneNumber = binding.etPhoneNumber.text.toString()
-			val provincePos = binding.spinnerProvinces.selectedItemPosition
+			val provincePos = binding.spinnerProvinces.selectedItemPosition-1
 			val provinceName = binding.spinnerProvinces.selectedItem?.toString()
-			val districtPos = binding.spinnerDistricts.selectedItemPosition
+			val districtPos = binding.spinnerDistricts.selectedItemPosition-1
 			val districtName = binding.spinnerDistricts.selectedItem?.toString()
-			val wardPos = binding.spinnerWards.selectedItemPosition
+			val wardPos = binding.spinnerWards.selectedItemPosition-1
 			val wardName = binding.spinnerWards.selectedItem?.toString()
 			val detailedAddress = binding.etDetailedAddress.text.toString()
 			val isSelectedAsDefaultAddress = binding.cbIsDefaultAddress.isChecked
@@ -344,5 +400,13 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 		private fun setSpinnerError(tvError: TextView){
 			tvError.visibility = View.VISIBLE
 		}
+
+	override fun onStop() {
+		super.onStop()
+		isEdit = false
+		isAddedSelectedAddressToProvinces = false
+		isAddedSelectedAddressToDistricts = false
+		isAddedSelectedAddressToWards = false
+	}
 
 	}

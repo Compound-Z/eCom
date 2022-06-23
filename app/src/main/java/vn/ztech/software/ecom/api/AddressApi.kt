@@ -23,10 +23,8 @@ interface IAddressApi{
     suspend fun getWards(@Path("districtId") districtId: Int): List<Ward>
     @POST("/api/v1/addresses")
     suspend fun addAddress(@Body request: AddAddressRequest): Address
-
-//    @PATCH("/api/v1/addresses/{productId}")
-//    suspend fun adjustProductQuantityInCart(@Path("productId")productId: String, @Body request: AdjustProductQuantityRequest): BasicResponse
-//
-//    @DELETE("/api/v1/addresses/{productId}")
-//    suspend fun deleteProductFromCart(@Path("productId") productId: String): BasicResponse
+    @PATCH("/api/v1/addresses/{addressItemId}")
+    suspend fun updateAddress(@Path("addressItemId")addressItemId: String, @Body request: AddAddressRequest): Address
+    @DELETE("/api/v1/addresses/{productId}")
+    suspend fun deleteAddress(@Path("addressItemId") addressItemId: String): BasicResponse
 }
