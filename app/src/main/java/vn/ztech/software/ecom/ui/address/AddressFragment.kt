@@ -10,6 +10,7 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentAddressBinding
 import vn.ztech.software.ecom.ui.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.model.Address
 import vn.ztech.software.ecom.model.AddressItem
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
@@ -24,7 +25,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getAddresses()
+        val address = arguments?.getParcelable<Address?>("address")
+        if (address != null){
+            viewModel.addresses.value = address
+        }else{
+            viewModel.getAddresses()
+        }
     }
 
 

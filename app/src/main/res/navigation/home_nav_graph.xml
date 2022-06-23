@@ -101,6 +101,11 @@
             android:name="addressId"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_addEditAddressFragment_to_addressFragment"
+            app:popUpTo="@id/addressFragment"
+            app:popUpToInclusive="true"
+            app:destination="@id/addressFragment" />
     </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/favoritesFragment"-->
@@ -162,8 +167,10 @@
         android:id="@+id/addressFragment"
         android:name="vn.ztech.software.ecom.ui.address.AddressFragment"
         android:label="fragment_order"
-        tools:layout="@layout/fragment_order"
-        >
+        tools:layout="@layout/fragment_order">
+        <argument
+            android:name="address"
+            app:nullable="true" />
         <action
             android:id="@+id/action_addressFragment_to_addEditAddressFragment"
             app:destination="@id/addEditAddressFragment" />

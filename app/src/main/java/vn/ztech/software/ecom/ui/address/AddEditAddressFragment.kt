@@ -3,10 +3,12 @@ package vn.ztech.software.ecom.ui.address
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_add_edit_address.view.*
+import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentAddEditAddressBinding
 import vn.ztech.software.ecom.model.AddressItem
 import vn.ztech.software.ecom.model.District
@@ -14,6 +16,7 @@ import vn.ztech.software.ecom.model.Province
 import vn.ztech.software.ecom.model.Ward
 import vn.ztech.software.ecom.ui.AddAddressViewErrors
 import vn.ztech.software.ecom.ui.BaseFragment
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 private const val TAG = "AddAddressFragment"
 
@@ -93,7 +96,11 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 				modifyErrors(errList)
 			}
 		}
-
+		viewModel.error.observe(viewLifecycleOwner){
+			it?.let {
+				showErrorDialog(it)
+			}
+		}
 		viewModel.provinces.observe(viewLifecycleOwner){
 			it?.let {
 				//populate data to spinner
@@ -148,6 +155,21 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 						TODO("Not yet implemented")
 					}
 				})
+			}
+		}
+		viewModel.addAddressStatus.observe(viewLifecycleOwner){
+			it?.let {
+				if(it){
+					binding.etName.onFocusChangeListener = null
+					binding.etPhoneNumber.onFocusChangeListener = null
+					binding.etDetailedAddress.onFocusChangeListener = null
+					//navigate back to list address, send an Address obj with
+					findNavController().navigate(
+						R.id.action_addEditAddressFragment_to_addressFragment,
+						bundleOf(
+							"address" to viewModel.addresses.value
+						))
+				}
 			}
 		}
 

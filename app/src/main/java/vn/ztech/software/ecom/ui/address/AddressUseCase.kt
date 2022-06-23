@@ -2,6 +2,7 @@ package vn.ztech.software.ecom.ui.address
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import vn.ztech.software.ecom.api.request.AddAddressRequest
 import vn.ztech.software.ecom.api.response.BasicResponse
 import vn.ztech.software.ecom.model.Address
 import vn.ztech.software.ecom.model.District
@@ -14,44 +15,43 @@ interface IAddressUseCase{
     suspend fun getProvinces(): Flow<List<Province>>
     suspend fun getDistricts(provinceId: Int): Flow<List<District>>
     suspend fun getWards(districtId: Int): Flow<List<Ward>>
-
-//    suspend fun addAddress(productId: String): Flow<BasicResponse>
+    suspend fun addAddress(addAddressRequest: AddAddressRequest): Flow<Address>
 //    suspend fun editAddress(productId: String, quantity: Int): Flow<BasicResponse>
 //    suspend fun deleteAddress(productId: String): Flow<BasicResponse>
 }
 
-class AddressUseCase(private val cartRepository: IAddressRepository): IAddressUseCase{
+class AddressUseCase(private val addressRepository: IAddressRepository): IAddressUseCase{
     override suspend fun getAddresses(): Flow<Address> = flow{
-        val listProducts = cartRepository.getAddresses()
+        val listProducts = addressRepository.getAddresses()
         emit(listProducts)
     }
     override suspend fun getProvinces(): Flow<List<Province>> = flow{
-        val provinces = cartRepository.getProvinces()
+        val provinces = addressRepository.getProvinces()
         emit(provinces)
     }
 
     override suspend fun getDistricts(provinceId: Int): Flow<List<District>> = flow{
-        val districts = cartRepository.getDistricts(provinceId)
+        val districts = addressRepository.getDistricts(provinceId)
         emit(districts)
     }
     override suspend fun getWards(districtId: Int): Flow<List<Ward>> = flow{
-        val districts = cartRepository.getWards(districtId)
+        val districts = addressRepository.getWards(districtId)
         emit(districts)
     }
 
-//    override suspend fun addAddress(productId: String): Flow<BasicResponse> = flow {
-//        emit(cartRepository.addAddress(productId))
-//    }
+    override suspend fun addAddress(addAddressRequest: AddAddressRequest): Flow<Address> = flow {
+        emit(addressRepository.addAddress(addAddressRequest))
+    }
 //
 //    override suspend fun editAddress(
 //        productId: String,
 //        quantity: Int
 //    ): Flow<BasicResponse> = flow {
-//        emit(cartRepository.editAddress(productId, quantity))
+//        emit(addressRepository.editAddress(productId, quantity))
 //    }
 //
 //    override suspend fun deleteAddress(productId: String): Flow<BasicResponse> = flow {
-//        emit(cartRepository.deleteAddress(productId))
+//        emit(addressRepository.deleteAddress(productId))
 //    }
 
 }

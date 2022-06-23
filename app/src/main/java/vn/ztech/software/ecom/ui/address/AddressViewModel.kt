@@ -231,8 +231,26 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
             }
         }
     }
-    private fun addAddress(addressRequest: AddAddressRequest){
-        Log.d("ADDRESS", "add ${addressRequest}")
+    private fun addAddress(addressRequest: AddAddressRequest, isLoadingEnabled: Boolean = true){
+        viewModelScope.launch {
+            addressUseCase.addAddress(addressRequest).flowOn(Dispatchers.IO).toLoadState().collect {
+                when(it){
+                    LoadState.Loading -> {
+                        if(isLoadingEnabled) loading.value = true
+                    }
+                    is LoadState.Loaded -> {
+                        loading.value = false
+                        addAddressStatus.value = true
+                        addresses.value = it.data
+                    }
+                    is LoadState.Error -> {
+                        loading.value = false
+                        addAddressStatus.value = false
+                        error.value = errorMessage(it.e)
+                    }
+                }
+            }
+        }
     }
     private fun updateAddress(addressRequest: AddAddressRequest){
         Log.d("ADDRESS", "update ${addressRequest}")

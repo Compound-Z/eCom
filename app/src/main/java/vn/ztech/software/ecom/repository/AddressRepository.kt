@@ -1,6 +1,7 @@
 package vn.ztech.software.ecom.repository
 
 import vn.ztech.software.ecom.api.IAddressApi
+import vn.ztech.software.ecom.api.request.AddAddressRequest
 import vn.ztech.software.ecom.api.request.AddProductToCartRequest
 import vn.ztech.software.ecom.api.request.AdjustProductQuantityRequest
 import vn.ztech.software.ecom.api.response.BasicResponse
@@ -14,39 +15,38 @@ interface IAddressRepository{
     suspend fun getProvinces(): List<Province>
     suspend fun getDistricts(provinceId: Int): List<District>
     suspend fun getWards(districtId: Int): List<Ward>
-
-//    suspend fun addAddress(productId: String): BasicResponse
+    suspend fun addAddress(addAddressRequest: AddAddressRequest): Address
 //    suspend fun editAddress(productId: String, quantity: Int): BasicResponse
 //    suspend fun deleteAddress(productId: String): BasicResponse
 }
 
-class AddressRepository(private val cartApi: IAddressApi): IAddressRepository{
+class AddressRepository(private val addAddressApi: IAddressApi): IAddressRepository{
     override suspend fun getAddresses(): Address {
-        return cartApi.getAddresses()
+        return addAddressApi.getAddresses()
     }
     override suspend fun getProvinces(): List<Province> {
-        return cartApi.getProvinces()
+        return addAddressApi.getProvinces()
     }
     override suspend fun getDistricts(provinceId: Int): List<District> {
-        return cartApi.getDistricts(provinceId)
+        return addAddressApi.getDistricts(provinceId)
     }
     override suspend fun getWards(districtId: Int): List<Ward> {
-        return cartApi.getWards(districtId)
+        return addAddressApi.getWards(districtId)
     }
 
-//    override suspend fun addAddress(productId: String): BasicResponse {
-//        return cartApi.addAddress(AddProductToCartRequest(productId))
-//    }
-//
+    override suspend fun addAddress(addAddressRequest: AddAddressRequest): Address {
+        return addAddressApi.addAddress(addAddressRequest)
+    }
+
 //    override suspend fun editAddress(
 //        productId: String,
 //        quantity: Int
 //    ): BasicResponse {
-//        return cartApi.adjustProductQuantityInCart(productId, AdjustProductQuantityRequest(quantity))
+//        return addAddressApi.adjustProductQuantityInCart(productId, AdjustProductQuantityRequest(quantity))
 //    }
 //
 //    override suspend fun deleteAddress(productId: String): BasicResponse {
-//        return cartApi.deleteAddress(productId)
+//        return addAddressApi.deleteAddress(productId)
 //    }
 
 }
