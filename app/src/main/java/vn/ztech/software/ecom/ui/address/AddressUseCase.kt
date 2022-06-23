@@ -17,13 +17,13 @@ interface IAddressUseCase{
     suspend fun getWards(districtId: Int): Flow<List<Ward>>
     suspend fun addAddress(addAddressRequest: AddAddressRequest): Flow<Address>
     suspend fun updateAddress(addressItemId: String, addAddressRequest: AddAddressRequest): Flow<Address>
-    suspend fun deleteAddress(addressItemId: String): Flow<BasicResponse>
+    suspend fun deleteAddress(addressItemId: String): Flow<Address>
 }
 
 class AddressUseCase(private val addressRepository: IAddressRepository): IAddressUseCase{
     override suspend fun getAddresses(): Flow<Address> = flow{
-        val listProducts = addressRepository.getAddresses()
-        emit(listProducts)
+        val addresses = addressRepository.getAddresses()
+        emit(addresses)
     }
     override suspend fun getProvinces(): Flow<List<Province>> = flow{
         val provinces = addressRepository.getProvinces()
@@ -47,7 +47,7 @@ class AddressUseCase(private val addressRepository: IAddressRepository): IAddres
         emit(addressRepository.updateAddress(addressItemId, addAddressRequest))
     }
 
-    override suspend fun deleteAddress(addressItemId: String): Flow<BasicResponse> = flow {
+    override suspend fun deleteAddress(addressItemId: String): Flow<Address> = flow {
         emit(addressRepository.deleteAddress(addressItemId))
     }
 

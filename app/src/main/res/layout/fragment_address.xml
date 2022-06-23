@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/address_app_bar"
-        android:layout_marginBottom="72dp">
+        android:layout_marginBottom="100dp">
 
         <TextView
             android:id="@+id/address_empty_text_view"
@@ -59,21 +59,36 @@
             tools:itemCount="2"
             tools:listitem="@layout/layout_address_card" />
 
+        <Button
+            android:id="@+id/address_add_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:backgroundTint="#C7D5DF"
+            android:text="@string/add_address_btn_text"
+            app:layout_constraintTop_toBottomOf="@id/address_addresses_recycler_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:translationY="-8dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/address_add_btn"
+        android:id="@+id/btChooseAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginHorizontal="36dp"
+        android:layout_marginTop="36dp"
         android:backgroundTint="@color/blue_accent_300"
         android:padding="16dp"
-        android:text="@string/add_address_btn_text"
+        android:text="Choose"
         android:textAllCaps="false"
         android:textSize="16sp"
+        android:enabled="false"
         android:textStyle="bold"
         android:translationY="-8dp" />
 

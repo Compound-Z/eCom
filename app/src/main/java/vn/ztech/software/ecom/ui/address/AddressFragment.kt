@@ -45,11 +45,13 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
             navigateToAddEditAddress(false)
         }
         binding.addressEmptyTextView.visibility = View.GONE
-
+        binding.btChooseAddress.setOnClickListener {
+            navigateToOrderFragment()
+        }
         if (context != null) {
             val addressItems = viewModel.addresses.value?.addresses ?: emptyList<AddressItem>()
             val defaultAddressId = viewModel.addresses.value?.defaultAddressId?:""
-            addressAdapter = AddressAdapter(requireContext(), addressItems, defaultAddressId,false)
+            addressAdapter = AddressAdapter(requireContext(), addressItems, defaultAddressId,true)
             addressAdapter.onClickListener = object : AddressAdapter.OnClickListener {
 
                 override fun onEditClick(addressItem: AddressItem) {
@@ -60,9 +62,19 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                     Log.d(TAG, "onDeleteAddress: initiated")
                     showDeleteDialog(addressId)
                 }
+
+                override fun onClick() {
+                    binding.btChooseAddress.isEnabled = true
+                }
             }
             binding.addressAddressesRecyclerView.adapter = addressAdapter
         }
+    }
+
+    private fun navigateToOrderFragment() {
+        findNavController().navigate(R.id.action_addressFragment_to_orderFragment,
+            bundleOf("ADDRESS_ITEM" to addressAdapter.lastCheckedAddressItem)
+            )
     }
 
 
@@ -108,19 +120,19 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     }
 
     private fun showDeleteDialog(addressId: String) {
-//        context?.let {
-//            MaterialAlertDialogBuilder(it)
-//                .setTitle(getString(R.string.delete_dialog_title_text))
-//                .setMessage(getString(R.string.delete_address_message_text))
-//                .setNeutralButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
-//                    dialog.cancel()
-//                }
-//                .setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
-//                    viewModel.deleteAddress(addressId)
-//                    dialog.cancel()
-//                }
-//                .show()
-//        }
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle(getString(R.string.delete_dialog_title_text))
+                .setMessage(getString(R.string.delete_address_message_text))
+                .setNeutralButton(getString(R.string.pro_cat_dialog_cancel_btn)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .setPositiveButton(getString(R.string.delete_dialog_delete_btn_text)) { dialog, _ ->
+                    viewModel.deleteAddress(addressId)
+                    dialog.cancel()
+                }
+                .show()
+        }
     }
 
     private fun navigateToAddEditAddress(isEdit: Boolean, addressItem: AddressItem? = null) {

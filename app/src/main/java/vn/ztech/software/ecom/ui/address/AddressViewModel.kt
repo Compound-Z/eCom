@@ -23,9 +23,6 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
     val addresses = MutableLiveData<Address>()
     val addAddressStatus = MutableLiveData<Boolean>()
     val updateAddressStatus = MutableLiveData<Boolean>()
-
-    val deleteAddressStatus = MutableLiveData<Boolean>()
-    val editAddressStatus = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()
     val uiError = MutableLiveData<List<AddAddressViewErrors>>()
     val isEdit = MutableLiveData<Boolean>()
@@ -269,6 +266,25 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
                     is LoadState.Error -> {
                         loading.value = false
                         updateAddressStatus.value = false
+                        error.value = errorMessage(it.e)
+                    }
+                }
+            }
+        }
+    }
+    fun deleteAddress(addressItemId: String, isLoadingEnabled: Boolean = true){
+        viewModelScope.launch {
+            addressUseCase.deleteAddress(addressItemId).flowOn(Dispatchers.IO).toLoadState().collect {
+                when(it){
+                    LoadState.Loading -> {
+                        if(isLoadingEnabled) loading.value = true
+                    }
+                    is LoadState.Loaded -> {
+                        loading.value = false
+                        addresses.value = it.data
+                    }
+                    is LoadState.Error -> {
+                        loading.value = false
                         error.value = errorMessage(it.e)
                     }
                 }

@@ -17,7 +17,7 @@ interface IAddressRepository{
     suspend fun getWards(districtId: Int): List<Ward>
     suspend fun addAddress(addAddressRequest: AddAddressRequest): Address
     suspend fun updateAddress(addressItemId: String,addAddressRequest: AddAddressRequest): Address
-    suspend fun deleteAddress(addressItemId: String): BasicResponse
+    suspend fun deleteAddress(addressItemId: String): Address
 }
 
 class AddressRepository(private val addAddressApi: IAddressApi): IAddressRepository{
@@ -45,7 +45,7 @@ class AddressRepository(private val addAddressApi: IAddressApi): IAddressReposit
         return addAddressApi.updateAddress(addressItemId, addAddressRequest)
     }
 
-    override suspend fun deleteAddress(addressItemId: String): BasicResponse {
+    override suspend fun deleteAddress(addressItemId: String): Address {
         return addAddressApi.deleteAddress(addressItemId)
     }
 

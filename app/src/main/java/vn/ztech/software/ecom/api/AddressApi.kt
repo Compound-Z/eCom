@@ -25,6 +25,6 @@ interface IAddressApi{
     suspend fun addAddress(@Body request: AddAddressRequest): Address
     @PATCH("/api/v1/addresses/{addressItemId}")
     suspend fun updateAddress(@Path("addressItemId")addressItemId: String, @Body request: AddAddressRequest): Address
-    @DELETE("/api/v1/addresses/{productId}")
-    suspend fun deleteAddress(@Path("addressItemId") addressItemId: String): BasicResponse
+    @DELETE("/api/v1/addresses/{addressItemId}")
+    suspend fun deleteAddress(@Path("addressItemId") addressItemId: String): Address
 }

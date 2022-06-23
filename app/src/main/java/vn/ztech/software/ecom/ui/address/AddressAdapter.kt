@@ -26,8 +26,7 @@ class AddressAdapter(
 	lateinit var onClickListener: OnClickListener
 	var data: List<AddressItem> = addressItems
 	var defaultAddressId = defaultAddressId
-
-	var lastCheckedAddress: String? = null
+	var lastCheckedAddressItem: AddressItem? = null
 	private var lastCheckedCard: MaterialCardView? = null
 	var selectedAddressPos = -1
 
@@ -41,7 +40,7 @@ class AddressAdapter(
 			binding.addressMobileTv.text = address.receiverPhoneNumber
 			if (isSelect) {
 				binding.addressCard.setOnClickListener {
-					onCardClick(position, address._id, it as MaterialCardView)
+					onCardClick(position, address, it as MaterialCardView)
 				}
 			}
 			if (defaultAddressId == address._id){
@@ -80,11 +79,12 @@ class AddressAdapter(
 	interface OnClickListener {
 		fun onEditClick(addressItem: AddressItem)
 		fun onDeleteClick(addressId: String)
+		fun onClick()
 	}
 	
 	//todo: this may lead to some bugs when the list address update and change order of the data....
-	private fun onCardClick(position: Int, addressTd: String, card: MaterialCardView) {
-		if (addressTd != lastCheckedAddress) {
+	private fun onCardClick(position: Int, addressItem: AddressItem, card: MaterialCardView) {
+		if (addressItem._id != lastCheckedAddressItem?._id) {
 			card.apply {
 				strokeColor = context.getColor(R.color.blue_accent_300)
 				isChecked = true
@@ -104,10 +104,12 @@ class AddressAdapter(
 				).toInt()
 			}
 
-			lastCheckedAddress = addressTd
+			lastCheckedAddressItem = addressItem
 			lastCheckedCard = card
 			selectedAddressPos = position
-			Log.d(TAG, "onCardClick: selected address = $addressTd")
+			Log.d(TAG, "onCardClick: selected address = ${addressItem._id}")
 		}
+
+		onClickListener.onClick()
 	}
 }
