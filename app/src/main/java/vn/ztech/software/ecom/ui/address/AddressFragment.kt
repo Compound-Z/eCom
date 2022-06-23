@@ -119,6 +119,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
             R.id.action_addressFragment_to_addEditAddressFragment,
             bundleOf("isEdit" to isEdit, "addressId" to addressId)
         )
+        android.util.Patterns.PHONE
     }
 
 

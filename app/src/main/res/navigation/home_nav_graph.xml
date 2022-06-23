@@ -89,19 +89,19 @@
 <!--            android:id="@+id/action_selectAddressFragment_to_selectPaymentFragment"-->
 <!--            app:destination="@id/selectPaymentFragment" />-->
 <!--    </fragment>-->
-<!--    <fragment-->
-<!--        android:id="@+id/addEditAddressFragment"-->
-<!--        android:name="com.vishalgaur.shoppingapp.ui.home.AddEditAddressFragment"-->
-<!--        android:label="fragment_add_edit_address"-->
-<!--        tools:layout="@layout/fragment_add_edit_address" >-->
-<!--        <argument-->
-<!--            android:name="isEdit"-->
-<!--            app:argType="boolean" />-->
-<!--        <argument-->
-<!--            android:name="addressId"-->
-<!--            app:argType="string"-->
-<!--            app:nullable="true" />-->
-<!--    </fragment>-->
+    <fragment
+        android:id="@+id/addEditAddressFragment"
+        android:name="vn.ztech.software.ecom.ui.address.AddEditAddressFragment"
+        android:label="fragment_add_edit_address"
+        tools:layout="@layout/fragment_add_edit_address" >
+        <argument
+            android:name="isEdit"
+            app:argType="boolean" />
+        <argument
+            android:name="addressId"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/favoritesFragment"-->
 <!--        android:name="com.vishalgaur.shoppingapp.ui.home.FavoritesFragment"-->
@@ -164,6 +164,9 @@
         android:label="fragment_order"
         tools:layout="@layout/fragment_order"
         >
+        <action
+            android:id="@+id/action_addressFragment_to_addEditAddressFragment"
+            app:destination="@id/addEditAddressFragment" />
     </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/orderDetailsFragment"-->

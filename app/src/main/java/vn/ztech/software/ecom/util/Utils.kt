@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.util
 
+import android.util.Log
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.math.roundToInt
@@ -47,7 +48,16 @@ internal fun isPasswordValid(password: String): Boolean {
 		PASSWORD_PATTERN.matcher(password).matches()
 	}
 }
+internal fun isPhoneNumberValid(phoneNumber: String): Boolean {
 
+	val PHONENUMBER_PATTERN = Pattern.compile("^(((\\+|)84)|0)(3|5|7|8|9)+([0-9]{8})$")
+	return if (phoneNumber.isEmpty()) {
+		false
+	} else {
+		Log.d("REGEX", PHONENUMBER_PATTERN.matcher(phoneNumber).matches().toString())
+		PHONENUMBER_PATTERN.matcher(phoneNumber).matches()
+	}
+}
 internal fun isZipCodeValid(zipCode: String): Boolean {
 	val ZIPCODE_PATTERN = Pattern.compile("^\\s*[1-9]\\d{5}\\s*\$")
 	return if (zipCode.isEmpty()) {

@@ -50,7 +50,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tfName"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -61,14 +61,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvName">
 
-                <AutoCompleteTextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:dropDownHeight="240dp"
-                    android:inputType="none"
-                    android:labelFor="@id/tfName"
                     android:paddingTop="12dp"
+                    android:inputType="textPersonName"
                     android:paddingBottom="12dp"
                     android:textColor="@color/gray"
                     android:textStyle="bold" />
@@ -105,10 +103,10 @@
                 app:layout_constraintTop_toBottomOf="@id/tvPhoneNumber">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_first_name_edit_text"
+                    android:id="@+id/etPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:inputType="phone"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:textColor="@color/gray"
@@ -117,127 +115,169 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/add_address_last_name_label"
-                android:layout_width="0dp"
+                android:id="@+id/tvProvince"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/add_address_last_name_label_text"
+                android:text="Province"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tfPhoneNumber" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lNameOutlinedTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                app:boxStrokeColor="@color/blue_accent_300"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_address_last_name_label">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_last_name_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
             <TextView
-                android:id="@+id/add_address_street_add_label"
+                android:id="@+id/tvProvinceError"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/add_address_street_add_label_text"
+                android:text="* Error: province is missing"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
+                android:textColor="@color/red_600"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                app:layout_constraintStart_toEndOf="@id/tvProvince"
+                app:layout_constraintTop_toBottomOf="@id/tfPhoneNumber" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardProvince"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvProvince"
+                android:backgroundTint="#D9EEF3"
+                android:layout_marginTop="8dp"
+                android:layout_height="50dp">
+
+                <Spinner
+                    android:id="@+id/spinnerProvinces"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/black">
+
+                </Spinner>
+            </androidx.cardview.widget.CardView>
+
+
+
+            <TextView
+                android:id="@+id/tvDistrict"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="District"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lNameOutlinedTextField" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/streetAddOutlinedTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                app:boxStrokeColor="@color/blue_accent_300"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_address_street_add_label">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_street_add_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text|textPostalAddress"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
+                app:layout_constraintTop_toBottomOf="@id/cardProvince" />
             <TextView
-                android:id="@+id/add_address_street_add2_label"
+                android:id="@+id/tvDistrictError"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/add_address_street_add2_label_text"
+                android:text="* Error: district is missing"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
+                android:textColor="@color/red_600"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/tvDistrict"
+                app:layout_constraintTop_toBottomOf="@id/cardProvince"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardDistrict"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDistrict"
+                android:backgroundTint="#D9EEF3"
+                android:layout_marginTop="8dp"
+                android:layout_height="50dp">
+            <Spinner
+                android:id="@+id/spinnerDistricts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDistrict"
+                />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvWard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Ward"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/streetAddOutlinedTextField" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/streetAdd2OutlinedTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/cardDistrict" />
+            <TextView
+                android:id="@+id/tvWardError"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                app:boxStrokeColor="@color/blue_accent_300"
+                android:text="* Error: ward is missing"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
+                android:textColor="@color/red_600"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                tools:visibility="visible"
+                app:layout_constraintStart_toEndOf="@+id/tvWard"
+                app:layout_constraintTop_toBottomOf="@id/cardDistrict"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardWard"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_address_street_add2_label">
+                app:layout_constraintTop_toBottomOf="@id/tvWard"
+                android:backgroundTint="#D9EEF3"
+                android:layout_marginTop="8dp"
+                android:layout_height="50dp">
+            <Spinner
+                android:id="@+id/spinnerWards"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:outlineSpotShadowColor="@color/green_500"
+                android:outlineAmbientShadowColor="@color/green_500"
+                app:layout_constraintTop_toBottomOf="@id/tvWard"
+                >
+            </Spinner>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_street_add2_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
 
-            </com.google.android.material.textfield.TextInputLayout>
+
 
             <TextView
                 android:id="@+id/add_address_city_label"
@@ -246,17 +286,17 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/add_address_city_label_text"
+                android:text="Detailed address"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/streetAdd2OutlinedTextField" />
+                app:layout_constraintTop_toBottomOf="@id/cardWard" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cityOutlinedTextField"
+                android:id="@+id/tfDetailedAddress"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -269,7 +309,7 @@
                 app:layout_constraintTop_toBottomOf="@id/add_address_city_label">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_city_edit_text"
+                    android:id="@+id/etDetailedAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
@@ -279,131 +319,31 @@
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
+            <CheckBox
+                android:id="@+id/cbIsDefaultAddress"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/tfDetailedAddress"
+                app:layout_constraintStart_toStartOf="@id/tfDetailedAddress"
+                android:layout_height="wrap_content">
+                
+            </CheckBox>
 
             <TextView
-                android:id="@+id/add_address_state_label"
+                android:id="@+id/tvIsDefaultAddress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/add_address_state_label_text"
+                android:text="Make this default address"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cityOutlinedTextField" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/stateOutlinedTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                app:boxStrokeColor="@color/blue_accent_300"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_address_state_label">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_state_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName|text"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/add_address_zipcode_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/add_address_zipcode_label_text"
-                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stateOutlinedTextField" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/zipCodeOutlinedTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                app:boxStrokeColor="@color/blue_accent_300"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_address_zipcode_label">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_zipcode_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number|text"
-                    android:maxLength="6"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/add_address_phone_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/add_address_phone_label_text"
-                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/zipCodeOutlinedTextField" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/phoneOutlinedTextField"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                app:boxStrokeColor="@color/blue_accent_300"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_address_phone_label">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/address_phone_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text|phone"
-                    android:maxLength="10"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:textColor="@color/gray"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintBottom_toBottomOf="@id/cbIsDefaultAddress"
+                app:layout_constraintStart_toEndOf="@id/cbIsDefaultAddress"
+                app:layout_constraintTop_toTopOf="@id/cbIsDefaultAddress" />
 
             <TextView
                 android:id="@+id/add_address_error_text_view"
@@ -420,9 +360,10 @@
                 app:drawableTint="?attr/colorError"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/phoneOutlinedTextField" />
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/cbIsDefaultAddress" />
 
-
+            
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -441,6 +382,6 @@
         android:text="@string/add_address_btn_text"
         android:textAllCaps="false"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 </RelativeLayout>

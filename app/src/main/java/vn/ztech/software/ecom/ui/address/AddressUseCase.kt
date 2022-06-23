@@ -4,10 +4,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import vn.ztech.software.ecom.api.response.BasicResponse
 import vn.ztech.software.ecom.model.Address
+import vn.ztech.software.ecom.model.District
+import vn.ztech.software.ecom.model.Province
+import vn.ztech.software.ecom.model.Ward
 import vn.ztech.software.ecom.repository.IAddressRepository
 
 interface IAddressUseCase{
     suspend fun getAddresses(): Flow<Address>
+    suspend fun getProvinces(): Flow<List<Province>>
+    suspend fun getDistricts(provinceId: Int): Flow<List<District>>
+    suspend fun getWards(districtId: Int): Flow<List<Ward>>
+
 //    suspend fun addAddress(productId: String): Flow<BasicResponse>
 //    suspend fun editAddress(productId: String, quantity: Int): Flow<BasicResponse>
 //    suspend fun deleteAddress(productId: String): Flow<BasicResponse>
@@ -17,6 +24,19 @@ class AddressUseCase(private val cartRepository: IAddressRepository): IAddressUs
     override suspend fun getAddresses(): Flow<Address> = flow{
         val listProducts = cartRepository.getAddresses()
         emit(listProducts)
+    }
+    override suspend fun getProvinces(): Flow<List<Province>> = flow{
+        val provinces = cartRepository.getProvinces()
+        emit(provinces)
+    }
+
+    override suspend fun getDistricts(provinceId: Int): Flow<List<District>> = flow{
+        val districts = cartRepository.getDistricts(provinceId)
+        emit(districts)
+    }
+    override suspend fun getWards(districtId: Int): Flow<List<Ward>> = flow{
+        val districts = cartRepository.getWards(districtId)
+        emit(districts)
     }
 
 //    override suspend fun addAddress(productId: String): Flow<BasicResponse> = flow {

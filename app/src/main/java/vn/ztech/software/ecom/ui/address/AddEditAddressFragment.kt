@@ -1,24 +1,19 @@
 package vn.ztech.software.ecom.ui.address
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
-import androidx.fragment.app.Fragment
+import android.widget.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
-import vn.ztech.software.ecom.R
-import vn.ztech.software.ecom.database.utils.getISOCountriesMap
+import kotlinx.android.synthetic.main.fragment_add_edit_address.view.*
 import vn.ztech.software.ecom.databinding.FragmentAddEditAddressBinding
 import vn.ztech.software.ecom.model.AddressItem
+import vn.ztech.software.ecom.model.District
+import vn.ztech.software.ecom.model.Province
+import vn.ztech.software.ecom.model.Ward
+import vn.ztech.software.ecom.ui.AddAddressViewErrors
 import vn.ztech.software.ecom.ui.BaseFragment
-import vn.ztech.software.ecom.ui.MyOnFocusChangeListener
-import java.util.*
 
 private const val TAG = "AddAddressFragment"
 
@@ -49,6 +44,8 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 			binding.addAddressTopAppBar.topAppBar.title = "Edit Address"
 		}
 
+		// get list provinces
+		viewModel.getProvinces()
 	}
 
 	override fun setUpViews() {
@@ -58,15 +55,9 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 			findNavController().navigateUp()
 		}
 		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-		binding.addressFirstNameEditText.onFocusChangeListener = focusChangeListener
-		binding.addressLastNameEditText.onFocusChangeListener = focusChangeListener
-		binding.addressStreetAddEditText.onFocusChangeListener = focusChangeListener
-		binding.addressStreetAdd2EditText.onFocusChangeListener = focusChangeListener
-		binding.addressCityEditText.onFocusChangeListener = focusChangeListener
-		binding.addressStateEditText.onFocusChangeListener = focusChangeListener
-		binding.addressZipcodeEditText.onFocusChangeListener = focusChangeListener
-		binding.addressPhoneEditText.onFocusChangeListener = focusChangeListener
-		setCountrySelectTextField()
+		binding.etName.onFocusChangeListener = focusChangeListener
+		binding.etPhoneNumber.onFocusChangeListener = focusChangeListener
+		binding.etDetailedAddress.onFocusChangeListener = focusChangeListener
 
 		binding.addAddressSaveBtn.setOnClickListener {
 			onAddAddress()
@@ -75,11 +66,88 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 
 	override fun observeView() {
 		super.observeView()
+		viewModel.loading.observe(viewLifecycleOwner){
+			when (it) {
+				true -> {
+					binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+					binding.loaderLayout.circularLoader.showAnimationBehavior
+				}
+				false -> {
+					binding.loaderLayout.circularLoader.hideAnimationBehavior
+					binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+				}
+			}
+		}
+
 		viewModel.uiError.observe(viewLifecycleOwner) { errList ->
 			if (errList.isEmpty()) {
+				//clear errors from ui
 				binding.addAddressErrorTextView.visibility = View.GONE
+				binding.tfName.error = null
+				binding.tfPhoneNumber.error = null
+				binding.tvProvinceError.visibility = View.INVISIBLE
+				binding.tvDistrictError.visibility = View.INVISIBLE
+				binding.tvWardError.visibility = View.INVISIBLE
+				binding.tfDetailedAddress.error = null
 			} else {
 				modifyErrors(errList)
+			}
+		}
+
+		viewModel.provinces.observe(viewLifecycleOwner){
+			it?.let {
+				//populate data to spinner
+				var preSelectedPos = -1
+				populateProvinceToSpinner(binding.spinnerProvinces, it, object : AdapterView.OnItemSelectedListener {
+					override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+						if(binding.spinnerProvinces.getItemAtPosition(p2).toString().isNotEmpty()
+							&& p2!=preSelectedPos){
+							preSelectedPos = p2
+							viewModel.getDistricts(viewModel.provinces.value?.get(p2)?.province_id?:-1)
+							//clear values in district, ward spinner
+							binding.spinnerDistricts.adapter = null
+							binding.spinnerWards.adapter = null
+						}
+					}
+
+					override fun onNothingSelected(p0: AdapterView<*>?) {
+						TODO("Not yet implemented")
+					}
+				})
+			}
+		}
+		viewModel.districts.observe(viewLifecycleOwner){
+			it?.let {
+				//populate data to spinner
+				var preSelectedPos = -1
+				populateDistrictToSpinner(binding.spinnerDistricts, it, object : AdapterView.OnItemSelectedListener {
+					override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+						if(binding.spinnerDistricts.getItemAtPosition(p2).toString().isNotEmpty()
+							&& p2!=preSelectedPos){
+							viewModel.getWards(viewModel.districts.value?.get(p2)?.district_id?:-1)
+							//clear data in spinnerWard
+							binding.spinnerWards.adapter = null
+						}
+					}
+
+					override fun onNothingSelected(p0: AdapterView<*>?) {
+						TODO("Not yet implemented")
+					}
+				})
+			}
+		}
+		viewModel.wards.observe(viewLifecycleOwner){
+			it?.let {
+				//populate data to spinner
+				populateWardToSpinner(binding.spinnerWards, it, object : AdapterView.OnItemSelectedListener {
+					override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+						if(binding.spinnerWards.getItemAtPosition(p2).toString().isNotEmpty()){}
+					}
+
+					override fun onNothingSelected(p0: AdapterView<*>?) {
+						TODO("Not yet implemented")
+					}
+				})
 			}
 		}
 
@@ -124,6 +192,37 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 //			}
 //		}
 	}
+
+	private fun populateProvinceToSpinner(spinnerProvinces: Spinner, it: List<Province>, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
+		val listProvinces = mutableListOf<String>()
+		it.forEach { listProvinces.add(it.name) }
+		listProvinces.add("")
+		val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
+		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+		spinnerProvinces.adapter = adapter
+		spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+		spinnerProvinces.setSelection(listProvinces.size-1)
+	}
+	private fun populateDistrictToSpinner(spinnerProvinces: Spinner, it: List<District>, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
+		val listProvinces = mutableListOf<String>()
+		it.forEach { listProvinces.add(it.name) }
+		listProvinces.add("")
+		val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
+		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+		spinnerProvinces.adapter = adapter
+		spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+		spinnerProvinces.setSelection(listProvinces.size-1)
+	}
+	private fun populateWardToSpinner(spinnerProvinces: Spinner, it: List<Ward>, onItemSelectedListener: AdapterView.OnItemSelectedListener) {
+		val listProvinces = mutableListOf<String>()
+		it.forEach { listProvinces.add(it.name) }
+		listProvinces.add("")
+		val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, listProvinces.toTypedArray())
+		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+		spinnerProvinces.adapter = adapter
+		spinnerProvinces.onItemSelectedListener = onItemSelectedListener
+		spinnerProvinces.setSelection(listProvinces.size-1)
+	}
 //		private fun fillDataInViews() {
 //			viewModel.addressData.value?.let { address ->
 //				binding.addAddressTopAppBar.topAppBar.title = "Edit Address"
@@ -155,73 +254,54 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 //		}
 
 		private fun onAddAddress() {
-			val countryName = binding.addressCountryEditText.text.toString()
-			val firstName = binding.addressFirstNameEditText.text.toString()
-			val lastName = binding.addressLastNameEditText.text.toString()
-			val streetAdd = binding.addressStreetAddEditText.text.toString()
-			val streetAdd2 = binding.addressStreetAdd2EditText.text.toString()
-			val city = binding.addressCityEditText.text.toString()
-			val state = binding.addressStateEditText.text.toString()
-			val zipCode = binding.addressZipcodeEditText.text.toString()
-			val phoneNumber = binding.addressPhoneEditText.text.toString()
+			val receiverName = binding.etName.text.toString()
+			val receiverPhoneNumber = binding.etPhoneNumber.text.toString()
+			val provincePos = binding.spinnerProvinces.selectedItemPosition
+			val provinceName = binding.spinnerProvinces.selectedItem?.toString()
+			val districtPos = binding.spinnerDistricts.selectedItemPosition
+			val districtName = binding.spinnerDistricts.selectedItem?.toString()
+			val wardPos = binding.spinnerWards.selectedItemPosition
+			val wardName = binding.spinnerWards.selectedItem?.toString()
+			val detailedAddress = binding.etDetailedAddress.text.toString()
+			val isSelectedAsDefaultAddress = binding.cbIsDefaultAddress.isChecked
 
-			val countryCode =
-				getISOCountriesMap().keys.find { Locale("", it).displayCountry == countryName }
-
-			Log.d(TAG, "onAddAddress: Add/Edit Address Initiated")
 			viewModel.submitAddress(
-				countryCode!!,
-				firstName,
-				lastName,
-				streetAdd,
-				streetAdd2,
-				city,
-				state,
-				zipCode,
-				phoneNumber
+				receiverName,
+				receiverPhoneNumber,
+				provinceName,
+				provincePos,
+				districtName,
+				districtPos,
+				wardName,
+				wardPos,
+				detailedAddress,
+				isSelectedAsDefaultAddress
 			)
 		}
 
-		private fun setCountrySelectTextField() {
-//		val isoCountriesMap = getISOCountriesMap()
-//		val countries = isoCountriesMap.values.toSortedSet().toList()
-//		val defaultCountry = Locale.getDefault().displayCountry
-//		val countryAdapter = ArrayAdapter(requireContext(), R.layout.country_list_item, countries)
-//		(binding.addressCountryEditText as? AutoCompleteTextView)?.let {
-//			it.setText(defaultCountry, false)
-//			it.setAdapter(countryAdapter)
-//		}
-		}
-
 		private fun modifyErrors(errList: List<AddAddressViewErrors>) {
-			binding.fNameOutlinedTextField.error = null
-			binding.lNameOutlinedTextField.error = null
-			binding.streetAddOutlinedTextField.error = null
-			binding.cityOutlinedTextField.error = null
-			binding.stateOutlinedTextField.error = null
-			binding.zipCodeOutlinedTextField.error = null
-			binding.phoneOutlinedTextField.error = null
+			binding.tfName.error = null
+			binding.tfPhoneNumber.error = null
+			binding.tvProvinceError.visibility = View.INVISIBLE
+			binding.tvDistrictError.visibility = View.INVISIBLE
+			binding.tvWardError.visibility = View.INVISIBLE
+			binding.tfDetailedAddress.error = null
 			errList.forEach { err ->
 				when (err) {
 					AddAddressViewErrors.EMPTY -> setEditTextsError(true)
-					AddAddressViewErrors.ERR_FNAME_EMPTY ->
-						setEditTextsError(true, binding.fNameOutlinedTextField)
-					AddAddressViewErrors.ERR_LNAME_EMPTY ->
-						setEditTextsError(true, binding.lNameOutlinedTextField)
-					AddAddressViewErrors.ERR_STR1_EMPTY ->
-						setEditTextsError(true, binding.streetAddOutlinedTextField)
-					AddAddressViewErrors.ERR_CITY_EMPTY ->
-						setEditTextsError(true, binding.cityOutlinedTextField)
-					AddAddressViewErrors.ERR_STATE_EMPTY ->
-						setEditTextsError(true, binding.stateOutlinedTextField)
-					AddAddressViewErrors.ERR_ZIP_EMPTY ->
-						setEditTextsError(true, binding.zipCodeOutlinedTextField)
-					AddAddressViewErrors.ERR_ZIP_INVALID ->
-						setEditTextsError(false, binding.zipCodeOutlinedTextField)
-					AddAddressViewErrors.ERR_PHONE_INVALID ->
-						setEditTextsError(false, binding.phoneOutlinedTextField)
+					AddAddressViewErrors.ERR_NAME_EMPTY ->
+						setEditTextsError(true, binding.tfName)
 					AddAddressViewErrors.ERR_PHONE_EMPTY ->
-						setEditTextsError(true, binding.phoneOutlinedTextField)
+						setEditTextsError(true, binding.tfPhoneNumber)
+					AddAddressViewErrors.ERR_PROVINCE_EMPTY ->
+						setSpinnerError(binding.tvProvinceError)
+					AddAddressViewErrors.ERR_DISTRICT_EMPTY ->
+						setSpinnerError(binding.tvDistrictError)
+					AddAddressViewErrors.ERR_WARD_EMPTY ->
+						setSpinnerError(binding.tvWardError)
+					AddAddressViewErrors.ERR_DETAILED_ADDRESS_EMPTY ->
+						setEditTextsError(true, binding.tfDetailedAddress)
+					else -> {}
 				}
 			}
 		}
@@ -230,7 +310,7 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 			if (isEmpty) {
 				binding.addAddressErrorTextView.visibility = View.VISIBLE
 				if (editText != null) {
-					editText.error = "Please Fill the Form"
+					editText.error = "Please Fill the Form with correct value"
 					editText.errorIconDrawable = null
 				}
 			} else {
@@ -238,6 +318,9 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 				editText!!.error = "Invalid!"
 				editText.errorIconDrawable = null
 			}
+		}
+		private fun setSpinnerError(tvError: TextView){
+			tvError.visibility = View.VISIBLE
 		}
 
 	}
