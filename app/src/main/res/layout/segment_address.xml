@@ -72,6 +72,7 @@
             android:id="@+id/btGoToAddress"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:clickable="false"
             android:layout_marginEnd="8dp"
             android:background="@drawable/round_button"
             android:contentDescription="@string/pro_details_delete_btn_desc"

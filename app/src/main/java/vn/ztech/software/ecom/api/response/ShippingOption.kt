@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class GetShippingOptionsRes(
+data class ShippingOption(
     val fee: Fee,
     val name: String,
     val service_id: Int

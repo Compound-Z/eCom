@@ -11,6 +11,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.api.request.GetShippingOptionsReq
 import vn.ztech.software.ecom.api.response.CartProductResponse
+import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.databinding.FragmentOrderBinding
 import vn.ztech.software.ecom.model.Address
 import vn.ztech.software.ecom.model.AddressItem
@@ -24,7 +25,7 @@ private const val TAG = "OrdersFragment"
 class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
     private lateinit var productsAdapter: OrderProductsAdapter
-
+    private lateinit var shippingOptionsAdapter: ShippingOptionsAdapter
     private val addressViewModel: AddressViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
     private val orderViewModel: OrderViewModel by viewModel()
@@ -60,7 +61,12 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
         binding.segmentAddress.addressCard.setOnClickListener{
             navigateToAddressFragment()
         }
-//        binding.orderDetailsConstraintGroup.visibility = View.GONE
+
+        binding.layoutCalculateFee.btPlaceOrder.setOnClickListener {
+            Log.d(TAG, "Place order: ${orderViewModel.products.value.toString()} " +
+                    "\n${orderViewModel.currentSelectedAddress.value.toString()}" +
+                    "\n${orderViewModel.currentSelectedShippingOption.value.toString()}", )
+        }
 
 
     }
@@ -143,9 +149,38 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
                 )
             }
         }
+        orderViewModel.loadingShipping.observe(viewLifecycleOwner){
+            if(it){
+                binding.layoutListShippingOptions.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                binding.loaderLayout.circularLoader.showAnimationBehavior
+
+                //calculate cost area
+                binding.layoutCalculateFee.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                binding.layoutCalculateFee.loaderLayout.circularLoader.showAnimationBehavior
+            }else{
+                binding.layoutListShippingOptions.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                binding.loaderLayout.circularLoader.hideAnimationBehavior
+
+                //calculate cost area
+                binding.layoutCalculateFee.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                binding.layoutCalculateFee.loaderLayout.circularLoader.hideAnimationBehavior
+            }
+        }
         orderViewModel.shippingOptions.observe(viewLifecycleOwner){
             it?.let {
-                Log.d(TAG+"shippingOptions", it.toString())
+                setShippingOptionsAdapter(it)
+            }
+        }
+
+        orderViewModel.orderCost.observe(viewLifecycleOwner){
+            it?.apply {
+                if (productsCost>0) binding.layoutCalculateFee.tvProductsCost.text = productsCost.toString()
+                if (shippingFee>0) binding.layoutCalculateFee.tvShippingFee.text = shippingFee.toString()
+                if (totalCost>0) binding.layoutCalculateFee.tvTotalCost.text = totalCost.toString()
+                binding.layoutCalculateFee.btPlaceOrder.isEnabled = true
+            }
+            if (it == null){
+                binding.layoutCalculateFee.btPlaceOrder.isEnabled = false
             }
         }
         orderViewModel.error.observe(viewLifecycleOwner){
@@ -153,6 +188,17 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
                 showErrorDialog(it)
             }
         }
+    }
+
+    private fun setShippingOptionsAdapter(it: List<ShippingOption>) {
+        shippingOptionsAdapter = ShippingOptionsAdapter(requireContext(), it)
+        shippingOptionsAdapter.onClickListener = object : ShippingOptionsAdapter.OnClickListener{
+            override fun onClick(shippingOption: ShippingOption) {
+                orderViewModel.currentSelectedShippingOption.value = shippingOption
+                orderViewModel.calculateCost()
+            }
+        }
+        binding.layoutListShippingOptions.recyclerShippingOptions.adapter = shippingOptionsAdapter
     }
 
     private fun updateSegmentAddress(it: Address?) {

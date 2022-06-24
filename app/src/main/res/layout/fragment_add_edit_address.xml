@@ -382,6 +382,6 @@
         android:text="@string/add_address_btn_text"
         android:textAllCaps="false"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </RelativeLayout>
