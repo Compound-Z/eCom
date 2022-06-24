@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
+import vn.ztech.software.ecom.api.request.GetShippingOptionsReq
 import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.databinding.FragmentOrderBinding
 import vn.ztech.software.ecom.model.Address
@@ -17,15 +18,16 @@ import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.address.AddressViewModel
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.util.extension.showErrorDialog
+import vn.ztech.software.ecom.util.extension.toCartItems
 
 private const val TAG = "OrdersFragment"
 class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
     private lateinit var productsAdapter: OrderProductsAdapter
-    private lateinit var products: List<CartProductResponse>
 
     private val addressViewModel: AddressViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
+    private val orderViewModel: OrderViewModel by viewModel()
     override fun setViewBinding(): FragmentOrderBinding {
         return FragmentOrderBinding.inflate(layoutInflater)
     }
@@ -34,22 +36,19 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         //get list products from cart
-        xxxxxxxxxxxxxxxx how to have products when navigate from address?
-        val bundledProducts = arguments?.getParcelableArrayList<CartProductResponse?>("products") as ArrayList<CartProductResponse>
-        val bundledAddressItem = arguments?.getParcelable<AddressItem?>("ADDRESS_ITEM")
-        bundledProducts.let {
-            products = bundledProducts.toList()
-            if (context != null) {
-                setProductsAdapter(products)
-                binding.orderDetailsProRecyclerView.adapter = productsAdapter
-            }
+        val bundledProducts = arguments?.getParcelableArrayList<CartProductResponse>("products") as ArrayList<CartProductResponse>?
+        val bundledAddressItem = arguments?.getParcelable<AddressItem?>("ADDRESS_ITEM") as AddressItem?
+        if(bundledProducts != null) {
+            cartViewModel.products.value = bundledProducts
+        }else{
+            cartViewModel.getListProductsInCart()
         }
-        bundledAddressItem?.let {
-            addressViewModel.currentSelectedAddressItem.value = it
+        if(bundledAddressItem != null) {
+            addressViewModel.currentSelectedAddressItem.value = bundledAddressItem
+        }else{
+            //get list address
+            addressViewModel.getAddresses()
         }
-
-        //get list address
-        addressViewModel.getAddresses()
     }
 
 
@@ -72,6 +71,32 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
     override fun observeView() {
         super.observeView()
+        cartViewModel.loading.observe(viewLifecycleOwner){
+            when (it) {
+                true -> {
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                }
+                false -> {
+                    binding.loaderLayout.circularLoader.hideAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                }
+            }
+        }
+
+        cartViewModel.products.observe(viewLifecycleOwner) { products ->
+            products?.let {
+                orderViewModel.products.value = products
+            }
+            setProductsAdapter(products)
+        }
+
+        cartViewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                showErrorDialog(it)
+            }
+        }
+
         addressViewModel.loading.observe(viewLifecycleOwner){
             when (it) {
                 true -> {
@@ -90,6 +115,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
         addressViewModel.currentSelectedAddressItem.observe(viewLifecycleOwner){
             updateSegmentAddress(it)
+            orderViewModel.currentSelectedAddress.value = it
         }
         addressViewModel.error.observe(viewLifecycleOwner){
             it?.let {
@@ -97,6 +123,36 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
             }
         }
 
+        orderViewModel.products.observe(viewLifecycleOwner){
+            if(orderViewModel.checkIfCanGetShippingOptions()){
+                orderViewModel.getShippingOptions(
+                    GetShippingOptionsReq(
+                        orderViewModel.currentSelectedAddress.value?._id?:"",
+                        orderViewModel.products.value?.toCartItems()?: emptyList()
+                    )
+                )
+            }
+        }
+        orderViewModel.currentSelectedAddress.observe(viewLifecycleOwner){
+            if(orderViewModel.checkIfCanGetShippingOptions()){
+                orderViewModel.getShippingOptions(
+                    GetShippingOptionsReq(
+                        orderViewModel.currentSelectedAddress.value?._id?:"",
+                        orderViewModel.products.value?.toCartItems()?: emptyList()
+                    )
+                )
+            }
+        }
+        orderViewModel.shippingOptions.observe(viewLifecycleOwner){
+            it?.let {
+                Log.d(TAG+"shippingOptions", it.toString())
+            }
+        }
+        orderViewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                showErrorDialog(it)
+            }
+        }
     }
 
     private fun updateSegmentAddress(it: Address?) {
@@ -110,6 +166,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
                 defaultAddress?.let {
                     binding.segmentAddress.tvNameAndPhoneNumber.text = "${defaultAddress.receiverName} | ${defaultAddress.receiverPhoneNumber}"
                     binding.segmentAddress.tvDetailedAddress.text = defaultAddress.detailedAddress
+                    addressViewModel.currentSelectedAddressItem.value = defaultAddress
                 }
             }
         }
@@ -124,6 +181,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
     private fun setProductsAdapter(products: List<CartProductResponse>) {
         productsAdapter = OrderProductsAdapter(requireContext(), products)
+        binding.orderDetailsProRecyclerView.adapter = productsAdapter
     }
 }
 
