@@ -17,6 +17,4 @@ class ShippingUseCase(private val shippingRepository: IShippingRepository): IShi
         val shippingOptions = shippingRepository.getShippingOptions(getShippingOptionsReq).filter { it.name.isNotBlank() }.sortedBy { it.fee.total }
         emit(shippingOptions)
     }
-
-
 }

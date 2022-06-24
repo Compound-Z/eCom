@@ -27,6 +27,6 @@ fun viewModelModule() = module {
     viewModel { CategoryViewModel(get(), get()) }
     viewModel { CartViewModel(get()) }
     viewModel { AddressViewModel(get()) }
-    viewModel { OrderViewModel(get()) }
+    viewModel { OrderViewModel(get(), get()) }
 
 }

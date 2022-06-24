@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
@@ -63,9 +64,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
         }
 
         binding.layoutCalculateFee.btPlaceOrder.setOnClickListener {
-            Log.d(TAG, "Place order: ${orderViewModel.products.value.toString()} " +
-                    "\n${orderViewModel.currentSelectedAddress.value.toString()}" +
-                    "\n${orderViewModel.currentSelectedShippingOption.value.toString()}", )
+            orderViewModel.createOrder(orderViewModel.products.value, orderViewModel.currentSelectedAddress.value, orderViewModel.currentSelectedShippingOption.value)
         }
 
 
@@ -129,6 +128,18 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
             }
         }
 
+        orderViewModel.loading.observe(viewLifecycleOwner){
+            when (it) {
+                true -> {
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                }
+                false -> {
+                    binding.loaderLayout.circularLoader.hideAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                }
+            }
+        }
         orderViewModel.products.observe(viewLifecycleOwner){
             if(orderViewModel.checkIfCanGetShippingOptions()){
                 orderViewModel.getShippingOptions(
@@ -181,6 +192,12 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
             }
             if (it == null){
                 binding.layoutCalculateFee.btPlaceOrder.isEnabled = false
+            }
+        }
+        orderViewModel.createdOrder.observe(viewLifecycleOwner){
+            it?.let {
+                findNavController().navigate(R.id.action_orderFragment_to_orderSuccessFragment,
+                bundleOf("orderDetails" to it))
             }
         }
         orderViewModel.error.observe(viewLifecycleOwner){

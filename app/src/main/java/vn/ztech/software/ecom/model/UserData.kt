@@ -25,8 +25,6 @@ data class UserData(
 //	var addresses: List<Address> = ArrayList(),
 	@TypeConverters(ObjectListTypeConvertor::class)
 	var cart: List<CartItem> = ArrayList(),
-	@TypeConverters(ObjectListTypeConvertor::class)
-	var orders: List<OrderItem> = ArrayList(),
 ) : Parcelable {
 //	fun toHashMap(): HashMap<String, Any> {
 //		return hashMapOf(

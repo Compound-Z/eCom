@@ -11,5 +11,6 @@ fun repositoryModule() = module {
     single<ICartRepository> {CartRepository(get())}
     single<IAddressRepository> { AddressRepository(get()) }
     single<IShippingRepository> { ShippingRepository(get()) }
+    single<IOrderRepository> { OrderRepository(get()) }
 
 }

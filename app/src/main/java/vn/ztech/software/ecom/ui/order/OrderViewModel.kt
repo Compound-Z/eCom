@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import vn.ztech.software.ecom.api.request.CreateOrderRequest
 import vn.ztech.software.ecom.api.request.GetShippingOptionsReq
 import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.api.response.ShippingOption
@@ -17,9 +18,10 @@ import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.*
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
+import vn.ztech.software.ecom.util.extension.toCartItems
 
 private const val TAG = "OrderViewModel"
-class OrderViewModel(val shippingUseCase: IShippingUserCase): ViewModel() {
+class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUseCase: IOrderUserCase): ViewModel() {
 
     val loading = MutableLiveData<Boolean>()
     val addAddressStatus = MutableLiveData<Boolean>()
@@ -31,6 +33,7 @@ class OrderViewModel(val shippingUseCase: IShippingUserCase): ViewModel() {
     val currentSelectedShippingOption = MutableLiveData<ShippingOption>()
     val loadingShipping = MutableLiveData<Boolean>()
     val orderCost = MutableLiveData<OrderCost>()
+    val createdOrder = MutableLiveData<OrderDetails>()
 
     fun getShippingOptions(getShippingOptionReq: GetShippingOptionsReq, isLoadingEnabled: Boolean = true){
         viewModelScope.launch {
@@ -65,6 +68,40 @@ class OrderViewModel(val shippingUseCase: IShippingUserCase): ViewModel() {
         val shippingFee = currentSelectedShippingOption.value?.fee?.total?:-1
         orderCost.value = OrderCost(productsCost, shippingFee, productsCost+shippingFee)
     }
+
+    fun createOrder(products: MutableList<CartProductResponse>?, addressItem: AddressItem?, shippingOption: ShippingOption?) {
+        if (products.isNullOrEmpty() || addressItem == null || shippingOption == null){
+            error.value = errorMessage(CustomError(customMessage = "System error, empty information, can not create order"))
+        }else{
+            val createOrderRequest = CreateOrderRequest(
+                addressItemId = addressItem._id,
+                orderItems = products.toCartItems(),
+                shippingServiceId = shippingOption.service_id,
+                note = "" //todo: implement ui for Note
+            )
+            viewModelScope.launch {
+                orderUseCase.createOrder(createOrderRequest).flowOn(Dispatchers.IO).toLoadState().collect{
+                    when(it){
+                        LoadState.Loading -> {
+                            loading.value = true
+                        }
+                        is LoadState.Loaded -> {
+                            loading.value = false
+                            createdOrder.value = it.data
+                            Log.d("createOrder", createdOrder.value.toString())
+                        }
+                        is LoadState.Error -> {
+                            loading.value = false
+                            error.value = errorMessage(it.e)
+                            Log.d("createOrder: error", it.e.message.toString())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     data class OrderCost(
         var productsCost: Int = -1,
         var shippingFee: Int = -1,
