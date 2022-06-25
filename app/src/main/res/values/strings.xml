@@ -51,6 +51,8 @@
     <string name="app_pro_btn_text">Add Product</string>
     <string name="pro_cat_dialog_title">Select Product Category</string>
     <string name="pro_cat_dialog_cancel_btn">Cancel</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
     <string name="pro_cat_dialog_ok_btn">OK</string>
     <string name="add_pro_error_empty">Fill all the details!</string>
     <string name="add_pro_color_label_text">Colors Available</string>
@@ -118,6 +120,7 @@
     <string name="save_address_error_text">Error Saving Address!</string>
     <string name="ship_to_error_empty">Please select an address!</string>
     <string name="delete_address_message_text">On clicking Delete, Address will be deleted premanently!</string>
+    <string name="canceled_order_message_text">Do you want to cancel this order? :(</string>
     <string name="plus_btn_desc">Increase Button</string>
     <string name="minus_btn_desc">Decrease Button</string>
     <string name="delete_cart_item_message_text">On Proceeding, selected Item will be deleted from your Cart.</string>

@@ -1,6 +1,7 @@
 package vn.ztech.software.ecom.ui.order.order_details
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +20,7 @@ class OrderDetailsViewModel(private val orderUseCase: IOrderUserCase): ViewModel
     val loading = MutableLiveData<Boolean>()
     val orderDetails = MutableLiveData<OrderDetails>()
     val error = MutableLiveData<CustomError>()
-
+    val cancelOrderStatus = MutableLiveData<Boolean>()
     fun getOrderDetails(orderId: String){
             //todo: impl
     }
@@ -36,10 +37,12 @@ class OrderDetailsViewModel(private val orderUseCase: IOrderUserCase): ViewModel
                         is LoadState.Loaded -> {
                             loading.value = false
                             orderDetails.value = it.data
+                            cancelOrderStatus.value = true
                             Log.d("cancelOrder", orderDetails.value.toString())
                         }
                         is LoadState.Error -> {
                             loading.value = false
+                            cancelOrderStatus.value = false
                             error.value = errorMessage(it.e)
                             Log.d("cancelOrder: error", it.e.message.toString())
 

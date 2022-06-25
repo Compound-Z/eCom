@@ -6,12 +6,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.layout_price_card.*
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderDetailsBinding
@@ -68,7 +70,7 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         setUpShippingViews(viewModel.orderDetails.value?.user, viewModel.orderDetails.value?.address)
         setUpBillingViews(viewModel.orderDetails.value?.billing, viewModel.orderDetails.value?.orderItems)
         binding.btCancelOrder.setOnClickListener {
-            viewModel.cancelOrder(viewModel.orderDetails.value?._id)
+            showCancelDialog(viewModel.orderDetails.value?._id)
         }
         binding.btRebuyOrder.setOnClickListener {
             findNavController().navigate(
@@ -125,6 +127,15 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                   updateOrderStatusUI(it.status)
             }
         }
+        viewModel.cancelOrderStatus.observe(viewLifecycleOwner){
+            it?.let {
+                if (it){
+                    Snackbar.make(binding.root, "Cancel order successfully :(", Snackbar.LENGTH_LONG).show()
+                }else{
+                    Snackbar.make(binding.root, "Cancel order failed :D", Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
         viewModel.error.observe(viewLifecycleOwner){
             it?.let {
                 handleError(it)
@@ -169,6 +180,21 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
 		productsAdapter = OrderProductsAdapter(requireContext(), items)
         binding.orderDetailsProRecyclerView.adapter = productsAdapter
 	}
+    private fun showCancelDialog(orderId: String?) {
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle(getString(R.string.delete_dialog_title_text))
+                .setMessage(getString(R.string.canceled_order_message_text))
+                .setNeutralButton(getString(R.string.no)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+                    viewModel.cancelOrder(orderId)
+                    dialog.cancel()
+                }
+                .show()
+        }
+    }
 //	private lateinit var orderId: String
 //	override fun onCreateView(
 //		inflater: LayoutInflater,
