@@ -140,13 +140,13 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
     <include
         android:id="@+id/layoutCalculateFee"
+        layout="@layout/layout_calculate_order_fee"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/layout_calculate_order_fee"
-        android:outlineProvider="paddedBounds"
         android:layout_alignParentBottom="true"
         android:minHeight="80dp"
-        />
+        android:outlineProvider="paddedBounds" />
 </RelativeLayout>

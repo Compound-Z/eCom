@@ -5,32 +5,73 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import vn.ztech.software.ecom.R
+import vn.ztech.software.ecom.databinding.FragmentOrderDetailsBinding
 import vn.ztech.software.ecom.model.OrderDetails
+import vn.ztech.software.ecom.model.OrderItem
+import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 import java.time.Month
 import java.util.*
 const val TAG = "OrderDetailsFragment"
-class OrderDetailsFragment : Fragment() {
+class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
+
+    private val viewModel: OrderDetailsViewModel by viewModel()
+	private lateinit var productsAdapter: OrderProductsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val orderDetails = arguments?.getParcelable<OrderDetails?>("orderDetails")
-        if (orderDetails == null){
-            errorMessage(CustomError(customMessage = "System error: can not find orderDetails"))
-        }else{
-            Log.d(TAG, orderDetails.toString())
+        val fromWhere = arguments?.getString("fromWhere")?:"OrdersFragment"
+        when(fromWhere){
+            "OrdersFragment"->{
+                //todo: call api and get order details
+            }
+            "OrderSuccessFragment"->{
+                /**get argument passed from OrderSuccessFragment*/
+                val orderDetails = arguments?.getParcelable<OrderDetails?>("orderDetails")
+                if (orderDetails == null){
+                    errorMessage(CustomError(customMessage = "System error: can not find orderDetails"))
+                }else{
+                    viewModel.orderDetails.value = orderDetails
+                }
+            }
         }
+
     }
-//	private lateinit var binding: FragmentOrderDetailsBinding
-//	private val viewModel: HomeViewModel by activityViewModels()
-//	private lateinit var orderId: String
-//	private lateinit var productsAdapter: OrderProductsAdapter
+
+    override fun setViewBinding(): FragmentOrderDetailsBinding {
+        return FragmentOrderDetailsBinding.inflate(layoutInflater)
+    }
+
+    override fun setUpViews() {
+        super.setUpViews()
+        binding.orderDetailAppBar.topAppBar.title = getString(R.string.order_details_fragment_title)
+		binding.orderDetailAppBar.topAppBar.setNavigationOnClickListener { findNavController().navigateUp() }
+		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+//		binding.orderDetailsConstraintGroup.visibility = View.GONE
 //
+		if (context != null) {
+			setProductsAdapter(viewModel.orderDetails.value?.orderItems)
+			binding.orderDetailsProRecyclerView.adapter = productsAdapter
+		}
+    }
+
+    override fun observeView() {
+        super.observeView()
+    }
+
+    private fun setProductsAdapter(itemsList: List<OrderItem>?) {
+		val items = itemsList ?: emptyList()
+		productsAdapter = OrderProductsAdapter(requireContext(), items)
+	}
+//	private lateinit var orderId: String
 //	override fun onCreateView(
 //		inflater: LayoutInflater,
 //		container: ViewGroup?,
@@ -138,12 +179,7 @@ class OrderDetailsFragment : Fragment() {
 //			getString(R.string.price_text, (itemsPriceTotal + orderData.shippingCharges).toString())
 //	}
 //
-//	private fun setProductsAdapter(itemsList: List<UserData.CartItem>?) {
-//		val items = itemsList ?: emptyList()
-//		val likesList = viewModel.userLikes.value ?: emptyList()
-//		val proList = viewModel.orderProducts.value ?: emptyList()
-//		productsAdapter = OrderProductsAdapter(requireContext(), items, proList, likesList)
-//	}
+
 //
 //	private fun showDialogWithItems(checkedOption: Int = 0, orderId: String) {
 //		val categoryItems: Array<String> = OrderStatus.values().map { it.name }.toTypedArray()

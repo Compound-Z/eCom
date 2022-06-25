@@ -11,7 +11,8 @@ import vn.ztech.software.ecom.ui.auth.signup.SignUpViewModel
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.category.CategoryViewModel
 import vn.ztech.software.ecom.ui.home.HomeViewModel
-import vn.ztech.software.ecom.ui.order.OrderViewModel
+import vn.ztech.software.ecom.ui.order.order.OrderViewModel
+import vn.ztech.software.ecom.ui.order.order_details.OrderDetailsViewModel
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
 import vn.ztech.software.ecom.ui.splash.SplashViewModel
 
@@ -28,5 +29,5 @@ fun viewModelModule() = module {
     viewModel { CartViewModel(get()) }
     viewModel { AddressViewModel(get()) }
     viewModel { OrderViewModel(get(), get()) }
-
+    viewModel { OrderDetailsViewModel(get())}
 }

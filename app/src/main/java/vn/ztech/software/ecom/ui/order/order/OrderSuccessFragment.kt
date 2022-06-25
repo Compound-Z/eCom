@@ -28,7 +28,7 @@ class OrderSuccessFragment : BaseFragment<FragmentOrderSuccessBinding>() {
         }
         binding.tvViewOrder.setOnClickListener {
             findNavController().navigate(R.id.action_orderSuccessFragment_to_orderDetailsFragment,
-            bundleOf("orderDetails" to orderDetails))
+            bundleOf("orderDetails" to orderDetails,"fromWhere" to "OrderSuccessFragment"))
         }
     }
 

@@ -16,9 +16,8 @@ import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.address.AddressViewModel
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
-import vn.ztech.software.ecom.ui.order.OrderViewModel
-import vn.ztech.software.ecom.util.extension.showErrorDialog
 import vn.ztech.software.ecom.util.extension.toCartItems
+import vn.ztech.software.ecom.util.extension.toOrderItems
 
 private const val TAG = "OrdersFragment"
 class OrderFragment : BaseFragment<FragmentOrderBinding>() {
@@ -241,7 +240,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
     }
 
     private fun setProductsAdapter(products: List<CartProductResponse>) {
-        productsAdapter = OrderProductsAdapter(requireContext(), products)
+        productsAdapter = OrderProductsAdapter(requireContext(), products.toMutableList().toOrderItems())
         binding.orderDetailsProRecyclerView.adapter = productsAdapter
     }
 }

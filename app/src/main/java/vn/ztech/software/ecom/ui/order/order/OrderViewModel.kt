@@ -1,4 +1,4 @@
-package vn.ztech.software.ecom.ui.order
+package vn.ztech.software.ecom.ui.order.order
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -15,7 +15,7 @@ import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.*
-import vn.ztech.software.ecom.ui.order.order.IShippingUserCase
+import vn.ztech.software.ecom.ui.order.IOrderUserCase
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 import vn.ztech.software.ecom.util.extension.toCartItems
@@ -24,8 +24,6 @@ private const val TAG = "OrderViewModel"
 class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUseCase: IOrderUserCase): ViewModel() {
 
     val loading = MutableLiveData<Boolean>()
-    val addAddressStatus = MutableLiveData<Boolean>()
-    val updateAddressStatus = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()
     val products = MutableLiveData<MutableList<CartProductResponse>>()
     val currentSelectedAddress = MutableLiveData<AddressItem>()

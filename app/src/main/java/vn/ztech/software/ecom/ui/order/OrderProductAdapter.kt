@@ -10,15 +10,16 @@ import com.bumptech.glide.Glide
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.databinding.OrderListItemBinding
+import vn.ztech.software.ecom.model.OrderItem
 
 class OrderProductsAdapter(
-    private val context: Context, val productsArg: List<CartProductResponse>,
+    private val context: Context, val productsArg: List<OrderItem>,
 ) : RecyclerView.Adapter<OrderProductsAdapter.ViewHolder>() {
-    var products: List<CartProductResponse> = productsArg
+    var products: List<OrderItem> = productsArg
 
     inner class ViewHolder(private val binding: OrderListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: CartProductResponse) {
+        fun bind(product: OrderItem) {
             binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
             binding.cartProductTitleTv.text = product.name
             binding.cartProductQuantityTv.text = "Quantity: x${product.quantity}"

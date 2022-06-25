@@ -1,11 +1,5 @@
 package vn.ztech.software.ecom.ui.cart
 
-import android.annotation.SuppressLint
-import android.app.Application
-import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.Typeface
 import androidx.recyclerview.widget.ConcatAdapter
 import android.os.Bundle
 import android.util.Log
@@ -20,14 +14,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.api.response.CartProductResponse
-import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.FragmentCartBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
 import vn.ztech.software.ecom.databinding.LayoutPriceCardBinding
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
-import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 private const val TAG = "CartFragment"
 
