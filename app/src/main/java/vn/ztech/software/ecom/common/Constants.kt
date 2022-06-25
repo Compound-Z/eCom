@@ -13,4 +13,13 @@ object Constants {
 
     const val VERIFY_FAILED = "pending"
     const val VERIFY_APPROVED = "approved"
+
+    val OrderStatus = listOf<String>(
+        "", //empty string for no filter query, that means get all data
+        "PENDING",
+        "PROCESSING",
+        "CONFIRMED",
+        "CANCELED",
+        "RECEIVED",
+    )
 }

@@ -1,7 +1,6 @@
 package vn.ztech.software.ecom.ui.order.order_details
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,8 +20,31 @@ class OrderDetailsViewModel(private val orderUseCase: IOrderUserCase): ViewModel
     val orderDetails = MutableLiveData<OrderDetails>()
     val error = MutableLiveData<CustomError>()
     val cancelOrderStatus = MutableLiveData<Boolean>()
-    fun getOrderDetails(orderId: String){
-            //todo: impl
+    fun getOrderDetails(orderId: String?){
+        if (orderId == null){
+            errorMessage(CustomError(customMessage = "System error: the order is missing"))
+        }else{
+            viewModelScope.launch {
+                orderUseCase.getOrderDetails(orderId).flowOn(Dispatchers.IO).toLoadState().collect {
+                    when(it){
+                        LoadState.Loading -> {
+                            loading.value = true
+                        }
+                        is LoadState.Loaded -> {
+                            loading.value = false
+                            orderDetails.value = it.data
+                            Log.d("cancelOrder", orderDetails.value.toString())
+                        }
+                        is LoadState.Error -> {
+                            loading.value = false
+                            error.value = errorMessage(it.e)
+                            Log.d("cancelOrder: error", it.e.message.toString())
+
+                        }
+                    }
+                }
+            }
+        }
     }
     fun cancelOrder(orderId: String?){
         if (orderId == null){

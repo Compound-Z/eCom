@@ -36,8 +36,10 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         super.onCreate(savedInstanceState)
         val fromWhere = arguments?.getString("fromWhere")?:"OrdersFragment"
         when(fromWhere){
-            "OrdersFragment"->{
-                //todo: call api and get order details
+            "OrderHistoryFragment"->{
+                arguments?.takeIf { it.containsKey("orderId") }?.apply {
+                    viewModel.getOrderDetails(getString("orderId"))
+                }
             }
             "OrderSuccessFragment"->{
                 /**get argument passed from OrderSuccessFragment*/
@@ -49,7 +51,6 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                 }
             }
         }
-
     }
 
     override fun setViewBinding(): FragmentOrderDetailsBinding {
@@ -125,6 +126,7 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         viewModel.orderDetails.observe(viewLifecycleOwner){
             it?.let {
                   updateOrderStatusUI(it.status)
+                  setUpViews()
             }
         }
         viewModel.cancelOrderStatus.observe(viewLifecycleOwner){
