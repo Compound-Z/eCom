@@ -10,6 +10,7 @@ import vn.ztech.software.ecom.repository.IOrderRepository
 
 interface IOrderUserCase{
     suspend fun createOrder(createOrderRequest: CreateOrderRequest): Flow<OrderDetails>
+    suspend fun cancelOrder(orderId: String): Flow<OrderDetails>
 }
 
 class OrderUseCase(private val orderRepository: IOrderRepository): IOrderUserCase{
@@ -17,5 +18,10 @@ class OrderUseCase(private val orderRepository: IOrderRepository): IOrderUserCas
     override suspend fun createOrder(createOrderRequest: CreateOrderRequest): Flow<OrderDetails> = flow {
         val order = orderRepository.createOrder(createOrderRequest)
         emit(order)
+    }
+
+    override suspend fun cancelOrder(orderId: String): Flow<OrderDetails> = flow {
+        val orderDetails = orderRepository.cancelOrder(orderId)
+        emit(orderDetails)
     }
 }

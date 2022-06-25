@@ -20,6 +20,7 @@ import vn.ztech.software.ecom.databinding.LayoutPriceCardBinding
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
+import vn.ztech.software.ecom.util.extension.toOrderItems
 
 private const val TAG = "CartFragment"
 

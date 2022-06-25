@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +20,7 @@ import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 import vn.ztech.software.ecom.util.extension.getFullAddress
+import vn.ztech.software.ecom.util.extension.toCartProductResponses
 import java.time.Month
 import java.util.*
 const val TAG = "OrderDetailsFragment"
@@ -64,6 +66,15 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         binding.tvOrderStatus.text = viewModel.orderDetails.value?.status?:"unknown"
         setUpShippingViews(viewModel.orderDetails.value?.user, viewModel.orderDetails.value?.address)
         setUpBillingViews(viewModel.orderDetails.value?.billing, viewModel.orderDetails.value?.orderItems)
+        binding.btCancelOrder.setOnClickListener {
+            viewModel.cancelOrder(viewModel.orderDetails.value?._id)
+        }
+        binding.btRebuyOrder.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_orderDetailsFragment_to_orderFragment,
+                bundleOf("products" to viewModel.orderDetails.value?.orderItems?.toCartProductResponses())
+            )
+        }
     }
 
     private fun setUpBillingViews(billing: Billing?, orderItems: List<OrderItem>?) {
@@ -95,6 +106,37 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
 
     override fun observeView() {
         super.observeView()
+        viewModel.loading.observe(viewLifecycleOwner){
+            when (it) {
+                true -> {
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                }
+                false -> {
+                    binding.loaderLayout.circularLoader.hideAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                }
+            }
+        }
+        viewModel.orderDetails.observe(viewLifecycleOwner){
+            it?.let {
+              if(it.status == "CANCELED"){
+                  updateUICanceled()
+              }
+            }
+        }
+        viewModel.error.observe(viewLifecycleOwner){
+            it?.let {
+                handleError(it)
+            }
+        }
+    }
+
+    private fun updateUICanceled() {
+        binding.tvOrderStatus.text = "CANCELED"
+        binding.btCancelOrder.visibility = View.GONE
+        binding.btRebuyOrder.visibility = View.VISIBLE
+
     }
 
     private fun setProductsAdapter(itemsList: List<OrderItem>?) {

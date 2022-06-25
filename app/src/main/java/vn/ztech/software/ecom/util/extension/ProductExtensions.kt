@@ -25,3 +25,23 @@ fun MutableList<CartProductResponse>.toOrderItems(): List<OrderItem>{
     }
     return orderItems
 }
+fun List<OrderItem>.toCartProductResponses(): List<CartProductResponse>{
+    val cartProductResponses = this.map {
+        CartProductResponse(
+            _id = "",
+            imageUrl = it.imageUrl,
+            name = it.name,
+            price = it.price,
+            productId = it.productId,
+            quantity = it.quantity,
+            sku = it.sku,
+            weight = it.weight,
+            averageRating = -1,
+            category = "",
+            isSaling = true,
+            saleNumber = -1
+
+        )
+    }
+    return cartProductResponses
+}
