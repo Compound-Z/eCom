@@ -20,7 +20,7 @@ import vn.ztech.software.ecom.util.extension.toCartItems
 import vn.ztech.software.ecom.util.extension.toOrderItems
 
 private const val TAG = "OrdersFragment"
-class OrderFragment : BaseFragment<FragmentOrderBinding>() {
+class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
 
     private lateinit var productsAdapter: OrderProductsAdapter
     private lateinit var shippingOptionsAdapter: ShippingOptionsAdapter

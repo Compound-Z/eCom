@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.ui.order.order_details
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -72,7 +73,8 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         binding.btRebuyOrder.setOnClickListener {
             findNavController().navigate(
                 R.id.action_orderDetailsFragment_to_orderFragment,
-                bundleOf("products" to viewModel.orderDetails.value?.orderItems?.toCartProductResponses())
+                bundleOf("products" to viewModel.orderDetails.value?.orderItems?.toCartProductResponses(),
+                "ADDRESS_ITEM" to viewModel.orderDetails.value?.address)
             )
         }
     }
@@ -120,9 +122,7 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         }
         viewModel.orderDetails.observe(viewLifecycleOwner){
             it?.let {
-              if(it.status == "CANCELED"){
-                  updateUICanceled()
-              }
+                  updateOrderStatusUI(it.status)
             }
         }
         viewModel.error.observe(viewLifecycleOwner){
@@ -132,11 +132,36 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         }
     }
 
-    private fun updateUICanceled() {
-        binding.tvOrderStatus.text = "CANCELED"
-        binding.btCancelOrder.visibility = View.GONE
-        binding.btRebuyOrder.visibility = View.VISIBLE
-
+    private fun updateOrderStatusUI(status: String) {
+        binding.apply {
+            tvOrderStatus.text = status
+            when(status){
+                "PENDING"->{
+                    tvOrderStatus.setTextColor(Color.BLUE)
+                    tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_blue)
+                    btCancelOrder.visibility = View.VISIBLE
+                    btRebuyOrder.visibility = View.GONE
+                }
+                "CANCELED"->{
+                    tvOrderStatus.setTextColor(Color.RED)
+                    tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_red)
+                    btCancelOrder.visibility = View.GONE
+                    btRebuyOrder.visibility = View.VISIBLE
+                }
+                "PROCESSING"->{
+                    tvOrderStatus.setTextColor(Color.YELLOW)
+                    tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_yellow)
+                    btCancelOrder.visibility = View.VISIBLE
+                    btRebuyOrder.visibility = View.GONE
+                }
+                "CONFIRMED"->{
+                    tvOrderStatus.setTextColor(Color.GREEN)
+                    tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_green)
+                    btCancelOrder.visibility = View.GONE
+                    btRebuyOrder.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     private fun setProductsAdapter(itemsList: List<OrderItem>?) {
