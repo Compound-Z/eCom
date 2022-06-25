@@ -13,7 +13,7 @@ import vn.ztech.software.ecom.databinding.OrderListItemBinding
 import vn.ztech.software.ecom.model.OrderItem
 
 class OrderProductsAdapter(
-    private val context: Context, val productsArg: List<OrderItem>,
+    private val context: Context, productsArg: List<OrderItem>,
 ) : RecyclerView.Adapter<OrderProductsAdapter.ViewHolder>() {
     var products: List<OrderItem> = productsArg
 

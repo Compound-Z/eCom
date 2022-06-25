@@ -10,14 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.android.synthetic.main.layout_price_card.*
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderDetailsBinding
-import vn.ztech.software.ecom.model.OrderDetails
-import vn.ztech.software.ecom.model.OrderItem
+import vn.ztech.software.ecom.model.*
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
+import vn.ztech.software.ecom.util.extension.getFullAddress
 import java.time.Month
 import java.util.*
 const val TAG = "OrderDetailsFragment"
@@ -55,12 +56,41 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         binding.orderDetailAppBar.topAppBar.title = getString(R.string.order_details_fragment_title)
 		binding.orderDetailAppBar.topAppBar.setNavigationOnClickListener { findNavController().navigateUp() }
 		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-//		binding.orderDetailsConstraintGroup.visibility = View.GONE
 //
 		if (context != null) {
 			setProductsAdapter(viewModel.orderDetails.value?.orderItems)
 			binding.orderDetailsProRecyclerView.adapter = productsAdapter
 		}
+        binding.tvOrderStatus.text = viewModel.orderDetails.value?.status?:"unknown"
+        setUpShippingViews(viewModel.orderDetails.value?.user, viewModel.orderDetails.value?.address)
+        setUpBillingViews(viewModel.orderDetails.value?.billing, viewModel.orderDetails.value?.orderItems)
+    }
+
+    private fun setUpBillingViews(billing: Billing?, orderItems: List<OrderItem>?) {
+        if(billing == null || orderItems == null){
+            binding.layoutBilling.adCard.visibility = View.GONE
+        }else{
+            binding.layoutBilling.adCard.visibility = View.VISIBLE
+            binding.layoutBilling.apply {
+                priceItemsAmountTv.text = billing.subTotal.toString()
+                priceShippingAmountTv.text = billing.shippingFee.toString()
+                priceTotalAmountTv.text = (billing.subTotal + billing.shippingFee).toString()
+                tvNumberItems.text = "Items(${orderItems.size})"
+            }
+        }
+    }
+
+    private fun setUpShippingViews(user: UserOrder?, address: AddressItem?) {
+        if (user == null || address == null){
+            binding.orderDetailsShippingAddLayout.shippingCard.visibility = View.GONE
+        }else{
+            binding.orderDetailsShippingAddLayout.shippingCard.visibility = View.VISIBLE
+            binding.orderDetailsShippingAddLayout.apply {
+                tvReceiver.text = user.name
+                tvPhoneNumber.text = user.phoneNumber
+                tvAddress.text = address.getFullAddress()
+            }
+        }
     }
 
     override fun observeView() {
@@ -70,6 +100,7 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
     private fun setProductsAdapter(itemsList: List<OrderItem>?) {
 		val items = itemsList ?: emptyList()
 		productsAdapter = OrderProductsAdapter(requireContext(), items)
+        binding.orderDetailsProRecyclerView.adapter = productsAdapter
 	}
 //	private lateinit var orderId: String
 //	override fun onCreateView(

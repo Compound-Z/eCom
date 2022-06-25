@@ -61,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@id/tvShippingProviderLabel" />
 
         <TextView
-            android:id="@+id/ship_add_value_tv"
+            android:id="@+id/tvAddress"
             android:layout_width="0dp"
             android:layout_marginStart="25dp"
             android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
             android:layerType="software"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ship_add_value_tv"
+            app:layout_constraintTop_toBottomOf="@+id/tvAddress"
             app:srcCompat="@drawable/dotted_line_drawable" />
         <TextView
             android:id="@+id/tvReceiverLLabel"

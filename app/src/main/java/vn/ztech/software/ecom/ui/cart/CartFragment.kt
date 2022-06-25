@@ -203,7 +203,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
         inner class ViewHolder(private val priceCardBinding: LayoutPriceCardBinding) :
             RecyclerView.ViewHolder(priceCardBinding.root) {
             fun bind() {
-                priceCardBinding.priceItemsLabelTv.text = getString(
+                priceCardBinding.tvNumberItems.text = getString(
                     R.string.price_card_items_string,
                     priceData?.numberOfItem.toString()
                 )
