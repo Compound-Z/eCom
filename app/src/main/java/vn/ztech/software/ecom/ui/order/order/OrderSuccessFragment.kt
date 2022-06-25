@@ -1,10 +1,11 @@
-package vn.ztech.software.ecom.ui.order
+package vn.ztech.software.ecom.ui.order.order
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderSuccessBinding
@@ -26,7 +27,8 @@ class OrderSuccessFragment : BaseFragment<FragmentOrderSuccessBinding>() {
             findNavController().navigate(R.id.action_orderSuccessFragment_to_homeFragment)
         }
         binding.tvViewOrder.setOnClickListener {
-
+            findNavController().navigate(R.id.action_orderSuccessFragment_to_orderDetailsFragment,
+            bundleOf("orderDetails" to orderDetails))
         }
     }
 

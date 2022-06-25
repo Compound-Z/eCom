@@ -118,12 +118,12 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
 
         viewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
         productDetailsViewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
     }

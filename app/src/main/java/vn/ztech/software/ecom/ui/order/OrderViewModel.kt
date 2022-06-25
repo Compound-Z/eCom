@@ -1,7 +1,6 @@
 package vn.ztech.software.ecom.ui.order
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +15,7 @@ import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.*
+import vn.ztech.software.ecom.ui.order.order.IShippingUserCase
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 import vn.ztech.software.ecom.util.extension.toCartItems

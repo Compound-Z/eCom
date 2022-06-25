@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    tools:context=".ui.order.order.OrderFragment">
+    tools:context=".ui.order.order_details.OrderDetailsFragment">
 
     <include
         android:id="@+id/order_detail_app_bar"
@@ -25,30 +21,58 @@
         android:layout_below="@id/order_detail_app_bar" />
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/recyclerViewListItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/layoutCalculateFee"
         android:layout_below="@id/order_detail_app_bar"
         android:fillViewport="true"
-        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/order_detail_app_bar"
-            android:paddingBottom="12dp">
+            android:paddingBottom="72dp">
 
-            <!--            <androidx.constraintlayout.widget.Group-->
-            <!--                android:id="@+id/order_details_constraint_group"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                app:constraint_referenced_ids="order_details_payment_label_tv,-->
-            <!--                order_details_pro_label_tv,tvOrderShipping,-->
-            <!--                order_details_payment_layout,order_details_shipping_add_layout,-->
-            <!--                order_details_pro_recycler_view,order_change_status_btn" />-->
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/order_details_constraint_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="order_details_payment_label_tv,
+                order_details_pro_label_tv,order_details_ship_label_tv,
+                order_details_payment_layout,order_details_shipping_add_layout,
+                order_details_pro_recycler_view" />
+            <TextView
+                android:id="@+id/tvOrderStatusLabel"
+                android:text="Status"
+                android:layout_marginHorizontal="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content">
 
+            </TextView>
+            <TextView
+                android:id="@+id/tvOrderStatus"
+                android:layout_width="wrap_content"
+                android:text="Pending"
+                android:paddingVertical="5dp"
+                android:paddingHorizontal="12dp"
+                android:layout_marginStart="25dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue_500"
+                android:background="@drawable/rounded_bg_blue"
+                app:layout_constraintBottom_toBottomOf="@id/tvOrderStatusLabel"
+                app:layout_constraintStart_toEndOf="@id/tvOrderStatusLabel"
+                app:layout_constraintTop_toTopOf="@id/tvOrderStatusLabel"
+                android:layout_height="wrap_content">
+
+            </TextView>
             <TextView
                 android:id="@+id/order_details_pro_label_tv"
                 android:layout_width="0dp"
@@ -63,7 +87,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tvOrderStatusLabel" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/order_details_pro_recycler_view"
@@ -84,7 +108,7 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <TextView
-                android:id="@+id/tvOrderShipping"
+                android:id="@+id/order_details_ship_label_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -100,53 +124,46 @@
                 app:layout_constraintTop_toBottomOf="@id/order_details_pro_recycler_view" />
 
             <include
-                android:id="@+id/segmentAddress"
-                layout="@layout/segment_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvOrderShipping" />
-
-            <TextView
-                android:id="@+id/tvChooseShippingOptionLabel"
-                android:layout_width="match_parent"
+                android:id="@+id/order_details_shipping_add_layout"
+                layout="@layout/layout_shipping_card"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="Choose shipping option"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/order_details_ship_label_tv" />
+
+            <TextView
+                android:id="@+id/order_details_payment_label_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/payment_details_label_text"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/segmentAddress">
-
-            </TextView>
+                app:layout_constraintTop_toBottomOf="@id/order_details_shipping_add_layout" />
 
             <include
-                android:id="@+id/layoutListShippingOptions"
-                layout="@layout/layout_list_shipping_options"
-                android:layout_width="match_parent"
+                android:id="@+id/order_details_payment_layout"
+                layout="@layout/layout_price_card"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvChooseShippingOptionLabel" />
+                app:layout_constraintTop_toBottomOf="@id/order_details_payment_label_tv" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-    <include
-        android:id="@+id/layoutCalculateFee"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/layout_calculate_order_fee"
-        android:outlineProvider="paddedBounds"
-        android:layout_alignParentBottom="true"
-        android:minHeight="80dp"
-        />
 </RelativeLayout>

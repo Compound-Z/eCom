@@ -11,7 +11,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import vn.ztech.software.ecom.R
+import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
+import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
 import vn.ztech.software.ecom.ui.auth.otp.OtpActivity
+import vn.ztech.software.ecom.ui.splash.ISplashUseCase
+import vn.ztech.software.ecom.util.CustomError
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 abstract class BaseFragment<VBinding : ViewBinding>: Fragment() {
 
@@ -63,5 +68,21 @@ abstract class BaseFragment<VBinding : ViewBinding>: Fragment() {
         loaderLayout?.visibility =if(show) View.VISIBLE else View.GONE
         loadingMessage?.text = context?.getString(messageId)
     }
+
+    fun openLogInSignUpActivity(page: ISplashUseCase.PAGE){
+        val intent = Intent(activity, LoginSignupActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.putExtra("PAGE", page)
+        startActivity(intent)
+    }
+
+    fun handleError(error: CustomError){
+        if(error is RefreshTokenExpiredException){
+            openLogInSignUpActivity(ISplashUseCase.PAGE.LOGIN)
+        }else{
+            showErrorDialog(error)
+        }
+    }
+
 
 }

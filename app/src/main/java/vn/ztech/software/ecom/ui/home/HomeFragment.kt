@@ -2,6 +2,7 @@ package vn.ztech.software.ecom.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,8 +22,13 @@ import vn.ztech.software.ecom.databinding.FragmentHomeBinding
 import vn.ztech.software.ecom.ui.common.ItemDecorationRecyclerViewPadding
 import vn.ztech.software.ecom.ui.home.ListProductsAdapter.OnClickListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.MyOnFocusChangeListener
+import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
+import vn.ztech.software.ecom.ui.splash.ISplashUseCase
+import vn.ztech.software.ecom.util.CustomError
+import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 private const val TAG = "HomeFragment"
 
@@ -119,6 +125,24 @@ class HomeFragment : Fragment() {
                 binding.tvNoProductFound.visibility = View.VISIBLE
             }
         }
+        viewModel.error.observe(viewLifecycleOwner){
+            it ?: return@observe
+            handleError(it)
+        }
+    }
+    fun handleError(error: CustomError){
+        if(error is RefreshTokenExpiredException){
+            openLogInSignUpActivity(ISplashUseCase.PAGE.LOGIN)
+        }else{
+            showErrorDialog(error)
+        }
+    }
+
+    fun openLogInSignUpActivity(page: ISplashUseCase.PAGE){
+        val intent = Intent(activity, LoginSignupActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.putExtra("PAGE", page)
+        startActivity(intent)
     }
 
     private fun setHomeTopAppBar() {

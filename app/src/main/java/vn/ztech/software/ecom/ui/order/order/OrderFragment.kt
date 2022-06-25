@@ -1,11 +1,7 @@
-package vn.ztech.software.ecom.ui.order
+package vn.ztech.software.ecom.ui.order.order
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,6 +15,8 @@ import vn.ztech.software.ecom.model.AddressItem
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.address.AddressViewModel
 import vn.ztech.software.ecom.ui.cart.CartViewModel
+import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
+import vn.ztech.software.ecom.ui.order.OrderViewModel
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 import vn.ztech.software.ecom.util.extension.toCartItems
 
@@ -98,7 +96,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
 
         cartViewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
 
@@ -124,7 +122,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
         }
         addressViewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
 
@@ -202,14 +200,14 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>() {
         }
         orderViewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
     }
 
     private fun setShippingOptionsAdapter(it: List<ShippingOption>) {
         shippingOptionsAdapter = ShippingOptionsAdapter(requireContext(), it)
-        shippingOptionsAdapter.onClickListener = object : ShippingOptionsAdapter.OnClickListener{
+        shippingOptionsAdapter.onClickListener = object : ShippingOptionsAdapter.OnClickListener {
             override fun onClick(shippingOption: ShippingOption) {
                 orderViewModel.currentSelectedShippingOption.value = shippingOption
                 orderViewModel.calculateCost()

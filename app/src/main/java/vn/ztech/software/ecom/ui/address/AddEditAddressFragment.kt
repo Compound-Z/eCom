@@ -109,7 +109,7 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 		}
 		viewModel.error.observe(viewLifecycleOwner){
 			it?.let {
-				showErrorDialog(it)
+				handleError(it)
 			}
 		}
 		viewModel.provinces.observe(viewLifecycleOwner){
@@ -198,47 +198,6 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 				}
 			}
 		}
-
-//		viewModel.dataStatus.observe(viewLifecycleOwner) { status ->
-//			when (status) {
-//				StoreDataStatus.LOADING -> setLoaderState(View.VISIBLE)
-//				StoreDataStatus.ERROR -> {
-//					setLoaderState()
-//					makeToast("Error getting Data, Try Again!")
-//				}
-//				StoreDataStatus.DONE -> {
-//					fillDataInViews()
-//					setLoaderState()
-//				}
-//				else -> {
-//					setLoaderState()
-//				}
-//			}
-//		}
-//
-//		viewModel.addAddressStatus.observe(viewLifecycleOwner) { status ->
-//			if (status == AddObjectStatus.DONE) {
-//				makeToast("Address Saved!")
-//				findNavController().navigateUp()
-//			}
-//
-//			viewModel.addAddressStatus.observe(viewLifecycleOwner) { status ->
-//				when (status) {
-//					AddObjectStatus.DONE -> setLoaderState()
-//					AddObjectStatus.ERR_ADD -> {
-//						setLoaderState()
-//						binding.addAddressErrorTextView.visibility = View.VISIBLE
-//						binding.addAddressErrorTextView.text =
-//							getString(R.string.save_address_error_text)
-//						makeToast(getString(R.string.save_address_error_text))
-//					}
-//					AddObjectStatus.ADDING -> {
-//						setLoaderState(View.VISIBLE)
-//					}
-//					else -> setLoaderState()
-//				}
-//			}
-//		}
 	}
 
 	private fun populateProvinceToSpinner(spinnerProvinces: Spinner, it: List<Province>, onItemSelectedListener: AdapterView.OnItemSelectedListener) {

@@ -109,6 +109,10 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
             }
             binding.tvNumberOfCategories.text = "${listCategories.size} categories"
         }
+        viewModel.error.observe(viewLifecycleOwner){
+            it ?: return@observe
+            handleError(it)
+        }
     }
 
     private fun performSearch(searchWords: String) {

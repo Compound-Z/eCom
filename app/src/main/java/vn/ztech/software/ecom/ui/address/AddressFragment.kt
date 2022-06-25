@@ -114,7 +114,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
         viewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
     }

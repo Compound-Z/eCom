@@ -151,7 +151,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderFragment"
-        android:name="vn.ztech.software.ecom.ui.order.OrderFragment"
+        android:name="vn.ztech.software.ecom.ui.order.order.OrderFragment"
         android:label="fragment_order"
         tools:layout="@layout/fragment_order" >
         <action
@@ -188,7 +188,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderSuccessFragment"
-        android:name="vn.ztech.software.ecom.ui.order.OrderSuccessFragment"
+        android:name="vn.ztech.software.ecom.ui.order.order.OrderSuccessFragment"
         android:label="fragment_order_success"
         tools:layout="@layout/fragment_order_success">
         <action
@@ -197,21 +197,24 @@
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"
             />
-<!--        <action-->
-<!--            android:id="@+id/action_orderSuccessFragment_to_orderDetailsFragment"-->
-<!--            app:destination="@id/orderDetailsFragment"-->
-<!--            />-->
+        <action
+            android:id="@+id/action_orderSuccessFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment"
+            />
 
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/orderDetailsFragment"-->
-<!--        android:name="com.vishalgaur.shoppingapp.ui.home.OrderDetailsFragment"-->
-<!--        android:label="fragment_order_details"-->
-<!--        tools:layout="@layout/fragment_order_details" >-->
-<!--        <argument-->
-<!--            android:name="orderId"-->
-<!--            app:argType="string" />-->
-<!--    </fragment>-->
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="vn.ztech.software.ecom.ui.order.order_details.OrderDetailsFragment"
+        android:label="fragment_order_details"
+        tools:layout="@layout/fragment_order_details" >
+        <argument
+            android:name="orderId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_orderDetailsFragment_to_product"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/addressFragment"-->
 <!--        android:name="com.vishalgaur.shoppingapp.ui.home.AddressFragment"-->

@@ -60,12 +60,7 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 		}
 		viewModel.error.observe(viewLifecycleOwner){
 			it ?: return@observe
-
-			if(it is RefreshTokenExpiredException){
-				openLogInSignUpActivity(ISplashUseCase.PAGE.LOGIN)
-			}else{
-				showErrorDialog(it)
-			}
+			handleError(it)
 		}
 		viewModel.isLogOutSuccessfully.observe(viewLifecycleOwner){
 			if (it){
@@ -87,13 +82,6 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 				}
 				.show()
 		}
-	}
-
-	private fun openLogInSignUpActivity(page: ISplashUseCase.PAGE){
-		val intent = Intent(activity, LoginSignupActivity::class.java)
-		intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-		intent.putExtra("PAGE", page)
-		startActivity(intent)
 	}
 
 	private fun goLogIn() {

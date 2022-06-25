@@ -1,21 +1,12 @@
-package vn.ztech.software.ecom.ui.order
+package vn.ztech.software.ecom.ui.order.order
 
 import android.content.Context
-import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.RadioButton
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
-import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.databinding.ItemShippingOptionBinding
-import vn.ztech.software.ecom.databinding.LayoutAddressCardBinding
-import vn.ztech.software.ecom.model.AddressItem
-import vn.ztech.software.ecom.util.extension.getFullAddress
 
 class ShippingOptionsAdapter(
     private val context: Context,
