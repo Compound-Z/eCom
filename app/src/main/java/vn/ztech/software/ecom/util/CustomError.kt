@@ -10,7 +10,7 @@ import java.io.IOException
 import java.io.Serializable
 import kotlin.reflect.typeOf
 
-open class CustomError(private val e: Throwable = Throwable(), open val customMessage: String = "System error! Please try again later!"): IOException(), Serializable{
+open class CustomError( val e: Throwable = Throwable(), open var customMessage: String = "System error! Please try again later!"): IOException(), Serializable{
     init {
         Log.d("CustomError", e.message.toString())
     }
