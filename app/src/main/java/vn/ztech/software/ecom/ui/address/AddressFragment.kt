@@ -33,6 +33,14 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
         }else{
             viewModel.getAddresses()
         }
+        arguments?.takeIf { it.containsKey("fromWhere") }?.let {
+            val fromWhere = it.getString("fromWhere")
+            when(fromWhere){
+                "AccountFragment"-> {
+                    viewModel.fromWhere.value = "AccountFragment"
+                }
+            }
+        }
     }
 
 
@@ -122,6 +130,11 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 }
             }
             binding.addressAddBtn.visibility = View.VISIBLE
+        }
+        viewModel.fromWhere.observe(viewLifecycleOwner){
+            if (it == "AccountFragment"){
+                binding.btChooseAddress.visibility = View.GONE
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner){

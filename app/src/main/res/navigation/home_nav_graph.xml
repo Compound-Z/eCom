@@ -139,12 +139,12 @@
         android:name="vn.ztech.software.ecom.ui.account.logout.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" >
-<!--        <action-->
-<!--            android:id="@+id/action_accountFragment_to_ordersFragment"-->
-<!--            app:destination="@id/ordersFragment" />-->
-<!--        <action-->
-<!--            android:id="@+id/action_accountFragment_to_addressFragment"-->
-<!--            app:destination="@id/addressFragment" />-->
+        <action
+            android:id="@+id/action_accountFragment_to_orderHistoryFragment"
+            app:destination="@id/orderHistoryFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
 <!--        <action-->
 <!--            android:id="@+id/action_accountFragment_to_profileFragment"-->
 <!--            app:destination="@id/profileFragment" />-->

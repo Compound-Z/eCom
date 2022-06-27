@@ -30,6 +30,7 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
     val provinces = MutableLiveData<List<Province>>()
     val districts = MutableLiveData<List<District>>()
     val wards = MutableLiveData<List<Ward>>()
+    val fromWhere = MutableLiveData<String>()
 
     fun getAddresses(isLoadingEnabled: Boolean = true){
         viewModelScope.launch {

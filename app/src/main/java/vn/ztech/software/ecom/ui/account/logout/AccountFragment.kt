@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentAccountBinding
@@ -16,6 +18,7 @@ import vn.ztech.software.ecom.databinding.FragmentLoginBinding
 import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
+import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 
@@ -35,16 +38,15 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 //			Log.d(TAG, "Profile Selected")
 //			findNavController().navigate(R.id.action_accountFragment_to_profileFragment)
 //		}
-//		binding.accountOrdersTv.setOnClickListener {
-//			Log.d(TAG, "Orders Selected")
-//			findNavController().navigate(R.id.action_accountFragment_to_ordersFragment)
-//		}
-//		binding.accountAddressTv.setOnClickListener {
-//			Log.d(TAG, "Address Selected")
-//			findNavController().navigate(R.id.action_accountFragment_to_addressFragment)
-//		}
+		binding.accountOrdersTv.setOnClickListener {
+			(activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.orderHistoryFragment
+		}
+		binding.accountAddressTv.setOnClickListener {
+			findNavController().navigate(
+				R.id.action_accountFragment_to_addressFragment,
+				bundleOf("fromWhere" to "AccountFragment"))
+		}
 		binding.accountSignOutTv.setOnClickListener {
-			Log.d(TAG, "Sign Out Selected")
 			showSignOutDialog()
 		}
 	}
