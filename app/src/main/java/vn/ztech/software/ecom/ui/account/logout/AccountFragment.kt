@@ -91,5 +91,10 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 		startActivity(logInIntent)
 	}
 
+	override fun onStop() {
+		super.onStop()
+		viewModel.clearErrors()
+	}
+
 
 }

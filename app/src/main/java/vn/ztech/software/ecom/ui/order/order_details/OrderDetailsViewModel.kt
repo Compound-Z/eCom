@@ -74,4 +74,7 @@ class OrderDetailsViewModel(private val orderUseCase: IOrderUserCase): ViewModel
             }
         }
     }
+    fun clearErrors() {
+        error.value = null
+    }
 }

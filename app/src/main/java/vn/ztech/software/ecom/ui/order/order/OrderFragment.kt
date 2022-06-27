@@ -246,6 +246,13 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
         productsAdapter = OrderProductsAdapter(requireContext(), products.toMutableList().toOrderItems())
         binding.orderDetailsProRecyclerView.adapter = productsAdapter
     }
+
+    override fun onStop() {
+        super.onStop()
+        orderViewModel.clearErrors()
+        addressViewModel.clearErrors()
+        cartViewModel.clearErrors()
+    }
 }
 
 private fun Address.getDefaultAddress(): AddressItem? {

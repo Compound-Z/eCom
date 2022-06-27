@@ -131,5 +131,8 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
             }
         }
     }
-
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
+    }
 }

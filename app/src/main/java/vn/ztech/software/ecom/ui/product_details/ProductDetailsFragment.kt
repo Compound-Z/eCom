@@ -172,4 +172,8 @@ class ProductDetailsFragment : Fragment(),
         cartViewModel.addProductStatus.value = false /**refresh live data value to the original, so that the bottom sheet will not show up when navigate back to this fragment*/
         (activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.cartFragment
     }
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
+    }
 }

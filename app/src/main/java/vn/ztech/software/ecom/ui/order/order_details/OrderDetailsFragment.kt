@@ -189,6 +189,11 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                 .show()
         }
     }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
+    }
 //	private lateinit var orderId: String
 //	override fun onCreateView(
 //		inflater: LayoutInflater,

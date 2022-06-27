@@ -261,4 +261,8 @@ open class ListProductsInCategoryFragment : Fragment() {
         //feature: for now, ad is not supported
         return listOf()
     }
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
+    }
 }

@@ -47,4 +47,7 @@ class AccountViewModel(private val useCase: IAccountUseCase): ViewModel() {
     private fun clearLogs() {
         useCase.clearLogs()
     }
+    fun clearErrors() {
+        error.value = null
+    }
 }

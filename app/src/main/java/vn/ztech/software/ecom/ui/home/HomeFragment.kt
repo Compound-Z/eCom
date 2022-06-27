@@ -275,4 +275,9 @@ class HomeFragment : Fragment() {
         return listOf()
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
+    }
+
 }

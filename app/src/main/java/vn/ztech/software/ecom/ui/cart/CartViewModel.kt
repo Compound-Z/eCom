@@ -122,6 +122,9 @@ class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
             Log.d("CartViewModel", priceData.value?.subTotal.toString())
         }
     }
+    fun clearErrors() {
+        error.value = null
+    }
 
     inner class PriceData(
         var numberOfItem: Int,

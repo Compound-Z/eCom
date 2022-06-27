@@ -117,4 +117,8 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>() {
         val pwd2 = binding.retypeResetPasswordEditText.text.toString()
         viewModel.resetPassword(mob, pwd, pwd2)
     }
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
+    }
 }

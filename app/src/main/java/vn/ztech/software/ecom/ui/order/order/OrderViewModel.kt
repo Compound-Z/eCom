@@ -111,4 +111,7 @@ class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUs
         var shippingFee: Int = -1,
         var totalCost: Int = -1,
     )
+    fun clearErrors() {
+        error.value = null
+    }
 }

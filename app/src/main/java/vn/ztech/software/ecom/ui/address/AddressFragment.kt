@@ -157,5 +157,8 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
         android.util.Patterns.PHONE
     }
 
-
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
+    }
 }

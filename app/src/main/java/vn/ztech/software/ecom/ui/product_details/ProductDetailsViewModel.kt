@@ -54,4 +54,7 @@ class ProductDetailsViewModel(
             }
         }
     }
+    fun clearErrors() {
+        error.value = null
+    }
 }

@@ -366,6 +366,6 @@ class AddEditAddressFragment : BaseFragment<FragmentAddEditAddressBinding>() {
 		isAddedSelectedAddressToProvinces = false
 		isAddedSelectedAddressToDistricts = false
 		isAddedSelectedAddressToWards = false
+		viewModel.clearErrors()
 	}
-
-	}
+}

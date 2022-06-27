@@ -167,4 +167,8 @@ class OtpActivity : AppCompatActivity(), SuccessFragmentListener {
 	override fun onDialogDismiss() {
 		moveToLogin()
 	}
+	override fun onStop() {
+		super.onStop()
+		viewModel.clearErrors()
+	}
 }

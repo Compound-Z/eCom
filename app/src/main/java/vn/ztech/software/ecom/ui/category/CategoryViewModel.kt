@@ -117,4 +117,7 @@ class CategoryViewModel(private val listCategoriesUseCase: IListCategoriesUseCas
             }
         }
     }
+    fun clearErrors() {
+        error.value = null
+    }
 }

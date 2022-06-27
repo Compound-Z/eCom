@@ -137,6 +137,5 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 	override fun onPause() {
 		super.onPause()
 		viewModel.clearError()
-
 	}
 }

@@ -86,4 +86,7 @@ class OtpViewModel(private val useCase: IOtpUseCase) : ViewModel() {
 			return false
 		}
 	}
+	fun clearErrors() {
+		error.value = null
+	}
 }

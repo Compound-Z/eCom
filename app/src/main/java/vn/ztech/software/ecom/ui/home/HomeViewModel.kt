@@ -76,4 +76,8 @@ class HomeViewModel(
             }
         }
     }
+
+    fun clearErrors() {
+        error.value = null
+    }
 }

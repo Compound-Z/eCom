@@ -74,4 +74,7 @@ class ForgotPasswordViewModel(private val useCase: IResetPasswordUseCase): ViewM
         errorInputData.value = LoginViewErrors.NONE
         return true
     }
+    fun clearErrors() {
+        error.value = null
+    }
 }

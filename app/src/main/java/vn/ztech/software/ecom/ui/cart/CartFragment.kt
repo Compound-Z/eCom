@@ -177,6 +177,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
         viewModel.deleteProductStatus.value = false
         viewModel.adjustProductStatus.value = false
         viewModel.addProductStatus.value = false
+        viewModel.clearErrors()
     }
 
     private fun showDeleteDialog(itemId: String, itemBinding: LayoutCircularLoaderBinding) {

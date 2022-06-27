@@ -225,4 +225,7 @@ class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel()
             }
         }
     }
+    fun clearErrors() {
+        error.value = null
+    }
 }

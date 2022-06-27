@@ -129,5 +129,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
 		viewModel.login(mob, pwd)
 	}
+	override fun onStop() {
+		super.onStop()
+		viewModel.clearErrors()
+	}
 
 }

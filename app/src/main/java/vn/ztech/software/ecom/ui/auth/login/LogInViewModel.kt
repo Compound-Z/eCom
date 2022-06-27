@@ -81,4 +81,7 @@ class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
         errorInputData.value = LoginViewErrors.NONE
         return true
     }
+    fun clearErrors() {
+        error.value = null
+    }
 }
