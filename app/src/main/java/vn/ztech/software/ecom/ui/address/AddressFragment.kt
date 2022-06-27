@@ -3,6 +3,7 @@ package vn.ztech.software.ecom.ui.address
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -97,16 +98,27 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
         viewModel.addresses.observe(viewLifecycleOwner){
             it?.let {
-                if(it.addresses.isNotEmpty()){
+                if(!it.addresses.isNullOrEmpty()){
                     addressAdapter.data = it.addresses
                     addressAdapter.defaultAddressId = it.defaultAddressId
                     binding.addressAddressesRecyclerView.adapter = addressAdapter
                     binding.addressAddressesRecyclerView.adapter?.notifyDataSetChanged()
-                }else {
-                    binding.addressAddressesRecyclerView.visibility = View.GONE
+                    //re-constraint the button so that it display at the bottom of the recycler list
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clone(binding.constraintLayout)
+                    constraintSet.connect(R.id.address_add_btn, ConstraintSet.TOP, R.id.address_addresses_recycler_view, ConstraintSet.BOTTOM )
+                    constraintSet.applyTo(binding.constraintLayout)
+                }
+                else {
+                    binding.addressAddressesRecyclerView.visibility = View.INVISIBLE
                     binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
                     binding.loaderLayout.circularLoader.hideAnimationBehavior
                     binding.addressEmptyTextView.visibility = View.VISIBLE
+                    //re-constraint the button so that it display at the center of the screen
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clone(binding.constraintLayout)
+                    constraintSet.connect(R.id.address_add_btn, ConstraintSet.TOP, R.id.address_empty_text_view, ConstraintSet.BOTTOM )
+                    constraintSet.applyTo(binding.constraintLayout)
                 }
             }
             binding.addressAddBtn.visibility = View.VISIBLE

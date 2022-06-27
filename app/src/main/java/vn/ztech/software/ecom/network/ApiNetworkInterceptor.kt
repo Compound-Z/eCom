@@ -10,7 +10,6 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.Response
-import okhttp3.ResponseBody
 import vn.ztech.software.ecom.api.response.TokenResponse
 import vn.ztech.software.ecom.common.Constants
 import vn.ztech.software.ecom.database.local.user.UserManager

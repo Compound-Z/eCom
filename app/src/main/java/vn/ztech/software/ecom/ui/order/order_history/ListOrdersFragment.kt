@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.ui.order.order_history
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,13 +17,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.model.Order
 
 const val TAG = "ListOrdersFragment"
-class ListOrdersFragment(val onClickListener: OnClickListener) : BaseFragment<FragmentListOrderBinding>() {
+class ListOrdersFragment() : BaseFragment<FragmentListOrderBinding>() {
     private val viewModel: ListOrdersViewModel by viewModel()
     lateinit var statusFilter: String
     lateinit var adapter: ListOrderAdapter
     interface OnClickListener{
         fun onClickButtonViewDetails(orderId: String)
     }
+    private lateinit var callBack: OnClickListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,7 +48,7 @@ class ListOrdersFragment(val onClickListener: OnClickListener) : BaseFragment<Fr
         val orders = _orders?: emptyList()
         adapter = ListOrderAdapter(requireContext(), orders, object : ListOrderAdapter.OnClickListener{
             override fun onClickButtonViewDetail(order: Order) {
-                onClickListener.onClickButtonViewDetails(order._id)
+                callBack.onClickButtonViewDetails(order._id)
             }
         })
         binding.listOrders.adapter = adapter
@@ -80,5 +82,11 @@ class ListOrdersFragment(val onClickListener: OnClickListener) : BaseFragment<Fr
                 handleError(it)
             }
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        callBack = parentFragment as OnClickListener
     }
 }

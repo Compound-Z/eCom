@@ -11,7 +11,7 @@ import vn.ztech.software.ecom.model.Ward
 import vn.ztech.software.ecom.repository.IAddressRepository
 
 interface IAddressUseCase{
-    suspend fun getAddresses(): Flow<Address>
+    suspend fun getAddresses(): Flow<Address?>
     suspend fun getProvinces(): Flow<List<Province>>
     suspend fun getDistricts(provinceId: Int): Flow<List<District>>
     suspend fun getWards(districtId: Int): Flow<List<Ward>>
@@ -21,7 +21,7 @@ interface IAddressUseCase{
 }
 
 class AddressUseCase(private val addressRepository: IAddressRepository): IAddressUseCase{
-    override suspend fun getAddresses(): Flow<Address> = flow{
+    override suspend fun getAddresses(): Flow<Address?> = flow{
         val addresses = addressRepository.getAddresses()
         emit(addresses)
     }

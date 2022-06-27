@@ -14,7 +14,7 @@ import vn.ztech.software.ecom.model.Ward
 @Keep
 interface IAddressApi{
     @GET("/api/v1/addresses")
-    suspend fun getAddresses(): Address
+    suspend fun getAddresses(): Address?
     @GET("/api/v1/addresses/provinces")
     suspend fun getProvinces(): List<Province>
     @GET("/api/v1/addresses/districts/{provinceId}")

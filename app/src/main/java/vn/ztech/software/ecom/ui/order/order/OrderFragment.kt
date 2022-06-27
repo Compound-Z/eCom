@@ -117,7 +117,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
 
         addressViewModel.currentSelectedAddressItem.observe(viewLifecycleOwner){
             updateSegmentAddress(it)
-            orderViewModel.currentSelectedAddress.value = it
+            it?.let { orderViewModel.currentSelectedAddress.value = it}
         }
         addressViewModel.error.observe(viewLifecycleOwner){
             it?.let {
@@ -216,8 +216,11 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
     }
 
     private fun updateSegmentAddress(it: Address?) {
-        it?.let {
-            if (it.addresses.isEmpty()){
+        if (it == null){
+            //show remind note
+            binding.segmentAddress.tvNoAddress.visibility = View.VISIBLE
+        }else {
+            if (it.addresses.isNullOrEmpty()){
                 //show remind note
                 binding.segmentAddress.tvNoAddress.visibility = View.VISIBLE
             }else{

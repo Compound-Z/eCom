@@ -1,7 +1,6 @@
 package vn.ztech.software.ecom.ui.cart
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,10 +10,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.common.LoadState
-import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.common.extension.toLoadState
-import vn.ztech.software.ecom.model.Product
-import vn.ztech.software.ecom.model.ProductDetails
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 

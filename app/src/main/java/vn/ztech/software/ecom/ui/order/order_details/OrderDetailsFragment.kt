@@ -2,19 +2,12 @@ package vn.ztech.software.ecom.ui.order.order_details
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.layout_price_card.*
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderDetailsBinding
 import vn.ztech.software.ecom.model.*
@@ -24,8 +17,7 @@ import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 import vn.ztech.software.ecom.util.extension.getFullAddress
 import vn.ztech.software.ecom.util.extension.toCartProductResponses
-import java.time.Month
-import java.util.*
+
 const val TAG = "OrderDetailsFragment"
 class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
 
@@ -102,8 +94,8 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         }else{
             binding.orderDetailsShippingAddLayout.shippingCard.visibility = View.VISIBLE
             binding.orderDetailsShippingAddLayout.apply {
-                tvReceiver.text = user.name
-                tvPhoneNumber.text = user.phoneNumber
+                tvReceiver.text = address.receiverName
+                tvPhoneNumber.text = address.receiverPhoneNumber
                 tvAddress.text = address.getFullAddress()
             }
         }

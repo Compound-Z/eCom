@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ui.address.AddressFragment">
 
     <include
@@ -23,11 +23,16 @@
         android:layout_width="match_parent"
         android:layout_below="@id/address_app_bar"
         android:layout_marginBottom="100dp"
-        android:layout_height="wrap_content">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_alignBottom="@id/btChooseAddress"
+        android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:paddingBottom="50dp"
                 android:id="@+id/address_empty_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -66,15 +71,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:backgroundTint="#C7D5DF"
+                android:paddingVertical="8dp"
                 android:text="@string/add_address_btn_text"
-                app:layout_constraintTop_toBottomOf="@id/address_addresses_recycler_view"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:textAllCaps="false"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                android:translationY="-8dp" />
+                android:translationY="-8dp"
+                android:layout_marginTop="18dp"
+                app:layout_constraintTop_toBottomOf="@id/address_addresses_recycler_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

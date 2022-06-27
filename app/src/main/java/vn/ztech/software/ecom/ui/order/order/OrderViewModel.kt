@@ -69,7 +69,13 @@ class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUs
 
     fun createOrder(products: MutableList<CartProductResponse>?, addressItem: AddressItem?, shippingOption: ShippingOption?) {
         if (products.isNullOrEmpty() || addressItem == null || shippingOption == null){
-            error.value = errorMessage(CustomError(customMessage = "System error, empty information, can not create order"))
+            if(addressItem==null){
+                error.value = errorMessage(CustomError(customMessage = "Please choose an address"))
+            }else if(shippingOption == null){
+                error.value = errorMessage(CustomError(customMessage = "Please choose a shipping option"))
+            }else{
+                error.value = errorMessage(CustomError(customMessage = "Products is empty, go shopping please"))
+            }
         }else{
             val createOrderRequest = CreateOrderRequest(
                 addressItemId = addressItem._id,

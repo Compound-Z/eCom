@@ -11,7 +11,7 @@ import vn.ztech.software.ecom.model.Province
 import vn.ztech.software.ecom.model.Ward
 
 interface IAddressRepository{
-    suspend fun getAddresses(): Address
+    suspend fun getAddresses(): Address?
     suspend fun getProvinces(): List<Province>
     suspend fun getDistricts(provinceId: Int): List<District>
     suspend fun getWards(districtId: Int): List<Ward>
@@ -21,7 +21,7 @@ interface IAddressRepository{
 }
 
 class AddressRepository(private val addAddressApi: IAddressApi): IAddressRepository{
-    override suspend fun getAddresses(): Address {
+    override suspend fun getAddresses(): Address? {
         return addAddressApi.getAddresses()
     }
     override suspend fun getProvinces(): List<Province> {

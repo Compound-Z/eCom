@@ -20,7 +20,7 @@ import vn.ztech.software.ecom.util.isPhoneNumberValid
 
 class AddressViewModel(private val addressUseCase: IAddressUseCase): ViewModel() {
     val loading = MutableLiveData<Boolean>()
-    val addresses = MutableLiveData<Address>()
+    val addresses = MutableLiveData<Address?>()
     val addAddressStatus = MutableLiveData<Boolean>()
     val updateAddressStatus = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()

@@ -18,26 +18,12 @@ import vn.ztech.software.ecom.databinding.FragmentOrderHistoryBinding
 import vn.ztech.software.ecom.ui.BaseFragment
 
 
-class OrderHistoryFragment : BaseFragment<FragmentOrderHistoryBinding>() {
+class OrderHistoryFragment : BaseFragment<FragmentOrderHistoryBinding>(), ListOrdersFragment.OnClickListener {
     private lateinit var listOrdersFragmentAdapter: ListOrdersFragmentAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listOrdersFragmentAdapter = ListOrdersFragmentAdapter(this@OrderHistoryFragment, object : ListOrdersFragment.OnClickListener{
-            override fun onClickButtonViewDetails(orderId: String) {
-                findNavController().navigate(
-                    R.id.action_orderHistoryFragment_to_orderDetailsFragment,
-                    bundleOf(
-                        "fromWhere" to "OrderHistoryFragment",
-                        "orderId" to orderId,
-                    )
-                )
-            }
-
-        })
+        listOrdersFragmentAdapter = ListOrdersFragmentAdapter(this@OrderHistoryFragment)
         binding.pager.adapter = listOrdersFragmentAdapter
         TabLayoutMediator(binding.tabLayout, binding.pager) {tab, pos->
             if(pos==0) tab.text =  "All"
@@ -59,19 +45,29 @@ class OrderHistoryFragment : BaseFragment<FragmentOrderHistoryBinding>() {
         super.observeView()
     }
 
-    class ListOrdersFragmentAdapter(fragment: OrderHistoryFragment, val onClickListener: ListOrdersFragment.OnClickListener) : FragmentStateAdapter(fragment) {
+    class ListOrdersFragmentAdapter(fragment: OrderHistoryFragment) : FragmentStateAdapter(fragment) {
 
         override fun getItemCount(): Int {
             return Constants.OrderStatus.size
         }
 
         override fun createFragment(position: Int): Fragment {
-            val fragment = ListOrdersFragment(onClickListener = onClickListener)
+            val fragment = ListOrdersFragment()
             fragment.arguments = Bundle().apply {
                 putString("statusFilter", Constants.OrderStatus[position])
             }
             return fragment
         }
+    }
+
+    override fun onClickButtonViewDetails(orderId: String) {
+        findNavController().navigate(
+            R.id.action_orderHistoryFragment_to_orderDetailsFragment,
+            bundleOf(
+                "fromWhere" to "OrderHistoryFragment",
+                "orderId" to orderId,
+            )
+        )
     }
 
 }
