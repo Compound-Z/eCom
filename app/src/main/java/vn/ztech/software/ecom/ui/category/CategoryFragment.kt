@@ -107,7 +107,7 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
                     notifyDataSetChanged()
                 }
             }
-            binding.tvNumberOfCategories.text = "${listCategories.size} categories"
+            binding.categoryTopAppBar.topAppBar.title = "${listCategories.size} categories"
         }
         viewModel.error.observe(viewLifecycleOwner){
             it ?: return@observe

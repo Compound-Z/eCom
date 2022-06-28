@@ -37,8 +37,7 @@ class OrderHistoryFragment : BaseFragment<FragmentOrderHistoryBinding>(), ListOr
 
     override fun setUpViews() {
         super.setUpViews()
-        binding.ordersAppBar.topAppBar.title = getString(R.string.order_details_fragment_title)
-
+        binding.ordersAppBar.topAppBar.title = "Orders"
     }
 
     override fun observeView() {

@@ -121,13 +121,6 @@ class ProductDetailsFragment : Fragment(),
         binding.addProAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-        binding.addProAppBar.topAppBar.inflateMenu(R.menu.app_bar_menu)
-        binding.addProAppBar.topAppBar.overflowIcon?.setTint(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.gray
-            )
-        )
 
         setImagesView()
 
