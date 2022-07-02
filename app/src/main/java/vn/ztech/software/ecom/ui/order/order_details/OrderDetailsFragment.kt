@@ -154,7 +154,7 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                     btRebuyOrder.visibility = View.VISIBLE
                 }
                 "PROCESSING"->{
-                    tvOrderStatus.setTextColor(Color.YELLOW)
+                    tvOrderStatus.setTextColor(resources.getColor(R.color.dark_yellow))
                     tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_yellow)
                     btCancelOrder.visibility = View.VISIBLE
                     btRebuyOrder.visibility = View.GONE

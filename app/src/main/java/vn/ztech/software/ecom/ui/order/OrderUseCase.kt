@@ -30,7 +30,8 @@ class OrderUseCase(private val orderRepository: IOrderRepository): IOrderUserCas
 
     override suspend fun getOrders(statusFilter: String): Flow<List<Order>> = flow {
         val orders = orderRepository.getOrders(statusFilter)
-        emit(orders)
+        val orders2 = orders.sortedByDescending{ it.updatedAt }
+        emit(orders2)
     }
 
     override suspend fun getOrderDetails(orderId: String): Flow<OrderDetails> = flow {
