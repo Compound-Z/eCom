@@ -35,8 +35,20 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
                 binding.productImageView.clipToOutline = true
             }
             setUIBaseOnOrderStatus(binding.tvOrderStatus, order.status)
+
+            if (order.status == "CONFIRMED"){
+                binding.btViewDetails.text = "Mark as Received!"
+                binding.btViewDetails.setBackgroundColor(context.resources.getColor(R.color.button_bg_orange))
+            }else{
+                binding.btViewDetails.text = "View details"
+                binding.btViewDetails.setBackgroundColor(context.resources.getColor(R.color.blue_accent_300))
+
+            }
             binding.btViewDetails.setOnClickListener {
                 onClickListener.onClickButtonViewDetail(order)
+            }
+            binding.productCard.setOnClickListener {
+                onClickListener.onClick(order)
             }
         }
     }
@@ -65,8 +77,8 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
                     background = resources.getDrawable(R.drawable.rounded_bg_blue)
                 }
                 "CANCELED"->{
-                    setTextColor(Color.RED)
-                    background = resources.getDrawable(R.drawable.rounded_bg_red)
+                    setTextColor(Color.GRAY)
+                    background = resources.getDrawable(R.drawable.rounded_bg_gray)
                 }
                 "PROCESSING"->{
                     setTextColor(resources.getColor(R.color.dark_yellow))
@@ -76,10 +88,15 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
                     setTextColor(Color.GREEN)
                     background = resources.getDrawable(R.drawable.rounded_bg_green)
                 }
+                "RECEIVED"->{
+                    setTextColor(Color.GRAY)
+                    background = resources.getDrawable(R.drawable.rounded_bg_gray)
+                }
             }
         }
     }
     interface OnClickListener{
         fun onClickButtonViewDetail(order: Order)
+        fun onClick(order: Order)
     }
 }

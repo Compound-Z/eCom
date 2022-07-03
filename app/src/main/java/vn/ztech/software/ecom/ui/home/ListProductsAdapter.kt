@@ -38,6 +38,7 @@ class ListProductsAdapter(proList: List<Any>, private val context: Context) :
 		private val proRatingBar = binding.productRatingBar
 		private val proLikeButton = binding.productLikeCheckbox
 		private val proCartButton = binding.productAddToCartButton
+		private val tvSaleNumber = binding.tvSaleNumber
 
 		fun bind(productData: Product) {
 			productCard.setOnClickListener {
@@ -47,7 +48,7 @@ class ListProductsAdapter(proList: List<Any>, private val context: Context) :
 			proPrice.text =
 				context.getString(R.string.pro_details_price_value, productData.price.toString())
 			proRatingBar.rating = productData.averageRating.toFloat()
-
+			tvSaleNumber.text = "Sold: ${productData.saleNumber.toString()}"
 			if (productData.imageUrl.isNotEmpty()) {
 				val imgUrl = productData.imageUrl.toUri().buildUpon().scheme("https").build()
 				Glide.with(context)

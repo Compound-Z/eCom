@@ -4,6 +4,7 @@ import androidx.room.FtsOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import vn.ztech.software.ecom.api.request.CreateOrderRequest
+import vn.ztech.software.ecom.api.request.UpdateOrderStatusBody
 import vn.ztech.software.ecom.model.Order
 import vn.ztech.software.ecom.model.OrderDetails
 import vn.ztech.software.ecom.repository.IOrderRepository
@@ -13,6 +14,8 @@ interface IOrderUserCase{
     suspend fun cancelOrder(orderId: String): Flow<OrderDetails>
     suspend fun getOrders(statusFilter: String): Flow<List<Order>>
     suspend fun getOrderDetails(orderId: String): Flow<OrderDetails>
+    suspend fun updateOrderStatus(orderId: String, updateOrderStatusBody: UpdateOrderStatusBody): Flow<Order>
+    suspend fun updateOrderStatusDetails(orderId: String, updateOrderStatusBody: UpdateOrderStatusBody): Flow<OrderDetails>
 
 }
 
@@ -37,5 +40,14 @@ class OrderUseCase(private val orderRepository: IOrderRepository): IOrderUserCas
     override suspend fun getOrderDetails(orderId: String): Flow<OrderDetails> = flow {
         val orderDetails = orderRepository.getOrderDetails(orderId)
         emit(orderDetails)
+    }
+
+    override suspend fun updateOrderStatus(_id: String, updateOrderStatusBody: UpdateOrderStatusBody): Flow<Order> =flow {
+        val order = orderRepository.updateOrderStatus(_id, updateOrderStatusBody)
+        emit(order)
+    }
+    override suspend fun updateOrderStatusDetails(_id: String, updateOrderStatusBody: UpdateOrderStatusBody): Flow<OrderDetails> =flow {
+        val order = orderRepository.updateOrderStatusDetails(_id, updateOrderStatusBody)
+        emit(order)
     }
 }

@@ -23,5 +23,6 @@
     <color name="loader_background_color">#55AAAAAA</color>
     <color name="bg_loader_layout">#86ACB1B5</color>
     <color name="dark_yellow">#FFC107</color>
+    <color name="button_bg_orange">#FF5722</color>
 
 </resources>

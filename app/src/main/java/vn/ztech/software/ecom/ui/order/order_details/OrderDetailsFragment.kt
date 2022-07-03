@@ -72,6 +72,19 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                 "ADDRESS_ITEM" to viewModel.orderDetails.value?.address)
             )
         }
+        binding.btMarkAsReceived.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Mark order as Received")
+                .setMessage("By proceeding this action, you will confirm that you this order have been delivered successfully to you!")
+                .setNeutralButton(getString(R.string.no)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+                    viewModel.receivedOrder(viewModel.orderDetails.value?._id)
+                    dialog.cancel()
+                }
+                .show()
+        }
     }
 
     private fun setUpBillingViews(billing: Billing?, orderItems: List<OrderItem>?) {
@@ -146,24 +159,38 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                     tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_blue)
                     btCancelOrder.visibility = View.VISIBLE
                     btRebuyOrder.visibility = View.GONE
+                    btMarkAsReceived.visibility = View.GONE
                 }
                 "CANCELED"->{
                     tvOrderStatus.setTextColor(Color.RED)
                     tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_red)
                     btCancelOrder.visibility = View.GONE
                     btRebuyOrder.visibility = View.VISIBLE
+                    btMarkAsReceived.visibility = View.GONE
+
                 }
                 "PROCESSING"->{
                     tvOrderStatus.setTextColor(resources.getColor(R.color.dark_yellow))
                     tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_yellow)
                     btCancelOrder.visibility = View.VISIBLE
                     btRebuyOrder.visibility = View.GONE
+                    btMarkAsReceived.visibility = View.GONE
+
                 }
                 "CONFIRMED"->{
                     tvOrderStatus.setTextColor(Color.GREEN)
                     tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_green)
                     btCancelOrder.visibility = View.GONE
+                    btRebuyOrder.visibility = View.GONE
+                    btMarkAsReceived.visibility = View.VISIBLE
+                }
+                "RECEIVED"->{
+                    tvOrderStatus.setTextColor(Color.GREEN)
+                    tvOrderStatus.background = resources.getDrawable(R.drawable.rounded_bg_green)
+                    btCancelOrder.visibility = View.GONE
                     btRebuyOrder.visibility = View.VISIBLE
+                    btMarkAsReceived.visibility = View.GONE
+
                 }
             }
         }

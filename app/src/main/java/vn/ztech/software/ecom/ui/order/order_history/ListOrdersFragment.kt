@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentListOrderBinding
 import vn.ztech.software.ecom.ui.BaseFragment
@@ -32,6 +33,7 @@ class ListOrdersFragment() : BaseFragment<FragmentListOrderBinding>() {
             Log.d(TAG, getString("statusFilter").toString())
             viewModel.getOrders(getString("statusFilter"))
             statusFilter = getString("statusFilter").toString()
+            viewModel.statusFilter.value = statusFilter
         }
     }
 
@@ -48,6 +50,25 @@ class ListOrdersFragment() : BaseFragment<FragmentListOrderBinding>() {
         val orders = _orders?: emptyList()
         adapter = ListOrderAdapter(requireContext(), orders, object : ListOrderAdapter.OnClickListener{
             override fun onClickButtonViewDetail(order: Order) {
+                if(order.status == "CONFIRMED"){
+                    /**if the status of the order is CONFIRMED, this button is for the customer to Mark this order as received when they have actually received the order*/
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Mark order as Received")
+                        .setMessage("By proceeding this action, you will confirm that you this order have been delivered successfully to you!")
+                        .setNeutralButton(getString(R.string.no)) { dialog, _ ->
+                            dialog.cancel()
+                        }
+                        .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+                            viewModel.receivedOrder(order._id)
+                            dialog.cancel()
+                        }
+                        .show()
+                }else{
+                    callBack.onClickButtonViewDetails(order._id)
+                }
+            }
+
+            override fun onClick(order: Order) {
                 callBack.onClickButtonViewDetails(order._id)
             }
         })
@@ -77,6 +98,11 @@ class ListOrdersFragment() : BaseFragment<FragmentListOrderBinding>() {
                 }
             }
         }
+        viewModel.order.observe(viewLifecycleOwner){
+            it?.let {
+                viewModel.getOrders(viewModel.statusFilter.value)
+            }
+        }
         viewModel.error.observe(viewLifecycleOwner){
             it?.let {
                 handleError(it)
@@ -86,7 +112,14 @@ class ListOrdersFragment() : BaseFragment<FragmentListOrderBinding>() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
         callBack = parentFragment as OnClickListener
+    }
+    override fun onResume() {
+        super.onResume()
+        viewModel.getOrders(viewModel.statusFilter.value)
+    }
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
     }
 }

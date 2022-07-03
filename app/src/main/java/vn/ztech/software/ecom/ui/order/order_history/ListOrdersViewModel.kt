@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import vn.ztech.software.ecom.api.request.UpdateOrderStatusBody
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.model.Order
@@ -18,6 +19,8 @@ class ListOrdersViewModel(private val orderUseCase: IOrderUserCase): ViewModel()
     val loading = MutableLiveData<Boolean>()
     val orders = MutableLiveData<List<Order>>()
     val error = MutableLiveData<CustomError>()
+    val order = MutableLiveData<Order>()
+    val statusFilter = MutableLiveData<String>()
 
 
     fun getOrders(statusFilter: String?, isLoadingEnabled: Boolean = true) {
@@ -39,5 +42,32 @@ class ListOrdersViewModel(private val orderUseCase: IOrderUserCase): ViewModel()
                 }
             }
         }
+    }
+
+    fun receivedOrder(_id: String) {
+        val targetStatus = "RECEIVED"
+        updateOrderStatus(_id, targetStatus)
+    }
+    private fun updateOrderStatus(_orderId: String, targetStatus: String, isLoadingEnabled: Boolean = true){
+        viewModelScope.launch {
+            orderUseCase.updateOrderStatus(_orderId, UpdateOrderStatusBody(targetStatus)).flowOn(Dispatchers.IO).toLoadState().collect {
+                when (it) {
+                    LoadState.Loading -> {
+                        if (isLoadingEnabled) loading.value = true
+                    }
+                    is LoadState.Loaded -> {
+                        loading.value = false
+                        order.value = it.data
+                    }
+                    is LoadState.Error -> {
+                        loading.value = false
+                        error.value = errorMessage(it.e)
+                    }
+                }
+            }
+        }
+    }
+    fun clearErrors() {
+        error.value = null
     }
 }

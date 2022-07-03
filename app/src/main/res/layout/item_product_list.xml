@@ -79,7 +79,18 @@
             android:secondaryProgressTint="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_name_tv" />
-
+        <TextView
+            android:id="@+id/tvSaleNumber"
+            android:layout_width="0dp"
+            android:textColor="@color/gray"
+            android:textSize="11sp"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/product_rating_bar"
+            app:layout_constraintTop_toTopOf="@id/product_rating_bar"
+            app:layout_constraintBottom_toBottomOf="@id/product_rating_bar"
+            tools:text="Sold: 40" />
         <TextView
             android:id="@+id/product_price_tv"
             android:layout_width="wrap_content"
