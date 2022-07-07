@@ -22,4 +22,6 @@ object Constants {
         "CANCELED",
         "RECEIVED",
     )
+    const val NETWORK_PAGE_SIZE = 10
+
 }

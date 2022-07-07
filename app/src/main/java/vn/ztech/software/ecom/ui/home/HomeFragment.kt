@@ -14,8 +14,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.FragmentHomeBinding
@@ -61,7 +64,7 @@ class HomeFragment : Fragment() {
     private fun setViews() {
         setHomeTopAppBar()
         if (context != null) {
-            setUpProductAdapter(viewModel.allProducts.value)
+            setUpProductAdapter()
             binding.productsRecyclerView.apply {
                 val gridLayoutManager = GridLayoutManager(context, 2)
                 gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -69,11 +72,7 @@ class HomeFragment : Fragment() {
                         return when (listProductsAdapter.getItemViewType(position)) {
                             2 -> 2 //ad
                             else -> {
-                                val proCount = listProductsAdapter.data.count { it is Product }
-                                val adCount = listProductsAdapter.data.size - proCount
-                                val totalCount = proCount + (adCount * 2)
-                                // product, full for last item
-                                if (position + 1 == listProductsAdapter.data.size && totalCount % 2 == 1) 2 else 1
+                               1
                             }
                         }
                     }
@@ -110,21 +109,30 @@ class HomeFragment : Fragment() {
                 binding.swipeRefresh.isRefreshing = false
             }
         }
-        viewModel.allProducts.observe(viewLifecycleOwner) { listProducts->
-            if (listProducts.isNotEmpty()) {
-                binding.tvNoProductFound.visibility = View.GONE
-                binding.loaderLayout.circularLoader.hideAnimationBehavior
-                binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
-                binding.productsRecyclerView.visibility = View.VISIBLE
-                binding.productsRecyclerView.adapter?.apply {
-                    listProductsAdapter.data =
-                        getMixedDataList(listProducts, getAdsList())
-                    notifyDataSetChanged()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.allProducts.observe(viewLifecycleOwner) { listProducts ->
+                listProducts?.let {
+                    binding.productsRecyclerView.adapter?.apply {
+                        listProductsAdapter.submitData(lifecycle, listProducts)
+                    }
                 }
-            }else{
-                binding.tvNoProductFound.visibility = View.VISIBLE
             }
         }
+//        viewModel.allProducts.observe(viewLifecycleOwner) { listProducts->
+//            if (listProducts.isNotEmpty()) {
+//                binding.tvNoProductFound.visibility = View.GONE
+//                binding.loaderLayout.circularLoader.hideAnimationBehavior
+//                binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+//                binding.productsRecyclerView.visibility = View.VISIBLE
+//                binding.productsRecyclerView.adapter?.apply {
+//                    listProductsAdapter.data =
+//                        getMixedDataList(listProducts, getAdsList())
+//                    notifyDataSetChanged()
+//                }
+//            }else{
+//                binding.tvNoProductFound.visibility = View.VISIBLE
+//            }
+//        }
         viewModel.error.observe(viewLifecycleOwner){
             it ?: return@observe
             handleError(it)
@@ -185,11 +193,14 @@ class HomeFragment : Fragment() {
             val inputManager =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(it.windowToken, 0)
-//			viewModel.filterProducts("All")
         }
-//        binding.homeTopAppBar.topAppBar.setOnMenuItemClickListener { menuItem ->
-//            setAppBarItemClicks(menuItem)
-//        }
+        binding.homeTopAppBar.searchOutlinedTextLayout.setStartIconOnClickListener {
+            it.clearFocus()
+            val inputManager =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(it.windowToken, 0)
+            performSearch(binding.homeTopAppBar.searchOutlinedTextLayout.editText?.text.toString())
+        }
     }
 
     private fun performSearch(searchWords: String) {
@@ -210,8 +221,8 @@ class HomeFragment : Fragment() {
 //        }
     }
 
-    private fun setUpProductAdapter(productsList: List<Product>?) {
-        listProductsAdapter = ListProductsAdapter(productsList ?: emptyList(), requireContext())
+    private fun setUpProductAdapter() {
+        listProductsAdapter = ListProductsAdapter(requireContext())
         listProductsAdapter.onClickListener =  object : OnClickListener {
             override fun onClick(productData: Product) {
                 Log.d("XXXX", productData.toString())
@@ -221,36 +232,38 @@ class HomeFragment : Fragment() {
                 )
             }
 
-            override fun onDeleteClick(productData: Product) {
-//                Log.d(TAG, "onDeleteProduct: initiated for ${productData.productId}")
-//                showDeleteDialog(productData.name, productData.productId)
-            }
-
-            override fun onEditClick(productId: String) {
-//                Log.d(TAG, "onEditProduct: initiated for $productId")
-//                navigateToAddEditProductFragment(isEdit = true, productId = productId)
-            }
-
-            override fun onLikeClick(productId: String) {
-//                Log.d(TAG, "onToggleLike: initiated for $productId")
-//                viewModel.toggleLikeByProductId(productId)
-            }
-
-            override fun onAddToCartClick(productData: Product) {
-                Log.d(TAG, "onToggleCartAddition: initiated")
-//                viewModel.toggleProductInCart(productData)
-            }
         }
-        listProductsAdapter.bindImageButtons = object : ListProductsAdapter.BindImageButtons {
-
-            override fun setCartButton(productId: String, imgView: ImageView) {
-//                if (viewModel.isProductInCart(productId)) {
-//                    imgView.setImageResource(R.drawable.ic_remove_shopping_cart_24)
-//                } else {
-//                    imgView.setImageResource(R.drawable.ic_add_shopping_cart_24)
-//                }
+        listProductsAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        binding.productsRecyclerView.adapter = listProductsAdapter
+        listProductsAdapter.addLoadStateListener {loadState->
+            // show empty list
+            if (loadState.refresh is androidx.paging.LoadState.Loading ||
+                loadState.append is androidx.paging.LoadState.Loading){
+                binding.loaderLayout.circularLoader.showAnimationBehavior
+                binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
             }
+            else {
+                binding.loaderLayout.circularLoader.hideAnimationBehavior
+                binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 
+                if (listProductsAdapter.itemCount == 0){
+                    binding.tvNoProductFound.visibility = View.VISIBLE
+                    binding.productsRecyclerView.visibility = View.GONE
+                }else{
+                    binding.tvNoProductFound.visibility = View.GONE
+                    binding.productsRecyclerView.visibility = View.VISIBLE
+                }
+                // If we have an error, show a toast
+                val errorState = when {
+                    loadState.append is androidx.paging.LoadState.Error -> loadState.append as androidx.paging.LoadState.Error
+                    loadState.prepend is androidx.paging.LoadState.Error ->  loadState.prepend as androidx.paging.LoadState.Error
+                    loadState.refresh is androidx.paging.LoadState.Error -> loadState.refresh as androidx.paging.LoadState.Error
+                    else -> null
+                }
+                errorState?.let {
+                    handleError(CustomError(it.error, it.error.message?:"System error"))
+                }
+            }
         }
     }
 

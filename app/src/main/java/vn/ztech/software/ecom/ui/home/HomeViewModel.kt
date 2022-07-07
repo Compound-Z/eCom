@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
@@ -21,8 +23,8 @@ private const val TAG = "HomeViewModel"
 class HomeViewModel(
     private val listProductsUseCase: IListProductUseCase
 ): ViewModel() {
-    private var _allProducts = MutableLiveData<List<Product>>()
-    val allProducts: LiveData<List<Product>> get() = _allProducts
+    private var _allProducts = MutableLiveData<PagingData<Product>>()
+    val allProducts: LiveData<PagingData<Product>> get() = _allProducts
 
     private val _storeDataStatus = MutableLiveData<StoreDataStatus>()
     val storeDataStatus: LiveData<StoreDataStatus> get() = _storeDataStatus
@@ -35,14 +37,14 @@ class HomeViewModel(
 
     fun getProducts(){
         viewModelScope.launch {
-            listProductsUseCase.getListProducts().flowOn(Dispatchers.IO).toLoadState().collect {
+            listProductsUseCase.getListProducts().cachedIn(viewModelScope).flowOn(Dispatchers.IO).toLoadState().collect {
                 when(it){
                     LoadState.Loading -> {
                         _storeDataStatus.value = StoreDataStatus.LOADING
                     }
                     is LoadState.Loaded -> {
                         _storeDataStatus.value = StoreDataStatus.DONE
-                        _allProducts.value = it.data?: emptyList()
+                        _allProducts.value = it.data
                         Log.d(TAG, "LOADED")
                     }
                     is LoadState.Error -> {
@@ -64,7 +66,7 @@ class HomeViewModel(
                     }
                     is LoadState.Loaded -> {
                         _storeDataStatus.value = StoreDataStatus.DONE
-                        _allProducts.value = it.data?: emptyList()
+                        _allProducts.value = it.data
                         Log.d(TAG, "SEARCH LOADED")
                     }
                     is LoadState.Error -> {

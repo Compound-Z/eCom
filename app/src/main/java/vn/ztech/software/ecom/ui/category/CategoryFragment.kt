@@ -114,10 +114,6 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>() {
             handleError(it)
         }
     }
-
-    private fun performSearch(searchWords: String) {
-        viewModel.searchProducts(searchWords)
-    }
     
 
     private fun setUpCategoryAdapter(categoriesList: List<Category>?) {
