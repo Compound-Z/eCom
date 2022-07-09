@@ -17,6 +17,10 @@
             android:id="@+id/action_seeProduct"
             app:destination="@id/productDetailsFragment"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"

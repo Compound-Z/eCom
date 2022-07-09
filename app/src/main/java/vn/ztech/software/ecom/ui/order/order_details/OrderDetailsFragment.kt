@@ -3,6 +3,7 @@ package vn.ztech.software.ecom.ui.order.order_details
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,7 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderDetailsBinding
 import vn.ztech.software.ecom.model.*
 import vn.ztech.software.ecom.ui.BaseFragment
+import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
@@ -23,6 +25,7 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
 
     private val viewModel: OrderDetailsViewModel by viewModel()
 	private lateinit var productsAdapter: OrderProductsAdapter
+    var isLaunchedFromNoti = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +45,13 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                     viewModel.orderDetails.value = orderDetails
                 }
             }
-        }
+            "MainActivity"->{
+                arguments?.takeIf { it.containsKey("orderId") }?.apply {
+                    viewModel.getOrderDetails(getString("orderId"))
+                    isLaunchedFromNoti = true
+                }
+            }
+            }
     }
 
     override fun setViewBinding(): FragmentOrderDetailsBinding {
@@ -51,8 +60,23 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
 
     override fun setUpViews() {
         super.setUpViews()
+        if(isLaunchedFromNoti){
+            activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner,object :
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    (activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.orderFragment
+                    findNavController().navigateUp()
+                }
+            })
+        }
         binding.orderDetailAppBar.topAppBar.title = getString(R.string.order_details_fragment_title)
-		binding.orderDetailAppBar.topAppBar.setNavigationOnClickListener { findNavController().navigateUp() }
+		binding.orderDetailAppBar.topAppBar.setNavigationOnClickListener {
+            if (isLaunchedFromNoti){
+                /**this is a trick to force orderFragment to re-render, otherwise it will be blank, another solution should be research to replace this :((, but i have no time, so temporarily accept this*/
+                (activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.accountFragment
+            }
+            findNavController().navigateUp()
+        }
 		binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 //
 		if (context != null) {

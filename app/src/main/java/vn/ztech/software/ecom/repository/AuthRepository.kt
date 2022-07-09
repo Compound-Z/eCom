@@ -21,6 +21,8 @@ interface IAuthRepository {
     suspend fun verifyOtpResetPassword(phoneNumber: String, password: String, otp: String): BasicResponse
     suspend fun refreshToken(refreshToken: String): TokenResponse
     fun checkNeedToRefreshToken(): Boolean
+    suspend fun updateFCMToken(fcmToken: String): BasicResponse
+
 }
 
 class AuthRepository(
@@ -78,5 +80,7 @@ class AuthRepository(
         return false
     }
 
-
+    override suspend fun updateFCMToken(fcmToken: String): BasicResponse {
+        return authApi.updateFCMToken(UpdateFCMTokenRequest(fcmToken))
+    }
 }

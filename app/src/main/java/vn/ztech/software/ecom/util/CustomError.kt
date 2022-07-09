@@ -11,9 +11,6 @@ import java.io.Serializable
 import kotlin.reflect.typeOf
 
 open class CustomError( val e: Throwable = Throwable(), open var customMessage: String = "System error! Please try again later!"): IOException(), Serializable{
-    init {
-        Log.d("CustomError", e.message.toString())
-    }
     fun showErrorDialog(context: Context, listener: DialogInterface.OnClickListener? = null): AlertDialog {
         Log.d("showErrorDialog", e.message.toString())
         return AlertDialog.Builder(context)
@@ -21,6 +18,10 @@ open class CustomError( val e: Throwable = Throwable(), open var customMessage: 
             .setMessage(customMessage)
             .setPositiveButton(R.string.ok, listener)
             .show()
+    }
+    override fun equals(other: Any?): Boolean {
+        if (other == null) return false
+        return this.customMessage == (other as CustomError).customMessage
     }
 
 

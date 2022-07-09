@@ -27,6 +27,8 @@ import vn.ztech.software.ecom.ui.order.OrderUseCase
 import vn.ztech.software.ecom.ui.order.order.ShippingUseCase
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import vn.ztech.software.ecom.ui.splash.SplashUseCase
+import vn.ztech.software.ecomSeller.ui.main.IMainUseCase
+import vn.ztech.software.ecomSeller.ui.main.MainUseCase
 
 fun useCaseModule() = module {
     factory<ISplashUseCase> { SplashUseCase(get(), get()) }
@@ -42,5 +44,6 @@ fun useCaseModule() = module {
     factory<IAddressUseCase> { AddressUseCase(get()) }
     factory<IShippingUserCase> { ShippingUseCase(get()) }
     factory<IOrderUserCase> { OrderUseCase(get()) }
+    factory<IMainUseCase> { MainUseCase(get()) }
 
 }
