@@ -44,7 +44,7 @@ class ListProductsAdapter(private val context: Context) :
 			proName.text = productData.name
 			proPrice.text =
 				context.getString(R.string.pro_details_price_value, productData.price.toString())
-			proRatingBar.rating = productData.averageRating.toFloat()
+			proRatingBar.rating = productData.averageRating
 			tvSaleNumber.text = "Sold: ${productData.saleNumber.toString()}"
 			if (productData.imageUrl.isNotEmpty()) {
 				val imgUrl = productData.imageUrl.toUri().buildUpon().scheme("https").build()

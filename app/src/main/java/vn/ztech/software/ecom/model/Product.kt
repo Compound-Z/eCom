@@ -16,5 +16,6 @@ data class Product(
     val saleNumber: Int,
     val weight: Int,
     val quantity: Int,
-    val averageRating: Int,
-) : Parcelable
+    val averageRating: Float,
+    val numberOfRating:  Int,
+    ) : Parcelable
