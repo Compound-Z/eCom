@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -15,11 +16,15 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentProductDetailsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.common.StoreDataStatus
+import vn.ztech.software.ecom.databinding.ItemPreviewReviewSellerBinding
 import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.model.Review
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
 import vn.ztech.software.ecom.ui.main.MainActivity
+import vn.ztech.software.ecom.util.extension.round1Decimal
 import vn.ztech.software.ecom.util.extension.showErrorDialog
+import vn.ztech.software.ecom.util.extension.toDateTimeString
 
 class ProductDetailsFragment : Fragment(),
     DialogAddToCartSuccessFragment.OnClick {
@@ -62,6 +67,8 @@ class ProductDetailsFragment : Fragment(),
         }
         viewModel.product.value = product
         viewModel.getProductDetails(product?._id?:"")
+        viewModel.getReviewsOfThisProduct(product?._id?:"")
+
     }
 
     private fun setObservers() {
@@ -79,6 +86,11 @@ class ProductDetailsFragment : Fragment(),
         }
         viewModel.productDetails.observe(viewLifecycleOwner){
             setViews()
+        }
+        viewModel.reviews.observe(viewLifecycleOwner){
+            it?.let {
+                addReviewUI(it)
+            }
         }
         cartViewModel.loading.observe(viewLifecycleOwner){
             it?.let {
@@ -113,7 +125,39 @@ class ProductDetailsFragment : Fragment(),
             DialogAddToCartSuccessFragment(it, this@ProductDetailsFragment).show(parentFragmentManager,"DialogAddToCartSuccessFragment")
         }
     }
+    private fun addReviewUI(it: List<Review>) {
 
+        if(viewModel.hasNextPage.value == true) {
+            binding.btViewAllReview.apply {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    findNavController().navigate(
+                        R.id.action_productDetailsFragment_to_listReviewOfProductFragment,
+                        bundleOf(
+                            "product" to viewModel.product.value
+                        )
+                    )
+                }
+            }
+        } else {
+            binding.btViewAllReview.apply {
+                visibility = View.GONE
+
+            }
+        }
+
+        val layoutReviewItems = binding.layoutReviewItems
+        layoutReviewItems.removeAllViews()
+        it.forEach {
+            val view = ItemPreviewReviewSellerBinding.inflate(layoutInflater)
+            view.tvUserName.text = it.userName
+            view.ratingBar.rating = it.rating.toFloat()
+            view.tvReviewContent.text = it.content
+            view.tvDateTime.text = it.updatedAt.toDateTimeString()
+
+            layoutReviewItems.addView(view.root)
+        }
+    }
     private fun setViews() {
         binding.layoutViewsGroup.visibility = View.VISIBLE
         if(isAddToCartButtonEnabled)binding.proDetailsAddCartBtn.visibility = View.VISIBLE
@@ -126,7 +170,7 @@ class ProductDetailsFragment : Fragment(),
 
         binding.proDetailsTitleTv.text = viewModel.product.value?.name.toString()
         binding.proDetailsRatingBar.rating = (viewModel.product.value?.averageRating ?: 0.0).toFloat()
-        binding.tvNumberOfReviews.text = "(${viewModel.productDetails.value?.numOfReviews.toString()})"
+        binding.tvAverageRating.text = "${viewModel.product.value?.averageRating?.round1Decimal().toString()}"
         binding.tvSoldNumber.text = "Sold: ${viewModel.product.value?.saleNumber.toString()}"
 
         binding.proDetailsPriceTv.text = resources.getString(
@@ -138,6 +182,10 @@ class ProductDetailsFragment : Fragment(),
         binding.unitValue.text = viewModel.productDetails.value?.unit
         binding.brandValue.text = viewModel.productDetails.value?.brandName
         binding.originValue.text = viewModel.productDetails.value?.origin
+
+        binding.ratingBar.rating = viewModel.product.value?.averageRating?:0f
+        binding.tvAverageRating2.text = "${viewModel.product.value?.averageRating} / 5"
+        binding.numOfReview.text = "(${viewModel.product.value?.numberOfRating} reviews)"
     }
 
     private fun setImagesView() {

@@ -14,6 +14,8 @@ interface IProductRepository {
     suspend fun getListProducts(): Flow<PagingData<Product>>
     suspend fun getProductDetails(productId: String): ProductDetails
     suspend fun search(searchWords: String): Flow<PagingData<Product>>
+    suspend fun getOneProduct(productId: String): Product
+
 }
 
 class ProductRepository(private val productApi: IProductApi): IProductRepository{
@@ -46,5 +48,7 @@ class ProductRepository(private val productApi: IProductApi): IProductRepository
             initialKey = 1
         ).flow
     }
-
+    override suspend fun getOneProduct(productId: String): Product {
+        return productApi.getOneProduct(productId)
+    }
 }

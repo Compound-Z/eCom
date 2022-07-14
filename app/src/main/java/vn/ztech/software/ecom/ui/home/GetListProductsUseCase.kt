@@ -9,6 +9,8 @@ import vn.ztech.software.ecom.model.Product
 interface IListProductUseCase{
     suspend fun getListProducts(): Flow<PagingData<Product>>
     suspend fun search(searchWords: String): Flow<PagingData<Product>>
+    suspend fun getOneProduct(productId: String): Flow<Product>
+
 }
 
 class ListProductsUseCase(private val productRepository: IProductRepository): IListProductUseCase {
@@ -19,5 +21,10 @@ class ListProductsUseCase(private val productRepository: IProductRepository): IL
     override suspend fun search(searchWords: String): Flow<PagingData<Product>> {
         return productRepository.search(searchWords)
     }
+    override suspend fun getOneProduct(productId: String): Flow<Product> = flow {
+        emit(productRepository.getOneProduct(productId))
+    }
+
+
 
 }

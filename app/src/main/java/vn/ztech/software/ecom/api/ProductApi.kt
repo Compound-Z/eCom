@@ -22,6 +22,8 @@ interface IProductApi{
     @POST("/api/v1/products/search/{searchWords}")
     suspend fun search(@Path("searchWords")searchWords: String, @Body request: GetProductsRequest): PagedGetAllProductsResponse
 
+    @GET("/api/v1/products/get-one-product/{productId}")
+    suspend fun getOneProduct(@Path("productId") productId: String): Product
 }
 
 
