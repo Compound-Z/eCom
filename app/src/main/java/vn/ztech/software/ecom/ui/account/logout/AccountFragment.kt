@@ -41,6 +41,11 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 		binding.accountOrdersTv.setOnClickListener {
 			(activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.orderHistoryFragment
 		}
+		binding.accountReviewTv.setOnClickListener {
+			findNavController().navigate(
+				R.id.action_accountFragment_to_myReviewFragment,
+			)
+		}
 		binding.accountAddressTv.setOnClickListener {
 			findNavController().navigate(
 				R.id.action_accountFragment_to_addressFragment,

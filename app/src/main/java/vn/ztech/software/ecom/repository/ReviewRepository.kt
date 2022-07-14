@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import vn.ztech.software.ecom.api.IReviewApi
 import vn.ztech.software.ecomSeller.api.request.CreateReviewRequest
-import vn.ztech.software.ecomSeller.api.request.GetMyReviewQueueRequest
+import vn.ztech.software.ecom.api.request.GetMyReviewQueueRequest
 import vn.ztech.software.ecomSeller.api.request.GetReviewsRequest
 import vn.ztech.software.ecomSeller.api.request.UpdateReviewRequest
 import vn.ztech.software.ecom.api.response.PagedGetReviewResponse
@@ -20,7 +20,7 @@ interface IReviewRepository {
     suspend fun getAllReview(starFilter: Int?): Flow<PagingData<Review>>
     suspend fun getListReviewOfAProduct(productId: String, startFilter: Int?): Flow<PagingData<Review>>
     suspend fun getListReviewPreviewOfAProduct(productId: String, starFilter: Int?): PagedGetReviewResponse
-    suspend fun getMyReviewQueue(startFilter: String): Flow<PagingData<ReviewQueue>>
+    suspend fun getMyReviewQueue(filter: String): Flow<PagingData<ReviewQueue>>
     suspend fun createReview(productId: String, reviewQueueId: String, rating: Int, content: String): Review
     suspend fun updateReview(reviewId: String, rating: Int, content: String): Review
 }
@@ -63,14 +63,14 @@ class ReviewRepository(private val reviewApi: IReviewApi): IReviewRepository {
     }
 
 
-    override suspend fun getMyReviewQueue(startFilter: String): Flow<PagingData<ReviewQueue>> {
+    override suspend fun getMyReviewQueue(filter: String): Flow<PagingData<ReviewQueue>> {
         return Pager(
             config = PagingConfig(
                 pageSize = Constants.NETWORK_PAGE_SIZE,
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = {
-                ReviewQueuePagingSource(GetMyReviewQueueRequest(),reviewApi)
+                ReviewQueuePagingSource(GetMyReviewQueueRequest(filter),reviewApi)
             },
             initialKey = 1
         ).flow

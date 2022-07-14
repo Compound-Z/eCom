@@ -2,6 +2,7 @@ package vn.ztech.software.ecom.api
 
 import androidx.annotation.Keep
 import retrofit2.http.*
+import vn.ztech.software.ecom.api.request.GetMyReviewQueueRequest
 import vn.ztech.software.ecom.api.response.PagedGetReviewResponse
 import vn.ztech.software.ecom.model.Review
 import vn.ztech.software.ecomSeller.api.request.*

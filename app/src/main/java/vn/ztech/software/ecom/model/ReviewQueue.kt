@@ -6,7 +6,14 @@ data class ReviewQueue(
     val imageUrl: String,
     val productId: String,
     val productName: String,
-    val reviewRef: String,
+    val reviewRef: ReviewRef?,
     val updatedAt: String,
     val userId: String
+)
+
+data class ReviewRef(
+    val _id: String,
+    val content: String,
+    val rating: Int,
+    val userName: String
 )

@@ -5,7 +5,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import vn.ztech.software.ecom.api.IReviewApi
 import vn.ztech.software.ecom.model.ReviewQueue
-import vn.ztech.software.ecomSeller.api.request.GetMyReviewQueueRequest
+import vn.ztech.software.ecom.api.request.GetMyReviewQueueRequest
 import java.lang.Exception
 
 class ReviewQueuePagingSource (val request: GetMyReviewQueueRequest, private val reviewApi: IReviewApi): PagingSource<Int, ReviewQueue>() {

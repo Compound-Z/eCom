@@ -12,7 +12,7 @@ import vn.ztech.software.ecom.repository.IReviewRepository
 interface IReviewUseCase{
     suspend fun getAllReview(starFilter: Int?): Flow<PagingData<Review>>
     suspend fun getListReviewOfAProduct(productId: String, startFilter: Int?): Flow<PagingData<Review>>
-    suspend fun getMyReviewQueue(startFilter: String): Flow<PagingData<ReviewQueue>>
+    suspend fun getMyReviewQueue(filter: String): Flow<PagingData<ReviewQueue>>
     suspend fun createReview(productId: String, reviewQueueId: String, rating: Int, content: String): Review
     suspend fun updateReview(reviewId: String, rating: Int, content: String): Review
     suspend fun getListReviewPreviewOfAProduct(productId: String, starFilter: Int?): Flow<PagedGetReviewResponse>
@@ -26,8 +26,8 @@ class ReviewUseCase( private val reviewRepository: IReviewRepository): IReviewUs
         starFilter: Int?
     ) = reviewRepository.getListReviewOfAProduct(productId, starFilter)
 
-    override suspend fun getMyReviewQueue(starFilter: String): Flow<PagingData<ReviewQueue>>
-    = reviewRepository.getMyReviewQueue(starFilter)
+    override suspend fun getMyReviewQueue(filter: String): Flow<PagingData<ReviewQueue>>
+    = reviewRepository.getMyReviewQueue(filter)
 
     override suspend fun createReview(
         productId: String,

@@ -204,6 +204,7 @@
     <string name="reset_password_successfully">Reset password Successfully!</string>
     <string name="signup_successfully">Sign Up Successfully!</string>
     <string name="logging_out">Logging out...</string>
+    <string name="account_reviews_label">Reviews</string>
 
     <string name="pro_reviews_label_text">Product reviews</string>
 

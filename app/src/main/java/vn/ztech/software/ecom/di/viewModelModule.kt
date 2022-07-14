@@ -16,6 +16,8 @@ import vn.ztech.software.ecom.ui.order.order_details.OrderDetailsViewModel
 import vn.ztech.software.ecom.ui.order.order_history.ListOrdersViewModel
 import vn.ztech.software.ecom.ui.product_details.ListReviewOfProductViewModel
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
+import vn.ztech.software.ecom.ui.review.ListReviewQueueViewModel
+import vn.ztech.software.ecom.ui.review.ListReviewReviewedViewModel
 import vn.ztech.software.ecom.ui.splash.SplashViewModel
 import vn.ztech.software.ecomSeller.ui.main.MainViewModel
 
@@ -36,5 +38,7 @@ fun viewModelModule() = module {
     viewModel { ListOrdersViewModel(get()) }
     viewModel { MainViewModel(get()) }
     viewModel { ListReviewOfProductViewModel(get()) }
+    viewModel { ListReviewQueueViewModel(get()) }
+    viewModel { ListReviewReviewedViewModel(get()) }
 
 }

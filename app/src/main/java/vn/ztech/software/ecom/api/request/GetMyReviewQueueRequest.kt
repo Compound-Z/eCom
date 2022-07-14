@@ -1,4 +1,4 @@
-package vn.ztech.software.ecomSeller.api.request
+package vn.ztech.software.ecom.api.request
 
 class GetMyReviewQueueRequest (
     var filter: String = "NOT_REVIEWED",
