@@ -70,7 +70,6 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
 
             override fun onClickWriteReview(productId: String, reviewQueueId: String, imageUrl: String, productName: String) {
                 listener.onClickCreateReview(productId, reviewQueueId, imageUrl, productName)
-//
             }
         })
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY

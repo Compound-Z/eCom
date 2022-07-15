@@ -67,7 +67,7 @@ class MyReviewFragment : BaseFragment2<FragmentMyReviewBinding>(), ListReviewQue
 
     override fun onClickProduct(productId: String) {
         findNavController().navigate(
-            R.id.action_myReviewFragment_to_productDetailsFragment,
+            R.id.action_myReviewFragment_to_productDetailsFragment2,
             bundleOf(
                 "productId" to productId
             )
