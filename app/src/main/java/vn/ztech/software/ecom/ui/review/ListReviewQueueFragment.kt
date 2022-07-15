@@ -50,7 +50,6 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
                     binding.listReviews.adapter?.apply {
                         adapter.submitData(viewLifecycleOwner.lifecycle,it)
                     }
-                    viewModel.existed = true
                 }
             }
         }
@@ -80,8 +79,10 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
             // show empty list
             if (loadState.refresh is androidx.paging.LoadState.Loading ||
                 loadState.append is androidx.paging.LoadState.Loading){
-                binding.loaderLayout.circularLoader.showAnimationBehavior
-                binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                if(!viewModel.existed){
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                }
             }
             else {
                 binding.loaderLayout.circularLoader.hideAnimationBehavior
@@ -104,7 +105,11 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.existed) viewModel.getReviews("",isLoadingEnabled = false)
+        if (viewModel.existed) adapter.refresh()
+    }
+    override fun onPause(){
+        super.onPause()
+        viewModel.existed = true
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -2,6 +2,7 @@ package vn.ztech.software.ecom.ui.review
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.paging.PagingDataAdapter
@@ -23,6 +24,7 @@ class ListReviewReviewedAdapter(val context: Context,
                 binding.tvUserName.text = review.reviewRef.userName
                 binding.tvReviewContent.text = review.reviewRef.content
                 binding.ratingBar.rating = review.reviewRef.rating.toFloat()
+                binding.btEdit.visibility = if(it.isEdited) View.GONE else View.VISIBLE
             }
             binding.tvProductName.text = review.productName
             binding.tvDateTime.text = review.updatedAt.toDateTimeString()
@@ -35,7 +37,6 @@ class ListReviewReviewedAdapter(val context: Context,
                     .into(binding.ivProduct)
                 binding.ivProduct.clipToOutline = true
             }
-
             binding.ivProduct.setOnClickListener {
                 onClickListener.onClick(review.productId)
             }
@@ -44,6 +45,9 @@ class ListReviewReviewedAdapter(val context: Context,
             }
             binding.tvReviewContent.setOnClickListener {
                 onClickListener.onClick(review.productId)
+            }
+            binding.btEdit.setOnClickListener {
+                onClickListener.onClickEdit(review.reviewRef?._id?:"", review.imageUrl, review.productName, review.reviewRef?.rating?.toFloat()?:5f, review.reviewRef?.content?:"")
             }
         }
     }
@@ -64,6 +68,7 @@ class ListReviewReviewedAdapter(val context: Context,
 
     interface OnClickListener{
         fun onClick(productId: String)
+        fun onClickEdit(reviewId: String, imageUrl: String, productName: String, rating: Float, reviewContent: String)
     }
 
     object ReviewQueueComparator: DiffUtil.ItemCallback<ReviewQueue>() {

@@ -14,7 +14,7 @@ interface IReviewUseCase{
     suspend fun getListReviewOfAProduct(productId: String, startFilter: Int?): Flow<PagingData<Review>>
     suspend fun getMyReviewQueue(filter: String): Flow<PagingData<ReviewQueue>>
     suspend fun createReview(productId: String, reviewQueueId: String, rating: Int, content: String): Flow<Review>
-    suspend fun updateReview(reviewId: String, rating: Int, content: String): Review
+    suspend fun updateReview(reviewId: String, rating: Int, content: String): Flow<Review>
     suspend fun getListReviewPreviewOfAProduct(productId: String, starFilter: Int?): Flow<PagedGetReviewResponse>
 }
 
@@ -38,8 +38,8 @@ class ReviewUseCase( private val reviewRepository: IReviewRepository): IReviewUs
         emit(reviewRepository.createReview(productId,reviewQueueId,rating,content))
     }
 
-    override suspend fun updateReview(reviewId: String, rating: Int, content: String): Review {
-        return reviewRepository.updateReview(reviewId,rating,content)
+    override suspend fun updateReview(reviewId: String, rating: Int, content: String): Flow<Review> = flow {
+        emit(reviewRepository.updateReview(reviewId,rating,content))
     }
 
     override suspend fun getListReviewPreviewOfAProduct(

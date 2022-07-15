@@ -15,5 +15,6 @@ data class ReviewRef(
     val _id: String,
     val content: String,
     val rating: Int,
-    val userName: String
+    val userName: String,
+    val isEdited: Boolean,
 )

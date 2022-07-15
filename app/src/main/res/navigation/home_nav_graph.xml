@@ -168,6 +168,9 @@
         <action
             android:id="@+id/action_myReviewFragment_to_createReviewFragment"
             app:destination="@id/createReviewFragment" />
+        <action
+            android:id="@+id/action_myReviewFragment_to_updateReviewFragment"
+            app:destination="@id/updateReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/listReviewFragment"
@@ -177,6 +180,7 @@
         <action
             android:id="@+id/action_listReviewFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+
     </fragment>
 
     <fragment
@@ -200,12 +204,30 @@
 
     </fragment>
     <fragment
+        android:id="@+id/updateReviewFragment"
+        android:name="vn.ztech.software.ecom.ui.review.update_review.UpdateReviewFragment"
+        android:label="fragment_update_review"
+        tools:layout="@layout/fragment_update_review" >
+        <action
+            android:id="@+id/action_updateReviewFragment_to_createReviewSuccessFragment"
+            app:destination="@id/updateReviewSuccessFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/createReviewSuccessFragment"
         android:name="vn.ztech.software.ecom.ui.review.create_review.CreateReviewSuccessFragment"
         android:label="fragment_create_review_success"
         tools:layout="@layout/fragment_create_review_success" >
         <action
             android:id="@+id/action_createReviewSuccessFragment_to_myReviewFragment"
+            app:popUpTo="@id/myReviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateReviewSuccessFragment"
+        android:name="vn.ztech.software.ecom.ui.review.update_review.UpdateReviewSuccessFragment"
+        android:label="fragment_update_review_success"
+        tools:layout="@layout/fragment_update_review_success" >
+        <action
+            android:id="@+id/action_updateReviewSuccessFragment_to_myReviewFragment"
             app:popUpTo="@id/myReviewFragment" />
     </fragment>
     <fragment

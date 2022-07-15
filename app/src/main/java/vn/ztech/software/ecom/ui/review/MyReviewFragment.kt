@@ -74,6 +74,25 @@ class MyReviewFragment : BaseFragment2<FragmentMyReviewBinding>(), ListReviewQue
         )
     }
 
+    override fun onClickEditReview(
+        reviewId: String,
+        imageUrl: String,
+        productName: String,
+        rating: Float,
+        reviewContent: String
+    ) {
+        findNavController().navigate(
+                    R.id.action_myReviewFragment_to_updateReviewFragment,
+                    bundleOf(
+                        "reviewId" to reviewId,
+                        "imageUrl" to imageUrl,
+                        "productName" to productName,
+                        "rating" to rating,
+                        "reviewContent" to reviewContent,
+                    )
+                )
+    }
+
     override fun onClickCreateReview(productId: String, reviewQueueId: String, imageUrl: String, productName: String) {
         findNavController().navigate(
                     R.id.action_myReviewFragment_to_createReviewFragment,

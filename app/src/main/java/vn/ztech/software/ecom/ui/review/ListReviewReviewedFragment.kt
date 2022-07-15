@@ -2,11 +2,15 @@ package vn.ztech.software.ecom.ui.review
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentListReviewReviewedBinding
 import vn.ztech.software.ecom.ui.BaseFragment2
 import vn.ztech.software.ecom.util.CustomError
@@ -16,6 +20,7 @@ class ListReviewReviewedFragment : BaseFragment2<FragmentListReviewReviewedBindi
     lateinit var adapter: ListReviewReviewedAdapter
     interface OnClickListener{
         fun onClickProduct(productId: String)
+        fun onClickEditReview(reviewId: String, imageUrl: String, productName: String, rating: Float, reviewContent: String)
     }
     lateinit var listener: OnClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +70,16 @@ class ListReviewReviewedFragment : BaseFragment2<FragmentListReviewReviewedBindi
             override fun onClick(productId: String) {
                listener.onClickProduct(productId)
             }
+
+            override fun onClickEdit(
+                reviewId: String,
+                imageUrl: String,
+                productName: String,
+                rating: Float,
+                reviewContent: String
+            ) {
+                listener.onClickEditReview(reviewId, imageUrl, productName, rating, reviewContent)
+            }
         })
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.listReviews.adapter = adapter
@@ -72,8 +87,10 @@ class ListReviewReviewedFragment : BaseFragment2<FragmentListReviewReviewedBindi
             // show empty list
             if (loadState.refresh is androidx.paging.LoadState.Loading ||
                 loadState.append is androidx.paging.LoadState.Loading){
-                binding.loaderLayout.circularLoader.showAnimationBehavior
-                binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                if(!viewModel.existed){
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                }
             }
             else {
                 binding.loaderLayout.circularLoader.hideAnimationBehavior
@@ -92,6 +109,18 @@ class ListReviewReviewedFragment : BaseFragment2<FragmentListReviewReviewedBindi
 
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+
+        if (viewModel.existed) {
+            adapter.refresh()
+        }
+    }
+
+    override fun onPause(){
+        super.onPause()
+        viewModel.existed = true
     }
     override fun onAttach(context: Context) {
         super.onAttach(context)
