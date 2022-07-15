@@ -3,19 +3,13 @@ package vn.ztech.software.ecom.ui.review
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentListReviewReviewedBinding
 import vn.ztech.software.ecom.ui.BaseFragment2
 import vn.ztech.software.ecom.util.CustomError
-import vn.ztech.software.ecom.util.extension.getFirstNumber
 
 class ListReviewReviewedFragment : BaseFragment2<FragmentListReviewReviewedBinding>() {
     private val viewModel: ListReviewReviewedViewModel by viewModel()

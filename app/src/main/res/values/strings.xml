@@ -49,6 +49,7 @@
     <string name="add_pro_desc_label_text">Description</string>
     <string name="add_pro_sizes_label_text">Sizes Available</string>
     <string name="app_pro_btn_text">Add Product</string>
+    <string name="review_pro_btn_text">Confirm review</string>
     <string name="pro_cat_dialog_title">Select Product Category</string>
     <string name="pro_cat_dialog_cancel_btn">Cancel</string>
     <string name="no">No</string>
@@ -147,8 +148,11 @@
     <string name="account_fragment_title">Account</string>
     <string name="account_sign_out_label">Sign Out</string>
     <string name="sign_out_dialog_title_text">Sign Out?</string>
+    <string name="confirm_review_dialog_title_text">Confirm review</string>
     <string name="sign_out_dialog_message_text">On proceeding, you will be signed out of the app.</string>
+    <string name="confirm_review_dialog_message_text">On proceeding, you will confirm this review.</string>
     <string name="dialog_sign_out_btn_text">Sign Out</string>
+    <string name="dialog_confirm_btn_text">Confirm</string>
     <string name="order_summary_items_label">Items</string>
     <string name="no_orders_placed_text">Nothing To Show</string>
     <string name="orders_fragment_title">Orders</string>

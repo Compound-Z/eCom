@@ -37,6 +37,10 @@ class ListReviewQueueAdapter(val context: Context,
             binding.tvProductName.setOnClickListener {
                 onClickListener.onClick(review.productId)
             }
+
+            binding.btWriteReview.setOnClickListener {
+                onClickListener.onClickWriteReview(review.productId, review._id, review.imageUrl, review.productName)
+            }
            
         }
     }
@@ -57,6 +61,7 @@ class ListReviewQueueAdapter(val context: Context,
 
     interface OnClickListener{
         fun onClick(productId: String)
+        fun onClickWriteReview(productId: String, reviewQueueId: String, imageUrl: String, productName: String)
     }
 
     object ReviewQueueComparator: DiffUtil.ItemCallback<ReviewQueue>() {

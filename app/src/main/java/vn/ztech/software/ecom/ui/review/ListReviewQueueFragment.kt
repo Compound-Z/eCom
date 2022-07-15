@@ -16,6 +16,7 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
     lateinit var adapter: ListReviewQueueAdapter
     interface OnClickListener{
         fun onClickProduct(productId: String)
+        fun onClickCreateReview(productId: String, reviewQueueId: String, imageUrl: String, productName: String)
     }
     lateinit var listener: OnClickListener
 
@@ -49,6 +50,7 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
                     binding.listReviews.adapter?.apply {
                         adapter.submitData(viewLifecycleOwner.lifecycle,it)
                     }
+                    viewModel.existed = true
                 }
             }
         }
@@ -65,7 +67,11 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
         adapter = ListReviewQueueAdapter(requireContext(), object : ListReviewQueueAdapter.OnClickListener{
             override fun onClick(productId: String) {
                 listener.onClickProduct(productId)
+            }
 
+            override fun onClickWriteReview(productId: String, reviewQueueId: String, imageUrl: String, productName: String) {
+                listener.onClickCreateReview(productId, reviewQueueId, imageUrl, productName)
+//
             }
         })
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -96,6 +102,10 @@ class ListReviewQueueFragment() : BaseFragment2<FragmentListReviewQueueBinding>(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.existed) viewModel.getReviews("",isLoadingEnabled = false)
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as OnClickListener

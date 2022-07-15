@@ -165,6 +165,9 @@
         <action
             android:id="@+id/action_myReviewFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_myReviewFragment_to_createReviewFragment"
+            app:destination="@id/createReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/listReviewFragment"
@@ -184,6 +187,26 @@
         <action
             android:id="@+id/action_listReviewQueueFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/createReviewFragment"
+        android:name="vn.ztech.software.ecom.ui.review.create_review.CreateReviewFragment"
+        android:label="fragment_create_review"
+        tools:layout="@layout/fragment_create_review" >
+        <action
+            android:id="@+id/action_createReviewFragment_to_createReviewSuccessFragment"
+            app:destination="@id/createReviewSuccessFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/createReviewSuccessFragment"
+        android:name="vn.ztech.software.ecom.ui.review.create_review.CreateReviewSuccessFragment"
+        android:label="fragment_create_review_success"
+        tools:layout="@layout/fragment_create_review_success" >
+        <action
+            android:id="@+id/action_createReviewSuccessFragment_to_myReviewFragment"
+            app:popUpTo="@id/myReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/allReviewOfProductFragment"
