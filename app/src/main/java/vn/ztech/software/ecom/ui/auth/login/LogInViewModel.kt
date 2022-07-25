@@ -13,6 +13,7 @@ import vn.ztech.software.ecom.api.response.Token
 import vn.ztech.software.ecom.api.response.TokenResponse
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.extension.toLoadState
+import vn.ztech.software.ecom.database.utils.UserType
 import vn.ztech.software.ecom.model.UserData
 import vn.ztech.software.ecom.ui.LoginViewErrors
 import vn.ztech.software.ecom.util.CustomError
@@ -39,11 +40,17 @@ class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
                         }
                         is LoadState.Loaded -> {
                             Log.d("LOGIN:", "LoadState.Loaded ${it.data}")
-                            userData = it.data.user
-                            tokens = it.data.tokens
-                            loading.value = false
-                            saveLogInInfo(userData, tokens)
-                            isLogInSuccessfully.value = true
+
+                            if(checkIdCustomer(it.data.user)){
+                                userData = it.data.user
+                                tokens = it.data.tokens
+                                loading.value = false
+                                saveLogInInfo(userData, tokens)
+                                isLogInSuccessfully.value = true
+                            }else{
+                                loading.value = false
+                                error.value = errorMessage(CustomError(customMessage = "Wrong account type, please use an Customer account to login"))
+                            }
                         }
                         is LoadState.Error -> {
 //                        if (it.e is TokenRefreshing) {
@@ -57,7 +64,9 @@ class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
                 }
             }
     }
-
+    private fun checkIdCustomer(user: UserData): Boolean {
+        return user.role == UserType.customer.name
+    }
     private fun saveLogInInfo(userData: UserData?, tokens: TokenResponse?) {
         if(userData != null && tokens != null){
             Log.d("LOGIN", "LogInViewModel saveLogInInfo")

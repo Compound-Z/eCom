@@ -57,7 +57,7 @@ class CategoryViewModel(private val listCategoriesUseCase: IListCategoriesUseCas
     }
     fun getProductsInCategory(){
         viewModelScope.launch {
-            listCategoriesUseCase.getListProductsInCategory(currentSelectedCategory.value?.name?:"").flowOn(Dispatchers.IO).toLoadState().collect {
+            listCategoriesUseCase.getListProductsInCategory(currentSelectedCategory.value?.name?:"").cachedIn(viewModelScope).flowOn(Dispatchers.IO).toLoadState().collect {
                 when(it){
                     LoadState.Loading -> {
                         _storeDataStatus.value = StoreDataStatus.LOADING
