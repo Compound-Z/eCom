@@ -2,10 +2,13 @@ package vn.ztech.software.ecom.ui.product_details
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
+import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.common.StoreDataStatus
@@ -170,6 +173,21 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
         binding.ratingBar.rating = viewModel.product.value?.averageRating?:0f
         binding.tvAverageRating2.text = "${viewModel.product.value?.averageRating} / 5"
         binding.numOfReview.text = "(${viewModel.product.value?.numberOfRating} reviews)"
+
+        /**shop info*/
+        if (viewModel.productDetails.value?.shopId?.imageUrl?.isNotEmpty() == true) {
+            val imgUrl = viewModel.productDetails.value?.shopId?.imageUrl?.toUri()?.buildUpon()?.scheme("https")?.build()
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(imgUrl)
+                .into(binding.layoutShop.ivShop)
+        }
+        binding.layoutShop.tvShopName.text = viewModel.productDetails.value?.shopId?.name
+        binding.layoutShop.tvShopAddress.text = viewModel.productDetails.value?.shopId?.name
+        binding.layoutShop.tvNumberOfProduct.text = "${viewModel.productDetails.value?.shopId?.numberOfProduct} products"
+        binding.layoutShop.btViewShop.setOnClickListener {
+            Toast.makeText(requireContext(), "To be developed", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setImagesView() {

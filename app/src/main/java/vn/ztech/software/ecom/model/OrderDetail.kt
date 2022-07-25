@@ -15,7 +15,7 @@ data class OrderDetails(
     val shippingDetails: ShippingDetails,
     val status: String,
     val updatedAt: String,
-    val user: UserOrder
+    val user: UserOrder,
 ):Parcelable
 
 @Parcelize
@@ -53,3 +53,4 @@ data class UserOrder(
     val phoneNumber: String,
     val userId: String
 ):Parcelable
+
