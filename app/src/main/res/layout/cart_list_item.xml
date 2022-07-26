@@ -52,7 +52,7 @@
             android:lines="2"
             android:textAppearance="@style/TextAppearance.MyTheme.Body1"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/cart_product_like_btn"
+            app:layout_constraintEnd_toStartOf="@+id/cart_product_delete_btn"
             app:layout_constraintStart_toEndOf="@+id/product_image_view"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="some title may be two lines" />

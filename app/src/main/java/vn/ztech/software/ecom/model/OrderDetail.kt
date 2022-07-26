@@ -35,7 +35,9 @@ data class OrderItem(
     val productId: String,
     val quantity: Int,
     val sku: String,
-    val weight: Int
+    val weight: Int,
+    val shopId: String,
+    val shopName: String
 ):Parcelable
 @Parcelize
 data class ShippingDetails(

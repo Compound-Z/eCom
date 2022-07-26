@@ -18,8 +18,10 @@ import vn.ztech.software.ecom.databinding.FragmentCartBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
 import vn.ztech.software.ecom.databinding.LayoutPriceCardBinding
 import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.model.Shop
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
+import vn.ztech.software.ecom.util.extension.toListProductsAndShop
 import vn.ztech.software.ecom.util.extension.toOrderItems
 
 private const val TAG = "CartFragment"
@@ -151,6 +153,10 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
                     viewModel.adjustProductQuantity(itemId, currQuantity - 1)
                 }
             }
+
+            override fun onShopClick(shop: Shop) {
+                Toast.makeText(requireContext(), "Shop Clicked: ${shop.name}", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -164,8 +170,9 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
             binding.cartProductsRecyclerView.visibility = View.VISIBLE
             binding.cartEmptyTextView.visibility = View.GONE
         }
+
         itemsAdapter.apply {
-            this.products = products
+            this.products = products.toListProductsAndShop()
         }
         concatAdapter = ConcatAdapter(itemsAdapter, PriceCardAdapter(viewModel.priceData.value))
         binding.cartProductsRecyclerView.adapter = concatAdapter
@@ -233,3 +240,5 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
     }
 
 }
+
+
