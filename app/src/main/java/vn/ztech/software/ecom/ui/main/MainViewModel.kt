@@ -1,4 +1,4 @@
-package vn.ztech.software.ecomSeller.ui.main
+package vn.ztech.software.ecom.ui.main
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.extension.toLoadState
+import vn.ztech.software.ecomSeller.ui.main.IMainUseCase
 
 class MainViewModel(private val mainUseCase: IMainUseCase): ViewModel() {
     val updateFCMTokenStatus = MutableLiveData<Boolean>()

@@ -12,7 +12,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.database.local.user.UserManager
 import vn.ztech.software.ecom.databinding.ActivityMainBinding
-import vn.ztech.software.ecomSeller.ui.main.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 val TAG = "MainActivity"
@@ -85,11 +84,11 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "remote token ${token}")
 
             if (localFCMToken == token.toString()){
-                if(isFCMTokenNew){
+//                if(isFCMTokenNew){
                     viewModel.updateFCMToken(token.toString())
-                }else{
+//                }else{
                     return@OnCompleteListener
-                }
+//                }
             }else{
                 /**update localFCMToken with new token*/
                 /**update localFCMToken with new token*/

@@ -21,7 +21,7 @@ import vn.ztech.software.ecom.ui.review.ListReviewReviewedViewModel
 import vn.ztech.software.ecom.ui.review.create_review.CreateReviewViewModel
 import vn.ztech.software.ecom.ui.review.update_review.UpdateReviewViewModel
 import vn.ztech.software.ecom.ui.splash.SplashViewModel
-import vn.ztech.software.ecomSeller.ui.main.MainViewModel
+import vn.ztech.software.ecom.ui.main.MainViewModel
 
 fun viewModelModule() = module {
     viewModel { SplashViewModel(get()) }
