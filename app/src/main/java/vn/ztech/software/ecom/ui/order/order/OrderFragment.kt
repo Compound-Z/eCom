@@ -1,6 +1,7 @@
 package vn.ztech.software.ecom.ui.order.order
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -12,18 +13,19 @@ import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.databinding.FragmentOrderBinding
 import vn.ztech.software.ecom.model.Address
 import vn.ztech.software.ecom.model.AddressItem
+import vn.ztech.software.ecom.model.SubOrder
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.address.AddressViewModel
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
 import vn.ztech.software.ecom.util.extension.toCartItems
+import vn.ztech.software.ecom.util.extension.toListSubOrders
 import vn.ztech.software.ecom.util.extension.toOrderItems
 
 private const val TAG = "OrdersFragment"
 class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
 
-    private lateinit var productsAdapter: OrderProductsAdapter
-    private lateinit var shippingOptionsAdapter: ShippingOptionsAdapter
+    private lateinit var subOrdersAdapter: SubOrdersAdapter
     private val addressViewModel: AddressViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
     private val orderViewModel: OrderViewModel by viewModel()
@@ -90,7 +92,12 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
             products?.let {
                 orderViewModel.products.value = products
             }
-            setProductsAdapter(products)
+//            setProductsAdapter(products)
+        }
+        orderViewModel.subOrders.observe(viewLifecycleOwner) {
+            it?.let {
+                setSubOrdersAdapter(it)
+            }
         }
 
         cartViewModel.error.observe(viewLifecycleOwner){
@@ -138,45 +145,53 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
             }
         }
         orderViewModel.products.observe(viewLifecycleOwner){
+            it?.let {
+                orderViewModel.subOrders.value = it.toListSubOrders()
+            }
             if(orderViewModel.checkIfCanGetShippingOptions()){
-                orderViewModel.getShippingOptions(
-                    GetShippingOptionsReq(
-                        orderViewModel.currentSelectedAddress.value?._id?:"",
-                        orderViewModel.products.value?.toCartItems()?: emptyList()
-                    )
-                )
+                getShippingOptions(orderViewModel.subOrders.value)
+//                orderViewModel.getShippingOptions(
+//                    GetShippingOptionsReq(
+//                        orderViewModel.currentSelectedAddress.value?._id?:"",
+//                        orderViewModel.products.value?.toCartItems()?: emptyList()
+//                    )
+//                )
             }
         }
         orderViewModel.currentSelectedAddress.observe(viewLifecycleOwner){
             if(orderViewModel.checkIfCanGetShippingOptions()){
-                orderViewModel.getShippingOptions(
-                    GetShippingOptionsReq(
-                        orderViewModel.currentSelectedAddress.value?._id?:"",
-                        orderViewModel.products.value?.toCartItems()?: emptyList()
-                    )
-                )
+                getShippingOptions(orderViewModel.subOrders.value)
+//                orderViewModel.getShippingOptions(
+//                    GetShippingOptionsReq(
+//                        orderViewModel.currentSelectedAddress.value?._id?:"",
+//                        orderViewModel.products.value?.toCartItems()?: emptyList()
+//                    )
+//                )
             }
         }
-        orderViewModel.loadingShipping.observe(viewLifecycleOwner){
-            if(it){
-                binding.layoutListShippingOptions.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
-                binding.loaderLayout.circularLoader.showAnimationBehavior
 
-                //calculate cost area
-                binding.layoutCalculateFee.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
-                binding.layoutCalculateFee.loaderLayout.circularLoader.showAnimationBehavior
-            }else{
-                binding.layoutListShippingOptions.loaderLayout.loaderFrameLayout.visibility = View.GONE
-                binding.loaderLayout.circularLoader.hideAnimationBehavior
-
-                //calculate cost area
-                binding.layoutCalculateFee.loaderLayout.loaderFrameLayout.visibility = View.GONE
-                binding.layoutCalculateFee.loaderLayout.circularLoader.hideAnimationBehavior
-            }
-        }
-        orderViewModel.shippingOptions.observe(viewLifecycleOwner){
+        //todo: iplm
+//        orderViewModel.loadingShipping.observe(viewLifecycleOwner){
+//            if(it){
+//                binding.layoutListShippingOptions.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+//                binding.loaderLayout.circularLoader.showAnimationBehavior
+//
+//                //calculate cost area
+//                binding.layoutCalculateFee.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+//                binding.layoutCalculateFee.loaderLayout.circularLoader.showAnimationBehavior
+//            }else{
+//                binding.layoutListShippingOptions.loaderLayout.loaderFrameLayout.visibility = View.GONE
+//                binding.loaderLayout.circularLoader.hideAnimationBehavior
+//
+//                //calculate cost area
+//                binding.layoutCalculateFee.loaderLayout.loaderFrameLayout.visibility = View.GONE
+//                binding.layoutCalculateFee.loaderLayout.circularLoader.hideAnimationBehavior
+//            }
+//        }
+        orderViewModel.loadShippingOptionsDone.observe(viewLifecycleOwner){
             it?.let {
-                setShippingOptionsAdapter(it)
+                binding.recyclerViewSubOrder.adapter?.notifyDataSetChanged()
+//                setShippingOptionsAdapter(it)
             }
         }
 
@@ -204,15 +219,28 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
         }
     }
 
-    private fun setShippingOptionsAdapter(it: List<ShippingOption>) {
-        shippingOptionsAdapter = ShippingOptionsAdapter(requireContext(), it)
-        shippingOptionsAdapter.onClickListener = object : ShippingOptionsAdapter.OnClickListener {
-            override fun onClick(shippingOption: ShippingOption) {
-                orderViewModel.currentSelectedShippingOption.value = shippingOption
-                orderViewModel.calculateCost()
-            }
+    private fun getShippingOptions(subOrders: List<SubOrder>?) {
+        subOrders?.forEach {
+            orderViewModel.getShippingOptions(
+                    it.shop._id,
+                    GetShippingOptionsReq(
+                        orderViewModel.currentSelectedAddress.value?._id?:"",
+                        it.items.toMutableList().toCartItems()
+                    )
+                )
         }
-        binding.layoutListShippingOptions.recyclerShippingOptions.adapter = shippingOptionsAdapter
+    }
+
+    private fun setShippingOptionsAdapter(it: List<ShippingOption>) {
+        //todo:
+//        shippingOptionsAdapter = ShippingOptionsAdapter(requireContext(), it)
+//        shippingOptionsAdapter.onClickListener = object : ShippingOptionsAdapter.OnClickListener {
+//            override fun onClick(shippingOption: ShippingOption) {
+//                orderViewModel.currentSelectedShippingOption.value = shippingOption
+//                orderViewModel.calculateCost()
+//            }
+//        }
+//        binding.layoutListShippingOptions.recyclerShippingOptions.adapter = shippingOptionsAdapter
     }
 
     private fun updateSegmentAddress(it: Address?) {
@@ -242,9 +270,17 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
         }
     }
 
-    private fun setProductsAdapter(products: List<CartProductResponse>) {
-        productsAdapter = OrderProductsAdapter(requireContext(), products.toMutableList().toOrderItems())
-        binding.orderDetailsProRecyclerView.adapter = productsAdapter
+    private fun setSubOrdersAdapter(subOrders: List<SubOrder>) {
+        subOrdersAdapter = SubOrdersAdapter(requireContext(), subOrders)
+        subOrdersAdapter.onClickListener = object : SubOrdersAdapter.OnClickListener{
+            override fun onSelectShippingOption(shopId: String, serviceId: Int) {
+                orderViewModel.setSelectedShippingOptionToSubOrder(shopId, serviceId)
+                orderViewModel.calculateCost()
+                Log.d("SubOrders", orderViewModel.subOrders.value.toString())
+            }
+
+        }
+        binding.recyclerViewSubOrder.adapter = subOrdersAdapter
     }
 
     override fun onStop() {

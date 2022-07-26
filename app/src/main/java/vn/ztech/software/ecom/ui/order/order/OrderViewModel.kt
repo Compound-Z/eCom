@@ -18,7 +18,8 @@ import vn.ztech.software.ecom.model.*
 import vn.ztech.software.ecom.ui.order.IOrderUserCase
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
-import vn.ztech.software.ecom.util.extension.toCartItems
+import vn.ztech.software.ecom.util.extension.findSelectedShippingOption
+import vn.ztech.software.ecom.api.request.CartItem
 
 private const val TAG = "OrderViewModel"
 class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUseCase: IOrderUserCase): ViewModel() {
@@ -26,14 +27,16 @@ class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUs
     val loading = MutableLiveData<Boolean>()
     val error = MutableLiveData<CustomError>()
     val products = MutableLiveData<MutableList<CartProductResponse>>()
+    val subOrders = MutableLiveData<List<SubOrder>>()
     val currentSelectedAddress = MutableLiveData<AddressItem>()
-    val shippingOptions = MutableLiveData<List<ShippingOption>>()
+//    val shippingOptions = MutableLiveData<List<ShippingOption>>()
     val currentSelectedShippingOption = MutableLiveData<ShippingOption>()
     val loadingShipping = MutableLiveData<Boolean>()
+    val loadShippingOptionsDone = MutableLiveData<Boolean>()
     val orderCost = MutableLiveData<OrderCost>()
     val createdOrder = MutableLiveData<OrderDetails>()
 
-    fun getShippingOptions(getShippingOptionReq: GetShippingOptionsReq, isLoadingEnabled: Boolean = true){
+    fun getShippingOptions(shopId: String, getShippingOptionReq: GetShippingOptionsReq, isLoadingEnabled: Boolean = true){
         viewModelScope.launch {
             shippingUseCase.getShippingOptions(getShippingOptionReq).flowOn(Dispatchers.IO).toLoadState().collect {
                 when(it){
@@ -42,8 +45,9 @@ class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUs
                     }
                     is LoadState.Loaded -> {
                         loadingShipping.value = false
-                        shippingOptions.value = it.data
-                        Log.d("getShippingOptions", shippingOptions.value.toString())
+                        setShippingOptionsToSubOrder(shopId, it.data)
+                        loadShippingOptionsDone.value = true
+//                        shippingOptions.value = it.data
                     }
                     is LoadState.Error -> {
                         loadingShipping.value = false
@@ -56,31 +60,55 @@ class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUs
         }
     }
 
+    private fun setShippingOptionsToSubOrder(shopId: String, data: List<ShippingOption>) {
+
+
+        subOrders.value?.forEach {
+            if (it.shop._id == shopId){
+                it.shippingOptions = data.distinctBy { it.service_id }/**remove duplicated shipping options*/
+                return@forEach
+            }
+        }
+    }
+
+
     fun checkIfCanGetShippingOptions(): Boolean {
         Log.d(TAG, "${!products.value.isNullOrEmpty()} && ${currentSelectedAddress.value != null}")
         return !products.value.isNullOrEmpty() && currentSelectedAddress.value != null
     }
 
     fun calculateCost(){
-        val productsCost = products.value?.sumOf { it.price*it.quantity }?:-1
-        val shippingFee = currentSelectedShippingOption.value?.fee?.total?:-1
+        var productsCost = 0
+        var shippingFee = 0
+
+        subOrders.value?.forEach {
+            shippingFee += it.shippingOptions?.findSelectedShippingOption(it.shippingServiceId)?.fee?.total?:0
+            productsCost += it.items.sumOf { it.price*it.quantity }
+        }
+
         orderCost.value = OrderCost(productsCost, shippingFee, productsCost+shippingFee)
     }
 
     fun createOrder(products: MutableList<CartProductResponse>?, addressItem: AddressItem?, shippingOption: ShippingOption?) {
-        if (products.isNullOrEmpty() || addressItem == null || shippingOption == null){
+        if (products.isNullOrEmpty() || addressItem == null || !checkShippingOptions()){
             if(addressItem==null){
                 error.value = errorMessage(CustomError(customMessage = "Please choose an address"))
-            }else if(shippingOption == null){
+            }else if(!checkShippingOptions()){
                 error.value = errorMessage(CustomError(customMessage = "Please choose a shipping option"))
             }else{
                 error.value = errorMessage(CustomError(customMessage = "Products is empty, go shopping please"))
             }
         }else{
+            /**map shipping option to order items*/
+            val listOrderItem = mutableListOf<CartItem>()
+            subOrders.value?.forEach {subOrder->
+                subOrder.items.forEach {
+                    listOrderItem.add(vn.ztech.software.ecom.api.request.CartItem(it.productId, it.quantity, subOrder.shippingServiceId))
+                }
+            }
             val createOrderRequest = CreateOrderRequest(
                 addressItemId = addressItem._id,
-                orderItems = products.toCartItems(),
-                shippingServiceId = shippingOption.service_id,
+                orderItems = listOrderItem,
                 note = "" //todo: implement ui for Note
             )
             viewModelScope.launch {
@@ -105,6 +133,15 @@ class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUs
         }
     }
 
+    private fun checkShippingOptions(): Boolean {
+        Log.d("SubOrders",  subOrders.value.toString())
+        subOrders.value?.forEach {
+            Log.d("SubOrders", it.shippingServiceId.toString())
+            if (it.shippingServiceId==-1) return false
+        }
+        return true
+    }
+
 
     data class OrderCost(
         var productsCost: Int = -1,
@@ -113,5 +150,14 @@ class OrderViewModel(private val shippingUseCase: IShippingUserCase, val orderUs
     )
     fun clearErrors() {
         error.value = null
+    }
+
+    fun setSelectedShippingOptionToSubOrder(shopId: String, serviceId: Int) {
+        subOrders.value?.forEach {
+            if (it.shop._id == shopId){
+                it.shippingServiceId = serviceId
+                return@forEach
+            }
+        }
     }
 }

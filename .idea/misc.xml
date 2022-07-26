@@ -48,7 +48,7 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_list_review_reviewed.xml" value="0.10916919959473151" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_login.xml" value="0.22" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_my_review.xml" value="0.13958333333333334" />
-        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order.xml" value="0.33" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order.xml" value="0.22" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order_details.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order_history.xml" value="0.159375" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order_success.xml" value="0.2" />
@@ -68,6 +68,7 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/item_review_reviewed.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/item_review_seller.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/item_shipping_option.xml" value="0.33" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/item_shop_in_cart.xml" value="0.19384057971014493" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_address_card.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_calculate_order_fee.xml" value="0.5" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_cart_product_in_shop_segment.xml" value="0.25" />
@@ -83,6 +84,7 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_shop_header.xml" value="0.33" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_star_filter_review_of_product_seller.xml" value="0.1816123188405797" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_star_filter_seller.xml" value="0.13958333333333334" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_sub_order.xml" value="0.19384057971014493" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/layout_top_bar.xml" value="0.1" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/order_list_item.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/segment_address.xml" value="0.25" />

@@ -4,10 +4,11 @@ import vn.ztech.software.ecom.api.request.CartItem
 import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.model.OrderItem
 import vn.ztech.software.ecom.model.Shop
+import vn.ztech.software.ecom.model.SubOrder
 
 fun MutableList<CartProductResponse>.toCartItems(): List<CartItem>{
     val cartItems = this.map {
-        CartItem(it.productId, it.quantity)
+        CartItem(it.productId, it.quantity, -1) /**by default, if not set, shippingServiceId = -1*/
     }
     return cartItems
 }
@@ -61,6 +62,25 @@ fun List<CartProductResponse>.toListProductsAndShop(): List<Any> {
         shop.value.forEach { product ->
             result.add(product)
         }
+    }
+    return result
+}
+
+fun List<CartProductResponse>.toListSubOrders(): List<SubOrder> {
+    val grouped = this.groupBy { it.shopId._id }
+    val result = mutableListOf<SubOrder>()
+    grouped.forEach { shop ->
+
+        /**add shop item to list, the shop info get from the first product since every product in the shop have the same shop info*/
+        val firstProduct = shop.value[0]
+        result.add(
+            SubOrder(
+                Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = ""),
+                shop.value,
+                -1, //initially, shippingServiceId is not set yet, it will be reset when user choose an shipping option returned from API
+            null
+            )
+        )
     }
     return result
 }
