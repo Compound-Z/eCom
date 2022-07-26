@@ -67,6 +67,14 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
                 }
             }
         }
+        viewModel.loadingProduct.observe(viewLifecycleOwner){
+            if (it){
+                binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+            }else{
+                binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                binding.proDetailsLayout.visibility = View.VISIBLE
+            }
+        }
         viewModel.product.observe(viewLifecycleOwner){
             if(viewModel.checkIsDataReady()){
                 setViews()
