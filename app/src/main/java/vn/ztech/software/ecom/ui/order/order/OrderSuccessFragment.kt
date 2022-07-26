@@ -11,6 +11,7 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderSuccessBinding
 import vn.ztech.software.ecom.model.OrderDetails
 import vn.ztech.software.ecom.ui.BaseFragment
+import vn.ztech.software.ecom.ui.main.MainActivity
 
 class OrderSuccessFragment : BaseFragment<FragmentOrderSuccessBinding>() {
     var orderDetails: OrderDetails? = null
@@ -27,8 +28,9 @@ class OrderSuccessFragment : BaseFragment<FragmentOrderSuccessBinding>() {
             findNavController().navigate(R.id.action_orderSuccessFragment_to_homeFragment)
         }
         binding.tvViewOrder.setOnClickListener {
-            findNavController().navigate(R.id.action_orderSuccessFragment_to_orderDetailsFragment,
-            bundleOf("orderDetails" to orderDetails,"fromWhere" to "OrderSuccessFragment"))
+            (activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.orderHistoryFragment
+//            findNavController().navigate(R.id.action_orderSuccessFragment_to_orderDetailsFragment,
+//            bundleOf("orderDetails" to orderDetails,"fromWhere" to "OrderSuccessFragment"))
         }
     }
 
