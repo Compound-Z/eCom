@@ -1,15 +1,19 @@
 package vn.ztech.software.ecom.ui.shop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentShopBinding
+import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.model.Shop
 import vn.ztech.software.ecom.ui.BaseFragment2
 import vn.ztech.software.ecom.ui.review.ListReviewQueueFragment
@@ -21,7 +25,7 @@ import vn.ztech.software.ecom.ui.shop.products.ListProductsInShopFragment
 import vn.ztech.software.ecom.util.extension.removeUnderline
 
 
-class ShopFragment : BaseFragment2<FragmentShopBinding>() {
+class ShopFragment : BaseFragment2<FragmentShopBinding>(), ListProductsInShopFragment.OnClickListener {
     private val viewModel: ShopViewModel by sharedViewModel()
     private lateinit var childFragment: ChildFragmentAdapter
 
@@ -129,6 +133,14 @@ class ShopFragment : BaseFragment2<FragmentShopBinding>() {
     }
     override fun setViewBinding(): FragmentShopBinding {
         return FragmentShopBinding.inflate(layoutInflater)
+    }
+
+    override fun onItemClick(product: Product) {
+        Log.d("XXXX", product.toString())
+        findNavController().navigate(
+            R.id.action_shopFragment_to_productDetailsFragment,
+            bundleOf("product" to product, "ADD_TO_CART_BUTTON_ENABLED" to true)
+        )
     }
 
 }

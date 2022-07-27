@@ -22,15 +22,14 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.common.StoreDataStatus
-import vn.ztech.software.ecom.databinding.FragmentHomeBinding
 import vn.ztech.software.ecom.databinding.FragmentListProductsInShopBinding
 import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.ui.MyOnFocusChangeListener
 import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
 import vn.ztech.software.ecom.ui.common.ItemDecorationRecyclerViewPadding
-import vn.ztech.software.ecom.ui.home.HomeViewModel
 import vn.ztech.software.ecom.ui.home.ListProductsAdapter
+import vn.ztech.software.ecom.ui.review.ListReviewReviewedFragment
 import vn.ztech.software.ecom.ui.shop.ShopViewModel
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import vn.ztech.software.ecom.util.CustomError
@@ -42,7 +41,16 @@ class ListProductsInShopFragment : Fragment() {
     private val shopViewModel: ShopViewModel by sharedViewModel()
     private lateinit var listProductsAdapter: ListProductsAdapter
     protected val focusChangeListener = MyOnFocusChangeListener()
+    lateinit var onClickListener: OnClickListener
+    interface OnClickListener{
+        fun onItemClick(product: Product)
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("ON_CREATE", "ON_CREATE")
+        viewModel.getProducts(shopViewModel.shopId.value)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,11 +64,11 @@ class ListProductsInShopFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getProducts(shopViewModel.shopId.value)
     }
 
     private fun setViews() {
         setHomeTopAppBar()
+
         if (context != null) {
             setUpProductAdapter()
             binding.productsRecyclerView.apply {
@@ -223,11 +231,8 @@ class ListProductsInShopFragment : Fragment() {
         listProductsAdapter = ListProductsAdapter(requireContext())
         listProductsAdapter.onClickListener =  object : ListProductsAdapter.OnClickListener {
             override fun onClick(productData: Product) {
-                Log.d("XXXX", productData.toString())
-                findNavController().navigate(
-                    R.id.action_seeProduct,
-                    bundleOf("product" to productData, "ADD_TO_CART_BUTTON_ENABLED" to true)
-                )
+                onClickListener.onItemClick(productData)
+
             }
 
         }
@@ -291,4 +296,8 @@ class ListProductsInShopFragment : Fragment() {
         viewModel.clearErrors()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        onClickListener = parentFragment as OnClickListener
+    }
 }

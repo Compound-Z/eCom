@@ -361,6 +361,10 @@
         android:name="vn.ztech.software.ecom.ui.shop.ShopFragment"
         android:label="ShopFragment"
         tools:layout="@layout/fragment_shop">
+        <action
+            android:id="@+id/action_shopFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment"
+            />
 <!--        <action-->
 <!--            android:id="@+id/action_productDetailsFragment2_to_homeFragment"-->
 <!--            app:destination="@id/homeFragment"-->
