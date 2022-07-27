@@ -28,5 +28,5 @@ interface IShopApi{
     suspend fun getProductsOfCategoryInShop(@Path("shop_id") shopId: String, @Body request: GetProductsOfCategoryInShopRequest ): PagedGetAllProductsResponse
 
     @POST("/api/v1/shops/search/{search_words}")
-    suspend fun searchProductsInShop(@Body request: SearchProductsInShopRequest ): PagedGetAllProductsResponse
+    suspend fun searchProductsInShop(@Path("search_words") searchWords: String, @Body request: SearchProductsInShopRequest ): PagedGetAllProductsResponse
 }

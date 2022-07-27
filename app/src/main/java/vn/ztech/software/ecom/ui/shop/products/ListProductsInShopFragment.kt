@@ -213,7 +213,7 @@ class ListProductsInShopFragment : Fragment() {
     }
 
     private fun performSearch(searchWords: String) {
-//        viewModel.search(searchWords)
+        viewModel.search(shopViewModel.shopId.value, searchWords)
     }
 
     private fun setAppBarItemClicks(menuItem: MenuItem): Boolean {

@@ -55,27 +55,35 @@ class ListProductsInShopViewModel(
         }
     }
 
-//    fun search(searchWords: String){
-//        viewModelScope.launch {
-//            listProductsUseCase.search(searchWords).flowOn(Dispatchers.IO).toLoadState().collect {
-//                when(it){
-//                    LoadState.Loading -> {
-//                        _storeDataStatus.value = StoreDataStatus.LOADING
-//                    }
-//                    is LoadState.Loaded -> {
-//                        _storeDataStatus.value = StoreDataStatus.DONE
-//                        _allProducts.value = it.data
-//                        Log.d(TAG, "SEARCH LOADED")
-//                    }
-//                    is LoadState.Error -> {
-//                        _storeDataStatus.value = StoreDataStatus.ERROR
-//                        error.value = errorMessage(it.e)
-//                        Log.d(TAG +" SEARCH ERROR:", it.e.message.toString())
-//                    }
-//                }
-//            }
-//        }
-//    }
+    fun search(shopId: String?, searchWords: String?){
+        if (shopId == null){
+            error.value = errorMessage(CustomError(customMessage = "System error"))
+            return
+        }
+        if (searchWords == null){
+            error.value = errorMessage(CustomError(customMessage = "System error"))
+            return
+        }
+        viewModelScope.launch {
+            listProductsInShopUseCase.searchListProductsInShop(shopId, searchWords).cachedIn(viewModelScope).flowOn(Dispatchers.IO).toLoadState().collect {
+                when(it){
+                    LoadState.Loading -> {
+                        _storeDataStatus.value = StoreDataStatus.LOADING
+                    }
+                    is LoadState.Loaded -> {
+                        _storeDataStatus.value = StoreDataStatus.DONE
+                        _allProducts.value = it.data
+                        Log.d(TAG, "SEARCH LOADED")
+                    }
+                    is LoadState.Error -> {
+                        _storeDataStatus.value = StoreDataStatus.ERROR
+                        error.value = errorMessage(it.e)
+                        Log.d(TAG +" SEARCH ERROR:", it.e.message.toString())
+                    }
+                }
+            }
+        }
+    }
 
     fun clearErrors() {
         error.value = null

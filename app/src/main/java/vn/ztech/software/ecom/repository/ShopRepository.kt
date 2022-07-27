@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import vn.ztech.software.ecom.api.IShopApi
 import vn.ztech.software.ecom.api.request.GetProductsOfCategoryInShopRequest
 import vn.ztech.software.ecom.api.request.GetProductsRequest
+import vn.ztech.software.ecom.api.request.SearchProductsInShopRequest
 import vn.ztech.software.ecom.common.Constants
 import vn.ztech.software.ecom.model.Category
 import vn.ztech.software.ecom.model.Product
@@ -16,6 +17,7 @@ import vn.ztech.software.ecom.model.Shop
 interface IShopRepository {
     suspend fun getShopInfo(shopId: String): Shop
     suspend fun getListProductsInShop(shopId: String): Flow<PagingData<Product>>
+    suspend fun searchListProductsInShop(shopId: String, searchWords: String): Flow<PagingData<Product>>
     suspend fun getListCategoriesInShop(shopId: String): List<Category>
     suspend fun getListProductsOfCategoryInShop(shopId: String, categoryName: String): Flow<PagingData<Product>>
 
@@ -70,6 +72,19 @@ class ShopRepository(private val shopApi: IShopApi): IShopRepository{
             ),
             pagingSourceFactory = {
                 ProductsInShopPagingSource(shopId, GetProductsRequest(),shopApi)
+            },
+            initialKey = 1
+        ).flow
+    }
+
+    override suspend fun searchListProductsInShop(shopId: String, searchWords: String): Flow<PagingData<Product>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = Constants.NETWORK_PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = {
+                SearchProductsInShopPagingSource(searchWords, SearchProductsInShopRequest(shopId=shopId),shopApi)
             },
             initialKey = 1
         ).flow
