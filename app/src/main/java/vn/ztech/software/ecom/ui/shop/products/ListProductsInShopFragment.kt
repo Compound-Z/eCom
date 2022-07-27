@@ -64,6 +64,9 @@ class ListProductsInShopFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.getProducts(shopViewModel.shopId.value)
+        }
     }
 
     private fun setViews() {

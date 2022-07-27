@@ -66,15 +66,15 @@ class ListCategoriesInShopFragment : BaseFragment<FragmentListCategoriesInShopBi
                 }
             }
         }
-        //feature: this will be add when the app supports seller.
-//        if (!viewModel.isUserASeller) {
-//            binding.homeFabAddProduct.visibility = View.GONE
-//        }
-//        binding.homeFabAddProduct.setOnClickListener {
-//            showDialogWithItems(ProductCategories, 0, false)
-//        }
         binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
         binding.loaderLayout.circularLoader.showAnimationBehavior
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.getCategories(shopViewMode.shopId.value)
+        }
     }
     //
     @SuppressLint("NotifyDataSetChanged")
