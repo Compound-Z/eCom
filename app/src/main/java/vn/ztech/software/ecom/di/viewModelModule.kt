@@ -24,6 +24,7 @@ import vn.ztech.software.ecom.ui.splash.SplashViewModel
 import vn.ztech.software.ecom.ui.main.MainViewModel
 import vn.ztech.software.ecom.ui.shop.ShopUseCase
 import vn.ztech.software.ecom.ui.shop.ShopViewModel
+import vn.ztech.software.ecom.ui.shop.products.ListProductsInShopViewModel
 
 fun viewModelModule() = module {
     viewModel { SplashViewModel(get()) }
@@ -47,4 +48,6 @@ fun viewModelModule() = module {
     viewModel { CreateReviewViewModel(get()) }
     viewModel { UpdateReviewViewModel(get()) }
     viewModel { ShopViewModel(get()) }
+    viewModel { ListProductsInShopViewModel(get()) }
+
 }

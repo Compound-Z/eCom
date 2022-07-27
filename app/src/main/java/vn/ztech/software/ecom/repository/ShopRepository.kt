@@ -13,6 +13,8 @@ import vn.ztech.software.ecom.model.Shop
 
 interface IShopRepository {
     suspend fun getShopInfo(shopId: String): Shop
+    suspend fun getListProductsInShop(shopId: String): Flow<PagingData<Product>>
+
 //    suspend fun getListProducts(): Flow<PagingData<Product>>
 //    suspend fun getProductDetails(productId: String): ProductDetails
 //    suspend fun search(searchWords: String): Flow<PagingData<Product>>
@@ -56,4 +58,17 @@ class ShopRepository(private val shopApi: IShopApi): IShopRepository{
     override suspend fun getShopInfo(shopId: String): Shop {
         return shopApi.getShopInfo(shopId)
     }
+    override suspend fun getListProductsInShop(shopId: String): Flow<PagingData<Product>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = Constants.NETWORK_PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = {
+                ProductsInShopPagingSource(shopId, GetProductsRequest(),shopApi)
+            },
+            initialKey = 1
+        ).flow
+    }
+
 }

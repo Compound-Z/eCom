@@ -29,6 +29,8 @@ import vn.ztech.software.ecom.ui.review.IReviewUseCase
 import vn.ztech.software.ecom.ui.review.ReviewUseCase
 import vn.ztech.software.ecom.ui.shop.IShopUseCase
 import vn.ztech.software.ecom.ui.shop.ShopUseCase
+import vn.ztech.software.ecom.ui.shop.products.IListProductsInShopUseCase
+import vn.ztech.software.ecom.ui.shop.products.ListProductsInShopUseCase
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import vn.ztech.software.ecom.ui.splash.SplashUseCase
 import vn.ztech.software.ecomSeller.ui.main.IMainUseCase
@@ -51,5 +53,6 @@ fun useCaseModule() = module {
     factory<IMainUseCase> { MainUseCase(get()) }
     factory<IReviewUseCase> { ReviewUseCase(get()) }
     factory<IShopUseCase> { ShopUseCase(get()) }
+    factory<IListProductsInShopUseCase> { ListProductsInShopUseCase(get()) }
 
 }
