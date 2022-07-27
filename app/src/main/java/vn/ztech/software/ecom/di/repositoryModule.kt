@@ -15,5 +15,4 @@ fun repositoryModule() = module {
     single<IOrderRepository> { OrderRepository(get()) }
     single<IReviewRepository> { ReviewRepository(get()) }
     single<IShopRepository> { ShopRepository(get()) }
-
 }

@@ -32,10 +32,12 @@ class ShopFragment : BaseFragment2<FragmentShopBinding>(), ListProductsInShopFra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.takeIf { it.containsKey("shopId") }?.let {
-            viewModel.shopId.value = arguments?.getString("shopId")
-        }
-        if(viewModel.shop.value == null ){
-            viewModel.getShopInfo(viewModel.shopId.value)
+            val shopId = arguments?.getString("shopId")
+            /**only update shop header when this shop is different from the previous shop*/
+            if (viewModel.shop.value == null || shopId != viewModel.shopId.value){
+                viewModel.getShopInfo(viewModel.shopId.value)
+            }
+            viewModel.shopId.value = shopId
         }
         setUpUI()
     }
@@ -141,6 +143,11 @@ class ShopFragment : BaseFragment2<FragmentShopBinding>(), ListProductsInShopFra
             R.id.action_shopFragment_to_productDetailsFragment,
             bundleOf("product" to product, "ADD_TO_CART_BUTTON_ENABLED" to true)
         )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearErrors()
     }
 
 }

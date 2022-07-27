@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import vn.ztech.software.ecom.api.IShopApi
 import vn.ztech.software.ecom.api.request.GetProductsRequest
 import vn.ztech.software.ecom.common.Constants
+import vn.ztech.software.ecom.model.Category
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.model.ProductDetails
 import vn.ztech.software.ecom.model.Shop
@@ -14,6 +15,7 @@ import vn.ztech.software.ecom.model.Shop
 interface IShopRepository {
     suspend fun getShopInfo(shopId: String): Shop
     suspend fun getListProductsInShop(shopId: String): Flow<PagingData<Product>>
+    suspend fun getListCategoriesInShop(shopId: String): List<Category>
 
 //    suspend fun getListProducts(): Flow<PagingData<Product>>
 //    suspend fun getProductDetails(productId: String): ProductDetails
@@ -69,6 +71,10 @@ class ShopRepository(private val shopApi: IShopApi): IShopRepository{
             },
             initialKey = 1
         ).flow
+    }
+
+    override suspend fun getListCategoriesInShop(shopId: String): List<Category> {
+        return shopApi.getCategoriesInShop(shopId)
     }
 
 }
