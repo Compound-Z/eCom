@@ -5,10 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import vn.ztech.software.ecom.api.request.GetProductsInCategoryRequest
-import vn.ztech.software.ecom.api.request.GetProductsOfCategoryInShopRequest
-import vn.ztech.software.ecom.api.request.GetProductsRequest
-import vn.ztech.software.ecom.api.request.SearchProductsInShopRequest
+import vn.ztech.software.ecom.api.request.*
 import vn.ztech.software.ecom.api.response.PagedGetAllProductsResponse
 import vn.ztech.software.ecom.model.Category
 import vn.ztech.software.ecom.model.Shop
@@ -29,4 +26,8 @@ interface IShopApi{
 
     @POST("/api/v1/shops/search/{search_words}")
     suspend fun searchProductsInShop(@Path("search_words") searchWords: String, @Body request: SearchProductsInShopRequest ): PagedGetAllProductsResponse
+
+    @POST("/api/v1/shops/search-cate/{search_words_product}")
+    suspend fun searchProductsOfCategoryInShop(@Path("search_words_product") searchWords: String, @Body request: SearchProductsOfCategoryInShopRequest ): PagedGetAllProductsResponse
+
 }

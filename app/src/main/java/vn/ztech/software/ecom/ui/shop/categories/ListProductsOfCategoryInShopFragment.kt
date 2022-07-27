@@ -210,7 +210,7 @@ open class ListProductsOfCategoryInShopFragment : Fragment() {
     }
 
     private fun performSearch(searchWordsProduct: String) {
-//        viewModel.searchProductsInCategory(searchWordsProduct)
+        viewModel.searchProductsOfCategoryInShop(shopViewModel.shopId.value, viewModel.currentSelectedCategory.value?.name, searchWordsProduct)
     }
 
     private fun setAppBarItemClicks(menuItem: MenuItem): Boolean {

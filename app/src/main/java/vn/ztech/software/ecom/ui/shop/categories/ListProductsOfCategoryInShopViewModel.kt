@@ -63,6 +63,33 @@ class ListProductsOfCategoryInShopViewModel(
         }
     }
 
+    fun searchProductsOfCategoryInShop(shopId: String?, searchWordsCategory: String?, searchWordsProduct: String?){
+        if (shopId == null || searchWordsCategory == null || searchWordsProduct == null){
+            error.value = errorMessage(CustomError(customMessage = "System error"))
+            return
+        }
+        viewModelScope.launch {
+            listProductsOfCategoryInShopUseCase.searchListProductsOfCategoryInShop(shopId, searchWordsCategory, searchWordsProduct).cachedIn(viewModelScope).flowOn(Dispatchers.IO).toLoadState().collect {
+                when(it){
+                    LoadState.Loading -> {
+                        _storeDataStatus.value = StoreDataStatus.LOADING
+                    }
+                    is LoadState.Loaded -> {
+                        _storeDataStatus.value = StoreDataStatus.DONE
+                        products.value = it.data
+                        Log.d(TAG, "SEARCH LOADED")
+                    }
+                    is LoadState.Error -> {
+                        _storeDataStatus.value = StoreDataStatus.ERROR
+                        error.value = errorMessage(it.e)
+                        Log.d(TAG +" SEARCH ERROR:", it.e.message.toString())
+                    }
+                }
+            }
+        }
+    }
+
+
 //    fun search(searchWords: String){
 //        viewModelScope.launch {
 //            listProductsUseCase.search(searchWords).flowOn(Dispatchers.IO).toLoadState().collect {
