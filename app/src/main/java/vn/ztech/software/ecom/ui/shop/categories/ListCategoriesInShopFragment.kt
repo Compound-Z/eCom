@@ -115,7 +115,7 @@ class ListCategoriesInShopFragment : BaseFragment<FragmentListCategoriesInShopBi
         listCategoriesAdapter.onClickListener =  object : ListCategoriesAdapter.OnClickListener {
             override fun onClick(categoryData: Category) {
                 findNavController().navigate(
-                    R.id.action_category_2_list_products,
+                    R.id.listProductsOfCategoryInShopFragment,
                     bundleOf("category" to categoryData)
                 )
             }

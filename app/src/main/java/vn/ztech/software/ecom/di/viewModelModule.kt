@@ -25,6 +25,7 @@ import vn.ztech.software.ecom.ui.main.MainViewModel
 import vn.ztech.software.ecom.ui.shop.ShopUseCase
 import vn.ztech.software.ecom.ui.shop.ShopViewModel
 import vn.ztech.software.ecom.ui.shop.categories.ListCategoriesInShopViewModel
+import vn.ztech.software.ecom.ui.shop.categories.ListProductsOfCategoryInShopViewModel
 import vn.ztech.software.ecom.ui.shop.products.ListProductsInShopViewModel
 
 fun viewModelModule() = module {
@@ -51,5 +52,6 @@ fun viewModelModule() = module {
     viewModel { ShopViewModel(get()) }
     viewModel { ListProductsInShopViewModel(get()) }
     viewModel { ListCategoriesInShopViewModel(get()) }
+    viewModel { ListProductsOfCategoryInShopViewModel(get()) }
 
 }

@@ -35,7 +35,7 @@ class ShopFragment : BaseFragment2<FragmentShopBinding>(), ListProductsInShopFra
             val shopId = arguments?.getString("shopId")
             /**only update shop header when this shop is different from the previous shop*/
             if (viewModel.shop.value == null || shopId != viewModel.shopId.value){
-                viewModel.getShopInfo(viewModel.shopId.value)
+                viewModel.getShopInfo(shopId)
             }
             viewModel.shopId.value = shopId
         }
