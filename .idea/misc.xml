@@ -39,6 +39,7 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_dialog_add_to_cart_success.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_forgot_password.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_list_categories_in_shop.xml" value="0.161231884057971" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_list_order.xml" value="0.1453125" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_list_product.xml" value="0.161231884057971" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_list_product_in_category.xml" value="0.161231884057971" />
@@ -54,6 +55,7 @@
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_order_success.xml" value="0.2" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_product_details.xml" value="0.1962962962962963" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_shop.xml" value="0.33" />
+        <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_shop_info.xml" value="0.161231884057971" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_signup.xml" value="0.25" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_signup_success.xml" value="0.33" />
         <entry key="..\:/Users/hoang/AndroidStudioProjects/eCom/app/src/main/res/layout/fragment_success.xml" value="0.25" />
