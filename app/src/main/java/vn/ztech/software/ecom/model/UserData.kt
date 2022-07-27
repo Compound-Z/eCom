@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import kotlinx.android.parcel.Parcelize
 import vn.ztech.software.ecom.database.local.user.ObjectListTypeConvertor
-import vn.ztech.software.ecom.ui.UserType
+import vn.ztech.software.ecom.database.utils.UserType
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -19,7 +19,7 @@ data class UserData(
 	var phoneNumber: String = "",
 	var email: String = "",
 	var password: String = "",
-	var role: String = UserType.CUSTOMER.name /**note: this field is "role" in the API*/,
+	var role: String = UserType.customer.name /**note: this field is "role" in the API*/ ,
 	var likes: List<String> = ArrayList(),
 //	@TypeConverters(ObjectListTypeConvertor::class)
 //	var addresses: List<Address> = ArrayList(),

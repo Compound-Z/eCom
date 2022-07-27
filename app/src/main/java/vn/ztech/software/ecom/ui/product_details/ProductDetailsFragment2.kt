@@ -194,7 +194,12 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
         binding.layoutShop.tvShopAddress.text = viewModel.productDetails.value?.shopId?.name
         binding.layoutShop.tvNumberOfProduct.text = "${viewModel.productDetails.value?.shopId?.numberOfProduct} products"
         binding.layoutShop.btViewShop.setOnClickListener {
-            Toast.makeText(requireContext(), "To be developed", Toast.LENGTH_LONG).show()
+            findNavController().navigate(
+                R.id.action_productDetailsFragment_to_shopFragment,
+                bundleOf(
+                    "shopId" to viewModel.productDetails.value?.shopId?._id
+                )
+            )
         }
     }
 

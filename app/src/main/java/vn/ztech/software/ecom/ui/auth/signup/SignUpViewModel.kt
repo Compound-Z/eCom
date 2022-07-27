@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import vn.ztech.software.ecom.common.LoadState
 import vn.ztech.software.ecom.common.extension.toLoadState
+import vn.ztech.software.ecom.database.utils.UserType
 import vn.ztech.software.ecom.model.UserData
 import vn.ztech.software.ecom.ui.SignUpViewErrors
-import vn.ztech.software.ecom.ui.UserType
 import vn.ztech.software.ecom.util.*
 import vn.ztech.software.ecom.util.isEmailValid
 import vn.ztech.software.ecom.util.isPhoneValid
@@ -74,7 +74,7 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
                                         "+84" + mobile.trim(),
                                         email.trim(),
                                         pwd1.trim(),
-                                        UserType.CUSTOMER.name,
+                                        UserType.customer.name,
                                         ArrayList(),
                                         ArrayList(),
 //                                        ArrayList(),

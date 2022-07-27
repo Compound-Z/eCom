@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.ui.product_details
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,11 +21,15 @@ import vn.ztech.software.ecom.databinding.FragmentProductDetailsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.ItemPreviewReviewSellerBinding
+import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.model.Review
+import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
 import vn.ztech.software.ecom.ui.main.MainActivity
+import vn.ztech.software.ecom.ui.splash.ISplashUseCase
+import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.extension.round1Decimal
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 import vn.ztech.software.ecom.util.extension.toDateTimeString
@@ -69,8 +74,10 @@ class ProductDetailsFragment : Fragment(),
             binding.proDetailsAddCartBtn.visibility = View.GONE
         }
         viewModel.product.value = product
-        viewModel.getProductDetails(product?._id?:"")
-        viewModel.getReviewsOfThisProduct(product?._id?:"")
+        if(viewModel.productDetails.value == null)
+            viewModel.getProductDetails(product?._id?:"")
+        if(viewModel.reviews.value == null)
+            viewModel.getReviewsOfThisProduct(product?._id?:"")
 
     }
 
@@ -113,12 +120,12 @@ class ProductDetailsFragment : Fragment(),
         }
         cartViewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
         viewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
     }
@@ -202,7 +209,12 @@ class ProductDetailsFragment : Fragment(),
         binding.layoutShop.tvShopAddress.text = viewModel.productDetails.value?.shopId?.name
         binding.layoutShop.tvNumberOfProduct.text = "${viewModel.productDetails.value?.shopId?.numberOfProduct} products"
         binding.layoutShop.btViewShop.setOnClickListener {
-            Toast.makeText(requireContext(), "To be developed", Toast.LENGTH_LONG).show()
+            findNavController().navigate(
+                R.id.action_productDetailsFragment_to_shopFragment,
+                bundleOf(
+                    "shopId" to viewModel.productDetails.value?.shopId?._id
+                )
+            )
         }
     }
 
@@ -234,5 +246,18 @@ class ProductDetailsFragment : Fragment(),
     override fun onStop() {
         super.onStop()
         viewModel.clearErrors()
+    }
+    fun handleError(error: CustomError){
+        if(error.e is RefreshTokenExpiredException){
+            openLogInSignUpActivity(ISplashUseCase.PAGE.LOGIN)
+        }else{
+            showErrorDialog(error)
+        }
+    }
+    fun openLogInSignUpActivity(page: ISplashUseCase.PAGE){
+        val intent = Intent(activity, LoginSignupActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.putExtra("PAGE", page)
+        startActivity(intent)
     }
 }

@@ -71,6 +71,10 @@
             android:id="@+id/action_productDetailsFragment_to_listReviewOfProductFragment"
             app:destination="@id/allReviewOfProductFragment"
             />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_shopFragment"
+            app:destination="@id/shopFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/productDetailsFragment2"
@@ -92,6 +96,10 @@
         <action
             android:id="@+id/action_productDetailsFragment2_to_listReviewOfProductFragment"
             app:destination="@id/allReviewOfProductFragment"
+            />
+        <action
+            android:id="@+id/action_productDetailsFragment2_to_shopFragment"
+            app:destination="@id/shopFragment"
             />
     </fragment>
     <fragment
@@ -347,6 +355,28 @@
         android:label="fragment_list_orders"
         tools:layout="@layout/fragment_list_order" >
 
+    </fragment>
+    <fragment
+        android:id="@+id/shopFragment"
+        android:name="vn.ztech.software.ecom.ui.shop.ShopFragment"
+        android:label="ShopFragment"
+        tools:layout="@layout/fragment_shop">
+<!--        <action-->
+<!--            android:id="@+id/action_productDetailsFragment2_to_homeFragment"-->
+<!--            app:destination="@id/homeFragment"-->
+<!--            app:popUpTo="@id/homeFragment"-->
+<!--            app:popUpToInclusive="true" />-->
+<!--        <argument-->
+<!--            android:name="productId"-->
+<!--            app:argType="string" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_productDetailsFragment2_to_cartFragment"-->
+<!--            app:destination="@id/cartFragment"-->
+<!--            />-->
+<!--        <action-->
+<!--            android:id="@+id/action_productDetailsFragment2_to_listReviewOfProductFragment"-->
+<!--            app:destination="@id/allReviewOfProductFragment"-->
+<!--            />-->
     </fragment>
 
 <!--    <fragment-->
