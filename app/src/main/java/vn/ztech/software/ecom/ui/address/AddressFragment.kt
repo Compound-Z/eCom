@@ -108,7 +108,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
             it?.let {
                 if(!it.addresses.isNullOrEmpty()){
                     addressAdapter.data = it.addresses
-                    addressAdapter.defaultAddressId = it.defaultAddressId
+                    addressAdapter.defaultAddressId = it.defaultAddressId?:""
                     binding.addressAddressesRecyclerView.adapter = addressAdapter
                     binding.addressAddressesRecyclerView.adapter?.notifyDataSetChanged()
                     //re-constraint the button so that it display at the bottom of the recycler list
