@@ -195,7 +195,7 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
         binding.layoutShop.tvNumberOfProduct.text = "${viewModel.productDetails.value?.shopId?.numberOfProduct} products"
         binding.layoutShop.btViewShop.setOnClickListener {
             findNavController().navigate(
-                R.id.action_productDetailsFragment_to_shopFragment,
+                R.id.action_productDetailsFragment2_to_shopFragment,
                 bundleOf(
                     "shopId" to viewModel.productDetails.value?.shopId?._id
                 )
