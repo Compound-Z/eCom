@@ -30,6 +30,7 @@ import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
 import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
 import vn.ztech.software.ecom.util.CustomError
+import vn.ztech.software.ecom.util.extension.removeUnderline
 import vn.ztech.software.ecom.util.extension.round1Decimal
 import vn.ztech.software.ecom.util.extension.showErrorDialog
 import vn.ztech.software.ecom.util.extension.toDateTimeString
@@ -205,8 +206,8 @@ class ProductDetailsFragment : Fragment(),
                 .load(imgUrl)
                 .into(binding.layoutShop.ivShop)
         }
-        binding.layoutShop.tvShopName.text = viewModel.productDetails.value?.shopId?.name
-        binding.layoutShop.tvShopAddress.text = viewModel.productDetails.value?.shopId?.name
+        binding.layoutShop.tvShopName.text = viewModel.productDetails.value?.shopId?.name?.removeUnderline()
+        binding.layoutShop.tvShopAddress.text = viewModel.productDetails.value?.shopId?.addressItem?.province?.name?:""
         binding.layoutShop.tvNumberOfProduct.text = "${viewModel.productDetails.value?.shopId?.numberOfProduct} products"
         binding.layoutShop.btViewShop.setOnClickListener {
             findNavController().navigate(
