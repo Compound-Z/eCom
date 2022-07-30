@@ -11,6 +11,7 @@ data class Shop(
     val categories: List<CategoryShop>,
     val createdAt: String,
     val imageUrl: String,
+    val description: String,
     val name: String,
     val numberOfProduct: Int,
     val shippingShopId: String,

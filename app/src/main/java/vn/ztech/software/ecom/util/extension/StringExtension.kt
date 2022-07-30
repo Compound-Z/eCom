@@ -18,6 +18,10 @@ fun String.toDateTimeString(): String {
     val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
     return localDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
 }
+fun String.toYear(): String {
+    val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
+    return localDateTime.format(DateTimeFormatter.ofPattern("MM/yyyy"))
+}
 
 fun String.getFirstNumber(): Int? {
     val firstNumString = this.split(" ")[0]

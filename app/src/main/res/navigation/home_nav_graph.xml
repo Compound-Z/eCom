@@ -365,6 +365,10 @@
             android:id="@+id/action_shopFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment"
             />
+        <action
+            android:id="@+id/action_shopFragment_to_shopInfoFragment"
+            app:destination="@id/shopInfoFragment"
+            />
 <!--        <action-->
 <!--            android:id="@+id/action_productDetailsFragment2_to_homeFragment"-->
 <!--            app:destination="@id/homeFragment"-->
@@ -380,6 +384,16 @@
 <!--        <action-->
 <!--            android:id="@+id/action_productDetailsFragment2_to_listReviewOfProductFragment"-->
 <!--            app:destination="@id/allReviewOfProductFragment"-->
+<!--            />-->
+    </fragment>
+    <fragment
+        android:id="@+id/shopInfoFragment"
+        android:name="vn.ztech.software.ecom.ui.shop.info.ShopInfoFragment"
+        android:label="ShopInfoFragment"
+        tools:layout="@layout/fragment_shop_info">
+<!--        <action-->
+<!--            android:id="@+id/action_shopFragment_to_productDetailsFragment"-->
+<!--            app:destination="@id/productDetailsFragment"-->
 <!--            />-->
     </fragment>
     <fragment

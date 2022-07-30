@@ -44,7 +44,7 @@ fun List<OrderItem>.toCartProductResponses(): List<CartProductResponse>{
             category = "",
             isSaling = true,
             saleNumber = -1,
-            shopId = Shop(_id = it.shopId, name = it.shopName, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = "")
+            shopId = Shop(_id = it.shopId, name = it.shopName, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = "", description = "")
         )
     }
     return cartProductResponses
@@ -57,7 +57,7 @@ fun List<CartProductResponse>.toListProductsAndShop(): List<Any> {
 
         /**add shop item to list, the shop info get from the first product since every product in the shop have the same shop info*/
         val firstProduct = shop.value[0]
-        result.add(Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = ""))
+        result.add(Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = "", description = ""))
 
         shop.value.forEach { product ->
             result.add(product)
@@ -75,7 +75,7 @@ fun List<CartProductResponse>.toListSubOrders(): List<SubOrder> {
         val firstProduct = shop.value[0]
         result.add(
             SubOrder(
-                Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = ""),
+                Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = "", description = ""),
                 shop.value,
                 -1, //initially, shippingServiceId is not set yet, it will be reset when user choose an shipping option returned from API
             null

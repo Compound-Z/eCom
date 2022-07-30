@@ -148,6 +148,11 @@
     <string name="account_address_label">Address</string>
     <string name="account_fragment_title">Account</string>
     <string name="account_sign_out_label">Sign Out</string>
+    <string name="account_from_when_label">From</string>
+    <string name="account_description_label">Description</string>
+    <string name="account_num_of_product_label">Product</string>
+    <string name="account_review_label">Reviews</string>
+    <string name="account_shop_info_label">Shop information</string>
     <string name="sign_out_dialog_title_text">Sign Out?</string>
     <string name="confirm_review_dialog_title_text">Confirm review</string>
     <string name="sign_out_dialog_message_text">On proceeding, you will be signed out of the app.</string>
