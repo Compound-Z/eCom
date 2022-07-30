@@ -76,7 +76,7 @@ class SplashActivity : AppCompatActivity() {
 
 	private fun openLogInSignUpActivity(page: ISplashUseCase.PAGE){
 		val intent = Intent(this@SplashActivity, LoginSignupActivity::class.java)
-		intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+		intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
 		intent.putExtra("PAGE", page)
 		startActivity(intent)
 		finish()
