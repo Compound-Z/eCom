@@ -1,5 +1,8 @@
 package vn.ztech.software.ecom.ui.shop.info
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -36,8 +39,18 @@ class ShopInfoFragment : BaseFragment2<FragmentShopInfoBinding>() {
 
     private fun updateUI() {
         binding.tvFromWhenContent.text = viewModel.shop.value?.createdAt?.toYear()
+        binding.tvPhoneNumberContent.text = viewModel.shop.value?.userId?.phoneNumber?:""
         binding.tvNumberOfProductContent.text = viewModel.shop.value?.numberOfProduct?.toString()
         binding.tvDescriptionContent.text = viewModel.shop.value?.description
+        binding.tvPhoneNumberContent.setOnClickListener {
+            copyToClipBoard(viewModel.shop.value?.userId?.phoneNumber?:"")
+        }
+    }
+    private fun copyToClipBoard(orderId: String) {
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip: ClipData = ClipData.newPlainText("orderId", orderId)
+        clipboard.setPrimaryClip(clip)
+        toastCenter("Copied $orderId")
     }
 
     override fun observeView() {

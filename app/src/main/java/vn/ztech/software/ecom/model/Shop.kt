@@ -16,7 +16,7 @@ data class Shop(
     val numberOfProduct: Int,
     val shippingShopId: String,
     val updatedAt: String,
-    val userId: String
+    val userId: UserId
 ): Parcelable
 
 @Parcelize
@@ -27,3 +27,9 @@ data class CategoryShop(
     val numberOfProduct: Int,
     val updatedAt: String
 ): Parcelable
+
+@Parcelize
+data class UserId(
+    val _id: String,
+    val phoneNumber: String
+):Parcelable
