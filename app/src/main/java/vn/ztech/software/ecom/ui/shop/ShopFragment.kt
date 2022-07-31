@@ -67,12 +67,7 @@ class ShopFragment : BaseFragment2<FragmentShopBinding>(), ListProductsInShopFra
         binding.shopAppBar.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-        binding.layoutShop.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_shopFragment_to_shopInfoFragment
-            )
-        }
-        binding.btViewShop.setOnClickListener {
+        binding.viewShop.setOnClickListener {
             findNavController().navigate(
                 R.id.action_shopFragment_to_shopInfoFragment
             )
