@@ -21,6 +21,7 @@ import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.model.Shop
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.product_details.ProductDetailsViewModel
+import vn.ztech.software.ecom.util.extension.toCurrency
 import vn.ztech.software.ecom.util.extension.toListProductsAndShop
 import vn.ztech.software.ecom.util.extension.toOrderItems
 
@@ -216,9 +217,8 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
                     R.string.price_card_items_string,
                     priceData?.numberOfItem.toString()
                 )
-                priceCardBinding.priceItemsAmountTv.text =
-                    getString(R.string.price_text, priceData?.subTotal.toString())
-                priceCardBinding.priceTotalAmountTv.text = getString(R.string.price_text, viewModel.priceData.value?.subTotal.toString())
+                priceCardBinding.priceItemsAmountTv.text = priceData?.subTotal?.toCurrency()
+                priceCardBinding.priceTotalAmountTv.text = viewModel.priceData.value?.subTotal?.toCurrency()
             }
         }
 

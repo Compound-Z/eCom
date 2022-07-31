@@ -11,6 +11,7 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.api.response.CartProductResponse
 import vn.ztech.software.ecom.databinding.OrderListItemBinding
 import vn.ztech.software.ecom.model.OrderItem
+import vn.ztech.software.ecom.util.extension.toCurrency
 
 class OrderProductsAdapter(
     private val context: Context, productsArg: List<OrderItem>,
@@ -23,8 +24,7 @@ class OrderProductsAdapter(
             binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
             binding.cartProductTitleTv.text = product.name
             binding.cartProductQuantityTv.text = "Quantity: x${product.quantity}"
-            binding.cartProductPriceTv.text =
-                context.getString(R.string.price_text, product.price.toString())
+            binding.cartProductPriceTv.text = product.price.toCurrency()
             if (product.imageUrl.isNotEmpty()) {
                 val imgUrl = product.imageUrl.toUri().buildUpon().scheme("https").build()
                 Glide.with(context)

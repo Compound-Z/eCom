@@ -19,6 +19,7 @@ import vn.ztech.software.ecom.ui.address.AddressViewModel
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
 import vn.ztech.software.ecom.util.extension.toCartItems
+import vn.ztech.software.ecom.util.extension.toCurrency
 import vn.ztech.software.ecom.util.extension.toListSubOrders
 import vn.ztech.software.ecom.util.extension.toOrderItems
 
@@ -197,9 +198,9 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
 
         orderViewModel.orderCost.observe(viewLifecycleOwner){
             it?.apply {
-                if (productsCost>0) binding.layoutCalculateFee.tvProductsCost.text = productsCost.toString()
-                if (shippingFee>0) binding.layoutCalculateFee.tvShippingFee.text = shippingFee.toString()
-                if (totalCost>0) binding.layoutCalculateFee.tvTotalCost.text = totalCost.toString()
+                if (productsCost>0) binding.layoutCalculateFee.tvProductsCost.text = productsCost.toCurrency()
+                if (shippingFee>0) binding.layoutCalculateFee.tvShippingFee.text = shippingFee.toCurrency()
+                if (totalCost>0) binding.layoutCalculateFee.tvTotalCost.text = totalCost.toCurrency()
                 binding.layoutCalculateFee.btPlaceOrder.isEnabled = true
             }
             if (it == null){

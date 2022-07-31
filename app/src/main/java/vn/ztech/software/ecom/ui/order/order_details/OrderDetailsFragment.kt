@@ -19,6 +19,7 @@ import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 import vn.ztech.software.ecom.util.extension.getFullAddress
 import vn.ztech.software.ecom.util.extension.toCartProductResponses
+import vn.ztech.software.ecom.util.extension.toCurrency
 
 const val TAG = "OrderDetailsFragment"
 class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
@@ -117,9 +118,9 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         }else{
             binding.layoutBilling.adCard.visibility = View.VISIBLE
             binding.layoutBilling.apply {
-                priceItemsAmountTv.text = billing.subTotal.toString()
-                priceShippingAmountTv.text = billing.shippingFee.toString()
-                priceTotalAmountTv.text = (billing.subTotal + billing.shippingFee).toString()
+                priceItemsAmountTv.text = billing.subTotal.toCurrency()
+                priceShippingAmountTv.text = billing.shippingFee.toCurrency()
+                priceTotalAmountTv.text = (billing.subTotal + billing.shippingFee).toCurrency()
                 tvNumberItems.text = "Items(${orderItems.size})"
             }
         }

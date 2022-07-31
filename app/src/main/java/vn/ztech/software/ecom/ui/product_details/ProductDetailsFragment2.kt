@@ -19,10 +19,7 @@ import vn.ztech.software.ecom.ui.BaseFragment2
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
 import vn.ztech.software.ecom.ui.main.MainActivity
-import vn.ztech.software.ecom.util.extension.removeUnderline
-import vn.ztech.software.ecom.util.extension.round1Decimal
-import vn.ztech.software.ecom.util.extension.showErrorDialog
-import vn.ztech.software.ecom.util.extension.toDateTimeString
+import vn.ztech.software.ecom.util.extension.*
 
 class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
     DialogAddToCartSuccessFragment.OnClick {
@@ -169,10 +166,8 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
         binding.tvAverageRating.text = "${viewModel.product.value?.averageRating?.round1Decimal().toString()}"
         binding.tvSoldNumber.text = "Sold: ${viewModel.product.value?.saleNumber.toString()}"
 
-        binding.proDetailsPriceTv.text = resources.getString(
-            R.string.pro_details_price_value,
-            viewModel.product.value?.price
-        )
+        binding.proDetailsPriceTv.text =  viewModel.product.value?.price?.toCurrency()
+
         binding.proDetailsSpecificsText.text = viewModel.productDetails.value?.description ?: ""
         binding.categoryValue.text = viewModel.product.value?.category
         binding.unitValue.text = viewModel.productDetails.value?.unit

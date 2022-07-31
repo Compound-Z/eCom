@@ -14,6 +14,7 @@ import vn.ztech.software.ecom.databinding.ItemShopInCartBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.model.Shop
+import vn.ztech.software.ecom.util.extension.toCurrency
 
 
 class CartItemAdapter(
@@ -28,8 +29,7 @@ class CartItemAdapter(
 		fun bind(product: CartProductResponse) {
 			binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
 			binding.cartProductTitleTv.text = product.name
-			binding.cartProductPriceTv.text =
-				context.getString(R.string.price_text, product.price.toString())
+			binding.cartProductPriceTv.text = product.price.toCurrency()
 			if (product.imageUrl.isNotEmpty()) {
 				val imgUrl = product.imageUrl.toUri().buildUpon().scheme("https").build()
 				Glide.with(context)

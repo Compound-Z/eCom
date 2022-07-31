@@ -13,6 +13,7 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.ItemOrderHistoryBinding
 import vn.ztech.software.ecom.databinding.OrderListItemBinding
 import vn.ztech.software.ecom.model.Order
+import vn.ztech.software.ecom.util.extension.toCurrency
 
 class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
                         val onClickListener: OnClickListener
@@ -24,8 +25,8 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
         fun bind(order: Order) {
 
             binding.cartProductTitleTv.text = "${order.orderItems[0].name}..."
-            binding.tvSubTotalAndShipping.text = "Subtotal: ${order.billing.subTotal} + ${order.billing.shippingFee}(ship)"
-            binding.tvTotal.text = (order.billing.subTotal + order.billing.shippingFee).toString()
+            binding.tvSubTotalAndShipping.text = "Subtotal: ${order.billing.subTotal.toCurrency()} + ${order.billing.shippingFee.toCurrency()}(ship)"
+            binding.tvTotal.text = (order.billing.subTotal + order.billing.shippingFee).toCurrency()
             if (order.orderItems[0].imageUrl.isNotEmpty()) {
                 val imgUrl = order.orderItems[0].imageUrl.toUri().buildUpon().scheme("https").build()
                 Glide.with(context)

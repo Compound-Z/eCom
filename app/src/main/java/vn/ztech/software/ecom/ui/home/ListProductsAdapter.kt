@@ -17,6 +17,10 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.ItemProductListBinding
 import vn.ztech.software.ecom.databinding.LayoutHomeAdBinding
 import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.util.extension.toCurrency
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 
 class ListProductsAdapter(private val context: Context) :
 	PagingDataAdapter<Product,RecyclerView.ViewHolder>(ProductComparator) {
@@ -30,8 +34,6 @@ class ListProductsAdapter(private val context: Context) :
 		private val productImage = binding.productImageView
 		private val proDeleteButton = binding.productDeleteButton
 		private val proEditBtn = binding.productEditButton
-//		private val proMrp = binding.productActualPriceTv
-//		private val proOffer = binding.productOfferValueTv
 		private val proRatingBar = binding.productRatingBar
 		private val proLikeButton = binding.productLikeCheckbox
 		private val proCartButton = binding.productAddToCartButton
@@ -42,8 +44,7 @@ class ListProductsAdapter(private val context: Context) :
 				onClickListener.onClick(productData)
 			}
 			proName.text = productData.name
-			proPrice.text =
-				context.getString(R.string.pro_details_price_value, productData.price.toString())
+			proPrice.text = productData.price.toCurrency()
 			proRatingBar.rating = productData.averageRating
 			tvSaleNumber.text = "Sold: ${productData.saleNumber.toString()}"
 			if (productData.imageUrl.isNotEmpty()) {
