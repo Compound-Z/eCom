@@ -7,5 +7,6 @@ data class Order(
     val billing: Billing,
     val orderItems: List<OrderItem>,
     val status: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val shippingDetails: ShippingDetails?,
 )

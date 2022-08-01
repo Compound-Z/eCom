@@ -16,7 +16,9 @@ data class OrderDetails(
     val status: String,
     val updatedAt: String,
     val user: UserOrder,
+    val shopRef: ShopRef?
 ):Parcelable
+
 
 @Parcelize
 data class Billing(
@@ -45,9 +47,15 @@ data class ShippingDetails(
     val shippingProvider: String,
     val shippingServiceId: Int,
     val shippingServiceTypeId: Int,
-    val weight: Int
-    //todo: more properties when the admin change order's status
-):Parcelable
+    val weight: Int,
+    var expectedDeliveryTime: String?,
+    var shippingOrderCode: String?,
+):Parcelable{
+    override fun hashCode(): Int {
+        /**override hashCOde fun so that NPE wont be thrown when sending object with null properties using bundle*/
+        return _id.hashCode()
+    }
+}
 @Parcelize
 data class UserOrder(
     val _id: String,

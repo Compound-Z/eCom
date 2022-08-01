@@ -84,11 +84,25 @@
             app:layout_constraintStart_toStartOf="@id/tvSubTotalAndShipping"
             app:layout_constraintTop_toBottomOf="@+id/tvSubTotalAndShipping"
             tools:text="$1234.56" />
+        <TextView
+            android:id="@+id/tvExpectedDeliveryTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body2"
+            android:textSize="12sp"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintStart_toStartOf="@id/product_image_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTotal"
+            tools:text="Expected delivery time: 25/7/2020" />
 
         <Button
             android:id="@+id/btViewDetails"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTotal"
+            app:layout_constraintTop_toBottomOf="@id/tvExpectedDeliveryTime"
             android:backgroundTint="@color/blue_accent_300"
             android:text="View details"
             android:layout_marginTop="2dp"

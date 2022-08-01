@@ -14,6 +14,8 @@ import vn.ztech.software.ecom.databinding.ItemOrderHistoryBinding
 import vn.ztech.software.ecom.databinding.OrderListItemBinding
 import vn.ztech.software.ecom.model.Order
 import vn.ztech.software.ecom.util.extension.toCurrency
+import vn.ztech.software.ecom.util.extension.toDateTimeString
+import vn.ztech.software.ecom.util.extension.toYear
 
 class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
                         val onClickListener: OnClickListener
@@ -40,6 +42,15 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
             if (order.status == "CONFIRMED"){
                 binding.btViewDetails.text = "Mark as Received!"
                 binding.btViewDetails.setBackgroundColor(context.resources.getColor(R.color.button_bg_orange))
+                /**only show expected delivery time if the order has been CONFIRMED*/
+                binding.tvExpectedDeliveryTime.apply {
+                    order.shippingDetails?.let {
+                        if(!it.expectedDeliveryTime.isNullOrEmpty()){
+                            visibility = View.VISIBLE
+                            text = "Expected delivery time: ${it.expectedDeliveryTime?.toDateTimeString()}"
+                        }
+                     }
+                }
             }else{
                 binding.btViewDetails.text = "View details"
                 binding.btViewDetails.setBackgroundColor(context.resources.getColor(R.color.blue_accent_300))

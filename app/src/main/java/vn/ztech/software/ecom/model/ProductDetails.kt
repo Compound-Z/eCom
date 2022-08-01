@@ -25,7 +25,13 @@ data class ShopRef(
     val imageUrl: String,
     val addressItem: AddressItem,
     val numberOfProduct: Int,
-): Parcelable
+): Parcelable{
+    override fun hashCode(): Int {
+        /**override hashCOde fun so that NPE wont be thrown when sending object with null properties using bundle*/
+        return if(_id.isNullOrEmpty()) return 1
+        else _id.hashCode()
+    }
+}
 //data class ProductDetails (
 //    var id: String="-1",
 //    var description: String = "",

@@ -34,7 +34,6 @@ class SubOrdersAdapter(
             shippingOptionsAdapter.onClickListener = object : ShippingOptionsAdapter.OnClickListener {
                 override fun onClick(shippingOption: ShippingOption) {
                     onClickListener.onSelectShippingOption(subOrder.shop._id, shippingOption.service_id)
-                    Toast.makeText(context, "${shippingOption.name} ${shippingOption.fee.total}", Toast.LENGTH_SHORT).show()
 //                    orderViewModel.currentSelectedShippingOption.value = shippingOption
 //                    orderViewModel.calculateCost()
                 }
