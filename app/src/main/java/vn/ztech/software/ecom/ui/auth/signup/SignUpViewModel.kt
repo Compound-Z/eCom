@@ -60,18 +60,18 @@ class SignUpViewModel(private val useCase: ISignUpUseCase): ViewModel() {
                         if (!isEmailValid(email)) {
                             err += ERR_EMAIL
                         }
-                        if (!isPhoneValid(mobile)) {
+                        if (!isPhoneNumberValid(mobile)) {
                             err += ERR_MOBILE
                         }
                         when (err) {
                             ERR_INIT -> {
                                 _errorStatus.value = SignUpViewErrors.NONE
-                                val uId = getRandomString(32, "84" + mobile.trim(), 6)
+                                val uId = getRandomString(32, mobile.trim(), 6)
                                 val newData =
                                     UserData(
                                         uId,
                                         name.trim(),
-                                        "+84" + mobile.trim(),
+                                        mobile.trim(),
                                         email.trim(),
                                         pwd1.trim(),
                                         UserType.customer.name,

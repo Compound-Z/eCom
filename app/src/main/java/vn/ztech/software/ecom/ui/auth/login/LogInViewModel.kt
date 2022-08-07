@@ -16,10 +16,9 @@ import vn.ztech.software.ecom.common.extension.toLoadState
 import vn.ztech.software.ecom.database.utils.UserType
 import vn.ztech.software.ecom.model.UserData
 import vn.ztech.software.ecom.ui.LoginViewErrors
-import vn.ztech.software.ecom.util.CustomError
-import vn.ztech.software.ecom.util.errorMessage
+import vn.ztech.software.ecom.util.*
 import vn.ztech.software.ecom.util.isPasswordValid
-import vn.ztech.software.ecom.util.isPhoneValid
+import vn.ztech.software.ecom.util.isPhoneNumberValid
 
 class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
     val loading = MutableLiveData<Boolean>()
@@ -33,7 +32,7 @@ class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
     fun login(phoneNumber: String, password: String) {
         if (isLogInInfoValid(phoneNumber, password))
             viewModelScope.launch {
-                useCase.login("+84$phoneNumber", password).flowOn(Dispatchers.IO).toLoadState().collect {
+                useCase.login(phoneNumber, password).flowOn(Dispatchers.IO).toLoadState().collect {
                     when (it) {
                         is LoadState.Loading -> {
                             loading.value = true
@@ -79,7 +78,7 @@ class LogInViewModel(private val useCase: ILogInUseCase): ViewModel() {
             errorInputData.value = LoginViewErrors.ERR_EMPTY
             return false
         }
-        if (!isPhoneValid(phoneNumber)) {
+        if (!isPhoneNumberValid(phoneNumber)) {
             errorInputData.value = LoginViewErrors.ERR_MOBILE
             return false
         }

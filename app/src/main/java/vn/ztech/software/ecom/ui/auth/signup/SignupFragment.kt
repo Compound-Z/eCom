@@ -22,6 +22,7 @@ import vn.ztech.software.ecom.util.EMAIL_ERROR_TEXT
 import vn.ztech.software.ecom.util.MOB_ERROR_TEXT
 import vn.ztech.software.ecom.util.PASSWORD_ERROR_TEXT
 import vn.ztech.software.ecom.util.extension.showErrorDialog
+import vn.ztech.software.ecom.util.standardlizePhoneNumber
 
 class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 	private val viewModel: SignUpViewModel by viewModel()
@@ -100,7 +101,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>() {
 
 	private fun onSignUp() {
 		val name = binding.signupNameEditText.text.toString()
-		val mobile = binding.signupMobileEditText.text.toString()
+		val mobile = standardlizePhoneNumber(binding.signupMobileEditText.text.toString())
 		val email = binding.signupEmailEditText.text.toString()
 		val password1 = binding.signupPasswordEditText.text.toString()
 		val password2 = binding.signupCnfPasswordEditText.text.toString()
