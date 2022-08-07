@@ -78,7 +78,8 @@ internal fun standardlizePhoneNumber(phoneNumber: String): String{
 		return phoneNumber
 	}
 	if (phoneNumber.startsWith("84")){
-		return "+${phoneNumber}"
+		if(phoneNumber.length == 9) return "+84${phoneNumber}"
+		else if(phoneNumber.length == 11) return "+${phoneNumber}"
 	}
 
 	return "+84${phoneNumber.trim()}"
