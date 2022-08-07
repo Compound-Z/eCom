@@ -1,26 +1,16 @@
 package vn.ztech.software.ecom.ui.account.logout
 
 import android.content.Intent
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentAccountBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import vn.ztech.software.ecom.databinding.FragmentLoginBinding
-import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.ui.BaseFragment
 import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
 import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.ui.splash.ISplashUseCase
-import vn.ztech.software.ecom.util.extension.showErrorDialog
 
 private const val TAG = "AccountFragment"
 

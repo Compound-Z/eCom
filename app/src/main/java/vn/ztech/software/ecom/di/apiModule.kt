@@ -16,5 +16,6 @@ fun apiModule() = module {
     single {createApi(IShippingApi::class.java)}
     single {createApi(IOrderApi::class.java)}
     single {createApi(IReviewApi::class.java)}
+    single {createApi(IShopApi::class.java)}
 
 }

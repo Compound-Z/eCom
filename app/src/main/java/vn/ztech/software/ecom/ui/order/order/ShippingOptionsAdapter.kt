@@ -7,6 +7,7 @@ import android.widget.RadioButton
 import androidx.recyclerview.widget.RecyclerView
 import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.databinding.ItemShippingOptionBinding
+import vn.ztech.software.ecom.util.extension.toCurrency
 
 class ShippingOptionsAdapter(
     private val context: Context,
@@ -25,9 +26,9 @@ class ShippingOptionsAdapter(
         fun bind(shippingOption: ShippingOption, position: Int) {
             binding.radioButton.isChecked = position == selectedShippingOptionPos
             binding.tvName.text = shippingOption.name
-            binding.tvTotalShippingFee.text = "${shippingOption.fee.total}đ"
-            binding.tvServiceShippingFee.text = "${shippingOption.fee.service_fee}đ"
-            binding.tvInsuranceShippingFee.text = "${shippingOption.fee.insurance_fee}đ"
+            binding.tvTotalShippingFee.text = shippingOption.fee.total.toCurrency()
+            binding.tvServiceShippingFee.text = shippingOption.fee.service_fee.toCurrency()
+            binding.tvInsuranceShippingFee.text = shippingOption.fee.insurance_fee.toCurrency()
             binding.layout.setOnClickListener {
                 onCardClick(position, shippingOption, binding.radioButton)
                 onClickListener.onClick(shippingOption)

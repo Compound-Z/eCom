@@ -21,7 +21,13 @@ import vn.ztech.software.ecom.ui.review.ListReviewReviewedViewModel
 import vn.ztech.software.ecom.ui.review.create_review.CreateReviewViewModel
 import vn.ztech.software.ecom.ui.review.update_review.UpdateReviewViewModel
 import vn.ztech.software.ecom.ui.splash.SplashViewModel
-import vn.ztech.software.ecomSeller.ui.main.MainViewModel
+import vn.ztech.software.ecom.ui.main.MainViewModel
+import vn.ztech.software.ecom.ui.shop.ShopUseCase
+import vn.ztech.software.ecom.ui.shop.ShopViewModel
+import vn.ztech.software.ecom.ui.shop.categories.ListCategoriesInShopViewModel
+import vn.ztech.software.ecom.ui.shop.categories.ListProductsOfCategoryInShopViewModel
+import vn.ztech.software.ecom.ui.shop.info.ShopInfoViewModel
+import vn.ztech.software.ecom.ui.shop.products.ListProductsInShopViewModel
 
 fun viewModelModule() = module {
     viewModel { SplashViewModel(get()) }
@@ -44,5 +50,10 @@ fun viewModelModule() = module {
     viewModel { ListReviewReviewedViewModel(get()) }
     viewModel { CreateReviewViewModel(get()) }
     viewModel { UpdateReviewViewModel(get()) }
+    viewModel { ShopViewModel(get()) }
+    viewModel { ListProductsInShopViewModel(get()) }
+    viewModel { ListCategoriesInShopViewModel(get()) }
+    viewModel { ListProductsOfCategoryInShopViewModel(get()) }
+    viewModel { ShopInfoViewModel() }
 
 }

@@ -2,10 +2,13 @@ package vn.ztech.software.ecom.ui.product_details
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
+import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.common.StoreDataStatus
@@ -16,9 +19,7 @@ import vn.ztech.software.ecom.ui.BaseFragment2
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
 import vn.ztech.software.ecom.ui.main.MainActivity
-import vn.ztech.software.ecom.util.extension.round1Decimal
-import vn.ztech.software.ecom.util.extension.showErrorDialog
-import vn.ztech.software.ecom.util.extension.toDateTimeString
+import vn.ztech.software.ecom.util.extension.*
 
 class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
     DialogAddToCartSuccessFragment.OnClick {
@@ -62,6 +63,14 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
 //                    binding.proDetailsLayout.visibility = View.GONE
                     binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
                 }
+            }
+        }
+        viewModel.loadingProduct.observe(viewLifecycleOwner){
+            if (it){
+                binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+            }else{
+                binding.loaderLayout.loaderFrameLayout.visibility = View.GONE
+                binding.proDetailsLayout.visibility = View.VISIBLE
             }
         }
         viewModel.product.observe(viewLifecycleOwner){
@@ -157,10 +166,8 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
         binding.tvAverageRating.text = "${viewModel.product.value?.averageRating?.round1Decimal().toString()}"
         binding.tvSoldNumber.text = "Sold: ${viewModel.product.value?.saleNumber.toString()}"
 
-        binding.proDetailsPriceTv.text = resources.getString(
-            R.string.pro_details_price_value,
-            viewModel.product.value?.price
-        )
+        binding.proDetailsPriceTv.text =  viewModel.product.value?.price?.toCurrency()
+
         binding.proDetailsSpecificsText.text = viewModel.productDetails.value?.description ?: ""
         binding.categoryValue.text = viewModel.product.value?.category
         binding.unitValue.text = viewModel.productDetails.value?.unit
@@ -170,6 +177,26 @@ class ProductDetailsFragment2 : BaseFragment2<FragmentProductDetailsBinding>(),
         binding.ratingBar.rating = viewModel.product.value?.averageRating?:0f
         binding.tvAverageRating2.text = "${viewModel.product.value?.averageRating} / 5"
         binding.numOfReview.text = "(${viewModel.product.value?.numberOfRating} reviews)"
+
+        /**shop info*/
+        if (viewModel.productDetails.value?.shopId?.imageUrl?.isNotEmpty() == true) {
+            val imgUrl = viewModel.productDetails.value?.shopId?.imageUrl?.toUri()?.buildUpon()?.scheme("https")?.build()
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(imgUrl)
+                .into(binding.layoutShop.ivShop)
+        }
+        binding.layoutShop.tvShopName.text = viewModel.productDetails.value?.shopId?.name?.removeUnderline()
+        binding.layoutShop.tvShopAddress.text = viewModel.productDetails.value?.shopId?.addressItem?.province?.name?:""
+        binding.layoutShop.tvNumberOfProduct.text = "${viewModel.productDetails.value?.shopId?.numberOfProduct} products"
+        binding.layoutShop.btViewShop.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_productDetailsFragment2_to_shopFragment,
+                bundleOf(
+                    "shopId" to viewModel.productDetails.value?.shopId?._id
+                )
+            )
+        }
     }
 
     private fun setImagesView() {

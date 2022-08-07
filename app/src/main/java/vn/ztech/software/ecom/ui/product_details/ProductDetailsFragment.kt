@@ -1,30 +1,36 @@
 package vn.ztech.software.ecom.ui.product_details
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.PagerSnapHelper
+import com.bumptech.glide.Glide
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentProductDetailsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.common.StoreDataStatus
 import vn.ztech.software.ecom.databinding.ItemPreviewReviewSellerBinding
+import vn.ztech.software.ecom.exception.RefreshTokenExpiredException
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.model.Review
+import vn.ztech.software.ecom.ui.auth.LoginSignupActivity
 import vn.ztech.software.ecom.ui.cart.CartViewModel
 import vn.ztech.software.ecom.ui.cart.DialogAddToCartSuccessFragment
 import vn.ztech.software.ecom.ui.main.MainActivity
-import vn.ztech.software.ecom.util.extension.round1Decimal
-import vn.ztech.software.ecom.util.extension.showErrorDialog
-import vn.ztech.software.ecom.util.extension.toDateTimeString
+import vn.ztech.software.ecom.ui.splash.ISplashUseCase
+import vn.ztech.software.ecom.util.CustomError
+import vn.ztech.software.ecom.util.extension.*
 
 class ProductDetailsFragment : Fragment(),
     DialogAddToCartSuccessFragment.OnClick {
@@ -66,8 +72,10 @@ class ProductDetailsFragment : Fragment(),
             binding.proDetailsAddCartBtn.visibility = View.GONE
         }
         viewModel.product.value = product
-        viewModel.getProductDetails(product?._id?:"")
-        viewModel.getReviewsOfThisProduct(product?._id?:"")
+        if(viewModel.productDetails.value == null)
+            viewModel.getProductDetails(product?._id?:"")
+        if(viewModel.reviews.value == null)
+            viewModel.getReviewsOfThisProduct(product?._id?:"")
 
     }
 
@@ -110,12 +118,12 @@ class ProductDetailsFragment : Fragment(),
         }
         cartViewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
         viewModel.error.observe(viewLifecycleOwner){
             it?.let {
-                showErrorDialog(it)
+                handleError(it)
             }
         }
     }
@@ -173,10 +181,8 @@ class ProductDetailsFragment : Fragment(),
         binding.tvAverageRating.text = "${viewModel.product.value?.averageRating?.round1Decimal().toString()}"
         binding.tvSoldNumber.text = "Sold: ${viewModel.product.value?.saleNumber.toString()}"
 
-        binding.proDetailsPriceTv.text = resources.getString(
-            R.string.pro_details_price_value,
-            viewModel.product.value?.price
-        )
+        binding.proDetailsPriceTv.text = viewModel.product.value?.price?.toCurrency()
+
         binding.proDetailsSpecificsText.text = viewModel.productDetails.value?.description ?: ""
         binding.categoryValue.text = viewModel.product.value?.category
         binding.unitValue.text = viewModel.productDetails.value?.unit
@@ -186,6 +192,26 @@ class ProductDetailsFragment : Fragment(),
         binding.ratingBar.rating = viewModel.product.value?.averageRating?:0f
         binding.tvAverageRating2.text = "${viewModel.product.value?.averageRating} / 5"
         binding.numOfReview.text = "(${viewModel.product.value?.numberOfRating} reviews)"
+
+        /**shop info*/
+        if (viewModel.productDetails.value?.shopId?.imageUrl?.isNotEmpty() == true) {
+            val imgUrl = viewModel.productDetails.value?.shopId?.imageUrl?.toUri()?.buildUpon()?.scheme("https")?.build()
+            Glide.with(requireContext())
+                .asBitmap()
+                .load(imgUrl)
+                .into(binding.layoutShop.ivShop)
+        }
+        binding.layoutShop.tvShopName.text = viewModel.productDetails.value?.shopId?.name?.removeUnderline()
+        binding.layoutShop.tvShopAddress.text = viewModel.productDetails.value?.shopId?.addressItem?.province?.name?:""
+        binding.layoutShop.tvNumberOfProduct.text = "${viewModel.productDetails.value?.shopId?.numberOfProduct} products"
+        binding.layoutShop.btViewShop.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_productDetailsFragment_to_shopFragment,
+                bundleOf(
+                    "shopId" to viewModel.productDetails.value?.shopId?._id
+                )
+            )
+        }
     }
 
     private fun setImagesView() {
@@ -216,5 +242,19 @@ class ProductDetailsFragment : Fragment(),
     override fun onStop() {
         super.onStop()
         viewModel.clearErrors()
+    }
+    fun handleError(error: CustomError){
+        if(error.e is RefreshTokenExpiredException){
+            openLogInSignUpActivity(ISplashUseCase.PAGE.LOGIN)
+        }else{
+            showErrorDialog(error)
+        }
+    }
+    fun openLogInSignUpActivity(page: ISplashUseCase.PAGE){
+        val intent = Intent(activity, LoginSignupActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra("PAGE", page)
+        startActivity(intent)
+        activity?.finish()
     }
 }

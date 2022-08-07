@@ -1,14 +1,20 @@
 package vn.ztech.software.ecom.ui.order.order_details
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.layout_shipping_card.view.*
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderDetailsBinding
 import vn.ztech.software.ecom.model.*
@@ -19,6 +25,8 @@ import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
 import vn.ztech.software.ecom.util.extension.getFullAddress
 import vn.ztech.software.ecom.util.extension.toCartProductResponses
+import vn.ztech.software.ecom.util.extension.toCurrency
+import vn.ztech.software.ecom.util.extension.toDateTimeString
 
 const val TAG = "OrderDetailsFragment"
 class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
@@ -84,7 +92,7 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
 			binding.orderDetailsProRecyclerView.adapter = productsAdapter
 		}
         binding.tvOrderStatus.text = viewModel.orderDetails.value?.status?:"unknown"
-        setUpShippingViews(viewModel.orderDetails.value?.user, viewModel.orderDetails.value?.address)
+        setUpShippingViews(viewModel.orderDetails.value?.user, viewModel.orderDetails.value?.address, viewModel.orderDetails.value?.shopRef, viewModel.orderDetails.value?.shippingDetails)
         setUpBillingViews(viewModel.orderDetails.value?.billing, viewModel.orderDetails.value?.orderItems)
         binding.btCancelOrder.setOnClickListener {
             showCancelDialog(viewModel.orderDetails.value?._id)
@@ -117,15 +125,15 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
         }else{
             binding.layoutBilling.adCard.visibility = View.VISIBLE
             binding.layoutBilling.apply {
-                priceItemsAmountTv.text = billing.subTotal.toString()
-                priceShippingAmountTv.text = billing.shippingFee.toString()
-                priceTotalAmountTv.text = (billing.subTotal + billing.shippingFee).toString()
+                priceItemsAmountTv.text = billing.subTotal.toCurrency()
+                priceShippingAmountTv.text = billing.shippingFee.toCurrency()
+                priceTotalAmountTv.text = (billing.subTotal + billing.shippingFee).toCurrency()
                 tvNumberItems.text = "Items(${orderItems.size})"
             }
         }
     }
 
-    private fun setUpShippingViews(user: UserOrder?, address: AddressItem?) {
+    private fun setUpShippingViews(user: UserOrder?, address: AddressItem?, shop: ShopRef?, shippingDetails: ShippingDetails?) {
         if (user == null || address == null){
             binding.orderDetailsShippingAddLayout.shippingCard.visibility = View.GONE
         }else{
@@ -134,10 +142,36 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                 tvReceiver.text = address.receiverName
                 tvPhoneNumber.text = address.receiverPhoneNumber
                 tvAddress.text = address.getFullAddress()
+
+                shop?.addressItem?.let {
+                    tvFromAddresContent.text = it.getFullAddress()
+                }
+
+                shippingDetails?.let {
+                    if (!it.expectedDeliveryTime.isNullOrEmpty()){
+                        groupShippingDetails.visibility = View.VISIBLE
+                        tvExpectedDeliveryTimeContent.text = it.expectedDeliveryTime?.toDateTimeString()
+                        tvShippingOrderCodeContent.text = it.shippingOrderCode
+                        tvShippingOrderCodeContent.setOnClickListener { view->
+                            copyToClipBoard(it.shippingOrderCode?:"")
+                        }
+                    }
+                }
+
             }
         }
     }
-
+    private fun copyToClipBoard(orderId: String) {
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip: ClipData = ClipData.newPlainText("orderId", orderId)
+        clipboard.setPrimaryClip(clip)
+        toastCenter("Copied $orderId")
+    }
+    fun toastCenter(message: String){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).apply {
+            setGravity(Gravity.CENTER, 0, 0)
+        }.show()
+    }
     override fun observeView() {
         super.observeView()
         viewModel.loading.observe(viewLifecycleOwner){

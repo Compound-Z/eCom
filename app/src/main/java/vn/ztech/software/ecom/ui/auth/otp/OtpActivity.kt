@@ -160,8 +160,9 @@ class OtpActivity : AppCompatActivity(), SuccessFragmentListener {
 	private fun moveToLogin(){
 		val logInIntent = Intent(this, LoginSignupActivity::class.java)
 			.putExtra("PAGE", ISplashUseCase.PAGE.LOGIN)
-			.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+			.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
 		startActivity(logInIntent)
+		finish()
 	}
 
 	override fun onDialogDismiss() {

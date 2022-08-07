@@ -20,6 +20,7 @@ import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.util.MOB_ERROR_TEXT
 import vn.ztech.software.ecom.util.PASSWORD_ERROR_TEXT
 import vn.ztech.software.ecom.util.extension.showErrorDialog
+import vn.ztech.software.ecom.util.standardlizePhoneNumber
 
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>() {
@@ -66,6 +67,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 			.putExtras(extras)
 		intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 		startActivity(intent)
+		activity?.finish()
 	}
 
 	override fun setUpViews() {
@@ -124,7 +126,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 	}
 
 	private fun onLogin() {
-		val mob = binding.loginMobileEditText.text.toString()
+		val mob = standardlizePhoneNumber(binding.loginMobileEditText.text.toString())
 		val pwd = binding.loginPasswordEditText.text.toString()
 
 		viewModel.login(mob, pwd)

@@ -148,6 +148,12 @@
     <string name="account_address_label">Address</string>
     <string name="account_fragment_title">Account</string>
     <string name="account_sign_out_label">Sign Out</string>
+    <string name="account_from_when_label">From</string>
+    <string name="account_description_label">Description</string>
+    <string name="account_phone_number_label">Phone number</string>
+    <string name="account_num_of_product_label">Product</string>
+    <string name="account_review_label">Reviews</string>
+    <string name="account_shop_info_label">Shop information</string>
     <string name="sign_out_dialog_title_text">Sign Out?</string>
     <string name="confirm_review_dialog_title_text">Confirm review</string>
     <string name="sign_out_dialog_message_text">On proceeding, you will be signed out of the app.</string>
@@ -163,7 +169,11 @@
     <string name="shipping_details_label_text">Shipping Details</string>
     <string name="payment_details_label_text">Payment Details</string>
     <string name="ship_date_text">Date Shipping</string>
-    <string name="shipping_address_label_string">Address</string>
+    <string name="shipping_address_label_string">To</string>
+    <string name="shipping_from_address_label_string">From</string>
+    <string name="shipping_exp_delivery_time_label_string">Expected delivery time</string>
+    <string name="order_code_label_string">Order code</string>
+    <string name="shipping_shipping_order_code_label_string">Shipping order code</string>
     <string name="ship_curr_status_label_text">Current Status</string>
     <string name="order_details_fragment_title">Order Details</string>
     <string name="order_history_fragment_title">Order history</string>

@@ -17,6 +17,7 @@ import vn.ztech.software.ecom.util.errorMessage
 class CartViewModel(private val cartUseCase: ICartUseCase): ViewModel() {
     val loading = MutableLiveData<Boolean>()
     val products = MutableLiveData<MutableList<CartProductResponse>>()
+    val productsAndShop = MutableLiveData<MutableList<Any>>()
     val addProductStatus = MutableLiveData<Boolean>()
     val deleteProductStatus = MutableLiveData<Boolean>()
     val adjustProductStatus = MutableLiveData<Boolean>()

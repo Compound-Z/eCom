@@ -13,6 +13,7 @@ import vn.ztech.software.ecom.databinding.ItemCategoryListBinding
 import vn.ztech.software.ecom.databinding.LayoutHomeAdBinding
 import vn.ztech.software.ecom.model.Category
 import vn.ztech.software.ecom.ui.home.ListProductsAdapter
+import vn.ztech.software.ecom.util.extension.removeUnderline
 
 class ListCategoriesAdapter(categoryList: List<Any>, private val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -31,7 +32,7 @@ class ListCategoriesAdapter(categoryList: List<Any>, private val context: Contex
             productCard.setOnClickListener {
                 onClickListener.onClick(categoryData)
             }
-            categoryName.text = categoryData.name
+            categoryName.text = categoryData.name.removeUnderline()
 
             if (categoryData.imageUrl.isNotEmpty()) {
                 val imgUrl = categoryData.imageUrl.toUri().buildUpon().scheme("https").build()

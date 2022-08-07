@@ -11,5 +11,6 @@ data class GetShippingOptionsReq(
 @Parcelize
 data class CartItem(
     val productId: String,
-    val quantity: Int
+    val quantity: Int,
+    val shippingServiceId: Int,
 ):Parcelable

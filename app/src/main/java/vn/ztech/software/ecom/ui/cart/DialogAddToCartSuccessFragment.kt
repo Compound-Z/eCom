@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import vn.ztech.software.ecom.databinding.FragmentDialogAddToCartSuccessBinding
 import vn.ztech.software.ecom.model.Product
+import vn.ztech.software.ecom.util.extension.toCurrency
 
 class DialogAddToCartSuccessFragment(val product: Product, val onClickListener: OnClick) : BottomSheetDialogFragment() {
     interface OnClick{
@@ -29,7 +30,7 @@ class DialogAddToCartSuccessFragment(val product: Product, val onClickListener: 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvName.text = product.name
-        binding.tvPrice.text = product.price.toString()
+        binding.tvPrice.text = product.price.toCurrency()
         val imgUrl = product.imageUrl.toUri().buildUpon().scheme("https").build()
         Glide.with(requireContext())
             .asBitmap()
