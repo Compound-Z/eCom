@@ -23,34 +23,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/order_detail_app_bar" />
-    <TextView
-        android:id="@+id/tvOrderShipping"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/shipping_details_label_text"
-        android:textAlignment="viewStart"
-        android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_below="@id/order_detail_app_bar" />
-    <include
-        android:id="@+id/segmentAddress"
-        layout="@layout/segment_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="4dp"
-        android:layout_below="@id/tvOrderShipping" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSubOrder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_above="@id/layoutCalculateFee"
-        android:layout_below="@id/segmentAddress"
+        android:layout_below="@id/layoutAddress"
         android:fillViewport="true"
         android:background="@color/white"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -58,6 +36,39 @@
         tools:itemCount="2"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </androidx.recyclerview.widget.RecyclerView>
+    <LinearLayout
+        android:id="@+id/layoutAddress"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_below="@id/order_detail_app_bar"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvOrderShipping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/shipping_details_label_text"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.MyTheme.Headline6"
+            android:textSize="18sp"
+            android:textStyle="bold"
+             />
+
+        <include
+            android:id="@+id/segmentAddress"
+            layout="@layout/segment_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvOrderShipping"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+
+
 
     <include
         android:id="@+id/layoutCalculateFee"

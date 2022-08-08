@@ -9,6 +9,7 @@ import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.databinding.LayoutSubOrderBinding
 import vn.ztech.software.ecom.model.SubOrder
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
+import vn.ztech.software.ecom.util.extension.removeUnderline
 import vn.ztech.software.ecom.util.extension.toOrderItems
 
 class SubOrdersAdapter(
@@ -23,7 +24,7 @@ class SubOrdersAdapter(
     inner class ViewHolderSubOrder(private var binding: LayoutSubOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(subOrder: SubOrder, position: Int) {
-            binding.layoutShop.tvShopName.text = subOrder.shop.name
+            binding.layoutShop.tvShopName.text = subOrder.shop.name.removeUnderline()
 
             /***products*/
             val productsAdapter = OrderProductsAdapter(context, subOrder.items.toMutableList().toOrderItems())
