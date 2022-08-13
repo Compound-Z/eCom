@@ -1,5 +1,6 @@
 package vn.ztech.software.ecom.ui.order.order_history
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,12 +25,18 @@ class ListOrdersViewModel(private val orderUseCase: IOrderUserCase): ViewModel()
 
 
     fun getOrders(statusFilter: String?, isLoadingEnabled: Boolean = true) {
-        statusFilter ?: throw CustomError(customMessage = "System error")
+        if(statusFilter==null) {
+            error.value = errorMessage( CustomError(customMessage = "System error"))
+            return
+        }
         viewModelScope.launch {
             orderUseCase.getOrders(statusFilter).flowOn(Dispatchers.IO).toLoadState().collect {
                 when (it) {
                     LoadState.Loading -> {
+                        Log.d("ORDERS", isLoadingEnabled.toString())
                         if (isLoadingEnabled) loading.value = true
+                        Log.d("ORDERS", loading.value.toString())
+
                     }
                     is LoadState.Loaded -> {
                         loading.value = false

@@ -26,15 +26,19 @@ class ListOrdersFragment() : BaseFragment<FragmentListOrderBinding>() {
         fun onClickButtonViewDetails(orderId: String)
     }
     private lateinit var callBack: OnClickListener
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         arguments?.takeIf { it.containsKey("statusFilter") }?.apply {
             Log.d(TAG, getString("statusFilter").toString())
-            viewModel.getOrders(getString("statusFilter"))
+            if(viewModel.orders.value == null) viewModel.getOrders(getString("statusFilter"))
+            else viewModel.getOrders(getString("statusFilter"), isLoadingEnabled = false)
             statusFilter = getString("statusFilter").toString()
             viewModel.statusFilter.value = statusFilter
         }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
     override fun setViewBinding(): FragmentListOrderBinding {
