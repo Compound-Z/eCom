@@ -38,9 +38,12 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
         return FragmentCartBinding.inflate(layoutInflater)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(viewModel.products.value == null) viewModel.getListProductsInCart() else viewModel.getListProductsInCart(isLoadingEnabled = false)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getListProductsInCart()
     }
 
     override fun setUpViews() {
