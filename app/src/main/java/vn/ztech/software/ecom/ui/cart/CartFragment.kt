@@ -44,6 +44,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getListProductsInCart(isLoadingEnabled = false)
     }
 
     override fun setUpViews() {
@@ -159,7 +160,12 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
             }
 
             override fun onShopClick(shop: Shop) {
-                Toast.makeText(requireContext(), "Shop Clicked: ${shop.name}", Toast.LENGTH_LONG).show()
+                findNavController().navigate(
+                    R.id.action_cartFragment_to_shopFragment,
+                    bundleOf(
+                        "shopId" to shop._id
+                    )
+                )
             }
         }
     }
