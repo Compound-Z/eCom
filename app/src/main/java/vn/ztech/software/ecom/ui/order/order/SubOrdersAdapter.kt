@@ -25,7 +25,9 @@ class SubOrdersAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(subOrder: SubOrder, position: Int) {
             binding.layoutShop.tvShopName.text = subOrder.shop.name.removeUnderline()
-
+            binding.layoutShop.tvShopName.setOnClickListener {
+                onClickListener.onShopClicked(subOrder.shop._id)
+            }
             /***products*/
             val productsAdapter = OrderProductsAdapter(context, subOrder.items.toMutableList().toOrderItems())
             binding.orderDetailsProRecyclerView.adapter = productsAdapter
@@ -74,6 +76,7 @@ class SubOrdersAdapter(
 
     interface OnClickListener {
         fun onSelectShippingOption(shopId: String, serviceId: Int)
+        fun onShopClicked(shopId: String)
     }
 
 }

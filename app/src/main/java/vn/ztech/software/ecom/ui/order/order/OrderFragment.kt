@@ -42,6 +42,7 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
         val bundledAddressItem = arguments?.getParcelable<AddressItem?>("ADDRESS_ITEM") as AddressItem?
         if(bundledProducts != null) {
             cartViewModel.products.value = bundledProducts
+            cartViewModel.getListProductsInCart(isLoadingEnabled = false)
         }else{
             cartViewModel.getListProductsInCart()
         }
@@ -278,6 +279,13 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
                 orderViewModel.setSelectedShippingOptionToSubOrder(shopId, serviceId)
                 orderViewModel.calculateCost()
                 Log.d("SubOrders", orderViewModel.subOrders.value.toString())
+            }
+
+            override fun onShopClicked(shopId: String) {
+                findNavController().navigate(
+                    R.id.action_orderFragment_to_shopFragment,
+                    bundleOf("shopId" to shopId)
+                )
             }
 
         }

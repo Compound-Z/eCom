@@ -285,6 +285,11 @@
             app:popUpTo="@id/homeFragment"
             >
         </action>
+        <action
+            android:id="@+id/action_orderFragment_to_shopFragment"
+            app:destination="@+id/shopFragment"
+            >
+        </action>
 <!--        <action-->
 <!--            android:id="@+id/action_ordersFragment_to_orderDetailsFragment"-->
 <!--            app:destination="@id/orderDetailsFragment" />-->
