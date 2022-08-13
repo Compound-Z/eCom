@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.swipeRefresh.setOnRefreshListener {
+            viewModel.existed = false
             viewModel.getProducts()
         }
     }

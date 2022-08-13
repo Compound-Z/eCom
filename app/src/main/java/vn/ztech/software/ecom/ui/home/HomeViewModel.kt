@@ -60,7 +60,7 @@ class HomeViewModel(
 
     fun search(searchWords: String){
         viewModelScope.launch {
-            listProductsUseCase.search(searchWords).flowOn(Dispatchers.IO).toLoadState().collect {
+            listProductsUseCase.search(searchWords).cachedIn(viewModelScope).flowOn(Dispatchers.IO).toLoadState().collect {
                 when(it){
                     LoadState.Loading -> {
                         _storeDataStatus.value = StoreDataStatus.LOADING
