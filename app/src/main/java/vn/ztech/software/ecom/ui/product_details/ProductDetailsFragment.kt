@@ -39,6 +39,8 @@ class ProductDetailsFragment : Fragment(),
     private val viewModel: ProductDetailsViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
     var isAddToCartButtonEnabled = true
+    var shouldNav = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -76,6 +78,7 @@ class ProductDetailsFragment : Fragment(),
             viewModel.getProductDetails(product?._id?:"")
         if(viewModel.reviews.value == null)
             viewModel.getReviewsOfThisProduct(product?._id?:"")
+        shouldNav = arguments?.getBoolean("SHOULD_NAV")?:true
 
     }
 
@@ -237,7 +240,7 @@ class ProductDetailsFragment : Fragment(),
 
     override fun onButtonGoToCartClicked() {
         cartViewModel.addProductStatus.value = false /**refresh live data value to the original, so that the bottom sheet will not show up when navigate back to this fragment*/
-        findNavController().navigate(
+        if(shouldNav) findNavController().navigate(
             R.id.action_productDetailsFragment_to_cartFragment
         )
         (activity as MainActivity).binding.homeBottomNavigation.selectedItemId = R.id.cartFragment

@@ -221,7 +221,10 @@ open class ListProductsInCategoryFragment : Fragment() {
             override fun onClick(productData: Product) {
                 findNavController().navigate(
                     R.id.action_list_pro_in_cart_2_pro_details,
-                    bundleOf("product" to productData, "ADD_TO_CART_BUTTON_ENABLED" to true)
+                    bundleOf(
+                        "product" to productData,
+                        "ADD_TO_CART_BUTTON_ENABLED" to true,
+                        "SHOULD_NAV" to false)
                 )
             }
         }
