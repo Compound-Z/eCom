@@ -23,6 +23,7 @@ private const val TAG = "HomeViewModel"
 class HomeViewModel(
     private val listProductsUseCase: IListProductUseCase
 ): ViewModel() {
+    var existed: Boolean = false
     private var _allProducts = MutableLiveData<PagingData<Product>>()
     val allProducts: LiveData<PagingData<Product>> get() = _allProducts
 

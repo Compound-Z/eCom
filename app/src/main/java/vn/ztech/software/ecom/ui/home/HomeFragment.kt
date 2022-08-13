@@ -41,7 +41,10 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var listProductsAdapter: ListProductsAdapter
     protected val focusChangeListener = MyOnFocusChangeListener()
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(viewModel.allProducts.value == null) viewModel.getProducts()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,7 +58,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getProducts()
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.getProducts()
         }
@@ -240,8 +242,11 @@ class HomeFragment : Fragment() {
             // show empty list
             if (loadState.refresh is androidx.paging.LoadState.Loading ||
                 loadState.append is androidx.paging.LoadState.Loading){
-                binding.loaderLayout.circularLoader.showAnimationBehavior
-                binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                if(!viewModel.existed){
+                    binding.loaderLayout.circularLoader.showAnimationBehavior
+                    binding.loaderLayout.loaderFrameLayout.visibility = View.VISIBLE
+                }
+
             }
             else {
                 binding.loaderLayout.circularLoader.hideAnimationBehavior
@@ -289,9 +294,20 @@ class HomeFragment : Fragment() {
         return listOf()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (viewModel.existed) {
+            listProductsAdapter.refresh()
+        }
+    }
     override fun onStop() {
         super.onStop()
         viewModel.clearErrors()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.existed = true
     }
 
 }
