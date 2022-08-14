@@ -15,6 +15,7 @@ import vn.ztech.software.ecom.model.Shop
 import vn.ztech.software.ecom.ui.BaseFragment2
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import vn.ztech.software.ecom.ui.shop.ShopViewModel
+import vn.ztech.software.ecom.util.extension.getFullAddress
 import vn.ztech.software.ecom.util.extension.toYear
 
 
@@ -40,6 +41,7 @@ class ShopInfoFragment : BaseFragment2<FragmentShopInfoBinding>() {
     private fun updateUI() {
         binding.tvFromWhenContent.text = viewModel.shop.value?.createdAt?.toYear()
         binding.tvPhoneNumberContent.text = viewModel.shop.value?.userId?.phoneNumber?:""
+        binding.tvAddressContent.text = viewModel.shop.value?.addressItem?.getFullAddress()
         binding.tvNumberOfProductContent.text = viewModel.shop.value?.numberOfProduct?.toString()
         binding.tvDescriptionContent.text = viewModel.shop.value?.description
         binding.tvPhoneNumberContent.setOnClickListener {

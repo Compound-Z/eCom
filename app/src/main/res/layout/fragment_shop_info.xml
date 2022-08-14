@@ -101,6 +101,40 @@
         android:drawableEnd="@drawable/ic_baseline_content_copy_24"
         tools:text="Milk and Milk Products" />
     <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:padding="10dp"
+        android:text="@string/account_address_label"
+        android:textColor="@color/gray"
+        android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:drawableStart="@drawable/ic_baseline_phone_24"
+        app:layout_constraintEnd_toStartOf="@id/guide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPhoneNumber" />
+    <TextView
+        android:id="@+id/tvAddressContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:paddingTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="14sp"
+        android:gravity="center_vertical"
+        android:textColor="#222121"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guide"
+        app:layout_constraintTop_toTopOf="@+id/tvAddress"
+        tools:text="số 1 California Hill, Hollywood sd sda sd ad asd asd asd as dad sad aasd ad sa  sadas a á da dsa d a sd ads a" />
+    <TextView
         android:id="@+id/tvNumberOfProduct"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -119,8 +153,7 @@
         android:drawableStart="@drawable/stock"
         app:layout_constraintEnd_toStartOf="@id/guide"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvPhoneNumber" />
-
+        app:layout_constraintTop_toBottomOf="@id/tvAddressContent" />
     <TextView
         android:id="@+id/tvNumberOfProductContent"
         android:layout_width="0dp"
