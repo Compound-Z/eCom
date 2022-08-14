@@ -5,6 +5,9 @@ import vn.ztech.software.ecom.model.*
 fun AddressItem.getFullAddress(): String{
     return "${this.detailedAddress}, ${this.ward.name}, ${this.district.name}, ${this.province.name}"
 }
+fun AddressItem.getAddressMainInfo(): String{
+    return "${this.ward.name}, ${this.district.name}, ${this.province.name}"
+}
 fun List<Province>.findPos(provinceId: Int): Int{
     this.forEachIndexed { index, province ->
         if (province.province_id == provinceId) return index

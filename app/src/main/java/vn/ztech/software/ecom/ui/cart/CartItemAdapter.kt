@@ -14,6 +14,8 @@ import vn.ztech.software.ecom.databinding.ItemShopInCartBinding
 import vn.ztech.software.ecom.databinding.LayoutCircularLoaderBinding
 import vn.ztech.software.ecom.model.Product
 import vn.ztech.software.ecom.model.Shop
+import vn.ztech.software.ecom.util.extension.getAddressMainInfo
+import vn.ztech.software.ecom.util.extension.getFullAddress
 import vn.ztech.software.ecom.util.extension.removeUnderline
 import vn.ztech.software.ecom.util.extension.toCurrency
 
@@ -68,7 +70,7 @@ class CartItemAdapter(
 		RecyclerView.ViewHolder(binding.root) {
 		fun bind(shop: Shop) {
 			binding.tvShopName.text = shop.name.removeUnderline()
-
+			binding.tvAddress.text = shop.addressItem?.getAddressMainInfo()
 			binding.tvShopName.setOnClickListener {
 				onClickListener.onShopClick(shop)
 			}

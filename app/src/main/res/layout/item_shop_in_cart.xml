@@ -28,5 +28,33 @@
         android:drawableTint="@color/dark_gray"
         android:drawableEnd="@drawable/ic_baseline_navigate_next_24"
         tools:text="Thai Nga Shop" />
+    <ImageView
+        android:id="@+id/ivLocation"
+        app:layout_constraintTop_toBottomOf="@id/tvShopName"
+        app:layout_constraintStart_toStartOf="@id/ivShop"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@id/ivShop"
+        android:src="@drawable/ic_filled_location_on_24_gray"
+        android:layout_height="wrap_content">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="-2dp"
+        android:textSize="14sp"
+        android:gravity="center_vertical"
+        android:textColor="#222121"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivShop"
+        app:layout_constraintTop_toTopOf="@+id/ivLocation"
+        tools:text="số 1 California Hill, Hollywood sd sda sd ad asd asd asd as dad sad aasd ad sa  sadas a á da dsa d a sd ads a" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

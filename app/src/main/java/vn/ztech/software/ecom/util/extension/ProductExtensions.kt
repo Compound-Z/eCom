@@ -58,7 +58,7 @@ fun List<CartProductResponse>.toListProductsAndShop(): List<Any> {
 
         /**add shop item to list, the shop info get from the first product since every product in the shop have the same shop info*/
         val firstProduct = shop.value[0]
-        result.add(Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = UserId("",""), description = ""))
+        result.add(Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = firstProduct.shopId.addressItem, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = UserId("",""), description = ""))
 
         shop.value.forEach { product ->
             result.add(product)
