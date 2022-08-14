@@ -9,6 +9,7 @@ import vn.ztech.software.ecom.api.response.ShippingOption
 import vn.ztech.software.ecom.databinding.LayoutSubOrderBinding
 import vn.ztech.software.ecom.model.SubOrder
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
+import vn.ztech.software.ecom.util.extension.getAddressMainInfo
 import vn.ztech.software.ecom.util.extension.removeUnderline
 import vn.ztech.software.ecom.util.extension.toOrderItems
 
@@ -28,6 +29,7 @@ class SubOrdersAdapter(
             binding.layoutShop.tvShopName.setOnClickListener {
                 onClickListener.onShopClicked(subOrder.shop._id)
             }
+            binding.layoutShop.tvAddress.text = subOrder.shop.addressItem?.getAddressMainInfo()
             /***products*/
             val productsAdapter = OrderProductsAdapter(context, subOrder.items.toMutableList().toOrderItems())
             binding.orderDetailsProRecyclerView.adapter = productsAdapter

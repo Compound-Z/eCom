@@ -76,7 +76,7 @@ fun List<CartProductResponse>.toListSubOrders(): List<SubOrder> {
         val firstProduct = shop.value[0]
         result.add(
             SubOrder(
-                Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = null, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = UserId("",""), description = ""),
+                Shop(_id = firstProduct.shopId._id, name = firstProduct.shopId.name, __v = 0, addressItem = firstProduct.shopId.addressItem, categories = listOf(), createdAt = "", imageUrl = "", numberOfProduct = 0, shippingShopId = "", updatedAt = "", userId = UserId("",""), description = ""),
                 shop.value,
                 -1, //initially, shippingServiceId is not set yet, it will be reset when user choose an shipping option returned from API
             null
