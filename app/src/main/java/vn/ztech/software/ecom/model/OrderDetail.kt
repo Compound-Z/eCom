@@ -50,6 +50,8 @@ data class ShippingDetails(
     val weight: Int,
     var expectedDeliveryTime: String?,
     var shippingOrderCode: String?,
+    var status: String,
+    var log: List<Log>?
 ):Parcelable{
     override fun hashCode(): Int {
         /**override hashCOde fun so that NPE wont be thrown when sending object with null properties using bundle*/
@@ -62,5 +64,11 @@ data class UserOrder(
     val name: String,
     val phoneNumber: String,
     val userId: String
+):Parcelable
+
+@Parcelize
+data class Log(
+    val status: String,
+    val updated_date: String,
 ):Parcelable
 

@@ -13,6 +13,7 @@ import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.ItemOrderHistoryBinding
 import vn.ztech.software.ecom.databinding.OrderListItemBinding
 import vn.ztech.software.ecom.model.Order
+import vn.ztech.software.ecom.util.extension.removeUnderline
 import vn.ztech.software.ecom.util.extension.toCurrency
 import vn.ztech.software.ecom.util.extension.toDateTimeString
 import vn.ztech.software.ecom.util.extension.toYear
@@ -29,6 +30,7 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
             binding.cartProductTitleTv.text = "${order.orderItems[0].name}..."
             binding.tvSubTotalAndShipping.text = "Subtotal: ${order.billing.subTotal.toCurrency()} + ${order.billing.shippingFee.toCurrency()}(ship)"
             binding.tvTotal.text = (order.billing.subTotal + order.billing.shippingFee).toCurrency()
+            binding.tvOrderId.text = order.orderId
             if (order.orderItems[0].imageUrl.isNotEmpty()) {
                 val imgUrl = order.orderItems[0].imageUrl.toUri().buildUpon().scheme("https").build()
                 Glide.with(context)
@@ -51,6 +53,10 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
                         }
                      }
                 }
+                if(order.shippingDetails?.status != "none"){
+                    binding.tvShippingStatus.visibility = View.VISIBLE
+                    binding.tvShippingStatus.text = "Shipping status: ${ order.shippingDetails?.status?.removeUnderline() }"
+                }
             }else{
                 binding.btViewDetails.text = "View details"
                 binding.btViewDetails.setBackgroundColor(context.resources.getColor(R.color.blue_accent_300))
@@ -61,6 +67,9 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
             }
             binding.productCard.setOnClickListener {
                 onClickListener.onClick(order)
+            }
+            binding.tvOrderId.setOnClickListener {
+                onClickListener.onCopyClipBoardClicked(order.orderId)
             }
         }
     }
@@ -110,5 +119,7 @@ class ListOrderAdapter( val context: Context, ordersArg: List<Order>,
     interface OnClickListener{
         fun onClickButtonViewDetail(order: Order)
         fun onClick(order: Order)
+        fun onCopyClipBoardClicked(orderId: String) {
+        }
     }
 }

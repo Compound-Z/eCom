@@ -252,6 +252,72 @@
             app:layout_constraintTop_toTopOf="@+id/tvPhoneNumberLabel"
             app:layout_constraintVertical_bias="0.0"
             tools:text="+84336130008" />
+        <ImageView
+            android:id="@+id/card_dotted_divider_2"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/price_card_divider_desc"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPhoneNumber"
+            app:srcCompat="@drawable/dotted_line_drawable" />
+        <TextView
+            android:id="@+id/tvOrderCodeLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="16dp"
+            android:text="Shipping order code"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_dotted_divider_2" />
+
+        <TextView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/tvOrderCode"
+            android:layout_width="0dp"
+            android:layout_marginStart="25dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/blue_accent_300"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvOrderCodeLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/tvOrderCodeLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvOrderCodeLabel"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="ABCDEF"
+            app:drawableEndCompat="@drawable/ic_baseline_content_copy_24" />
+        <TextView
+            android:id="@+id/tvShippingHistory"
+            android:layout_width="0dp"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Shipping history"
+            android:textAppearance="@style/TextAppearance.MyTheme.Body1"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvOrderCode" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/layoutLogs"
+            android:orientation="vertical"
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/tvShippingHistory"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content">
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--        <TextView-->
 <!--            android:id="@+id/ship_curr_status_label_tv"-->

@@ -14,6 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.item_log.view.*
 import kotlinx.android.synthetic.main.layout_shipping_card.view.*
 import vn.ztech.software.ecom.R
 import vn.ztech.software.ecom.databinding.FragmentOrderDetailsBinding
@@ -23,10 +24,7 @@ import vn.ztech.software.ecom.ui.main.MainActivity
 import vn.ztech.software.ecom.ui.order.OrderProductsAdapter
 import vn.ztech.software.ecom.util.CustomError
 import vn.ztech.software.ecom.util.errorMessage
-import vn.ztech.software.ecom.util.extension.getFullAddress
-import vn.ztech.software.ecom.util.extension.toCartProductResponses
-import vn.ztech.software.ecom.util.extension.toCurrency
-import vn.ztech.software.ecom.util.extension.toDateTimeString
+import vn.ztech.software.ecom.util.extension.*
 
 const val TAG = "OrderDetailsFragment"
 class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
@@ -154,6 +152,23 @@ class OrderDetailsFragment : BaseFragment<FragmentOrderDetailsBinding>() {
                         tvShippingOrderCodeContent.text = it.shippingOrderCode
                         tvShippingOrderCodeContent.setOnClickListener { view->
                             copyToClipBoard(it.shippingOrderCode?:"")
+                        }
+                    }
+                    if (!it.log.isNullOrEmpty()){
+                        binding.orderDetailsShippingAddLayout.tvShippingHistory.visibility = View.VISIBLE
+                        it?.log?.reversed()?.forEachIndexed { idx, it->
+                            var item: View
+
+                            if (idx==0) item = layoutInflater.inflate(R.layout.item_log, null)
+                            else  item = layoutInflater.inflate(R.layout.item_log_gray, null)
+
+                            item.tvLog.text = it.status
+                            item.tvDay.text = it.updated_date.toDayMonth()
+                            item.tvTime.text = it.updated_date.toTime()
+                            //todo: convert time and set
+                            layoutLogs.addView(
+                                item
+                            )
                         }
                     }
                 }

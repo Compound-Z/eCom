@@ -1,8 +1,11 @@
 package vn.ztech.software.ecom.ui.order.order_history
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -75,11 +78,25 @@ class ListOrdersFragment() : BaseFragment<FragmentListOrderBinding>() {
             override fun onClick(order: Order) {
                 callBack.onClickButtonViewDetails(order._id)
             }
+
+            override fun onCopyClipBoardClicked(orderId: String) {
+                copyToClipBoard(orderId)
+            }
         })
         binding.listOrders.adapter = adapter
     }
 
-
+    private fun copyToClipBoard(orderId: String) {
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip: ClipData = ClipData.newPlainText("orderId", orderId)
+        clipboard.setPrimaryClip(clip)
+        toastCenter("Copied $orderId")
+    }
+    fun toastCenter(message: String){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).apply {
+            setGravity(Gravity.CENTER, 0, 0)
+        }.show()
+    }
     override fun observeView() {
         super.observeView()
         viewModel.loading.observe(viewLifecycleOwner){

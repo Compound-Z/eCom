@@ -22,6 +22,14 @@ fun String.toYear(): String {
     val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
     return localDateTime.format(DateTimeFormatter.ofPattern("MM/yyyy"))
 }
+fun String.toDayMonth(): String {
+    val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
+    return localDateTime.format(DateTimeFormatter.ofPattern("dd/MM"))
+}
+fun String.toTime(): String {
+    val localDateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
+    return localDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+}
 
 fun String.getFirstNumber(): Int? {
     val firstNumString = this.split(" ")[0]
