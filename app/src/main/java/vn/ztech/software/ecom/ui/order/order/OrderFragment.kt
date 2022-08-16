@@ -40,12 +40,15 @@ class OrderFragment : BaseFragment<FragmentOrderBinding>()  {
         //get list products from cart
         val bundledProducts = arguments?.getParcelableArrayList<CartProductResponse>("products") as ArrayList<CartProductResponse>?
         val bundledAddressItem = arguments?.getParcelable<AddressItem?>("ADDRESS_ITEM") as AddressItem?
-        if(bundledProducts != null) {
-            cartViewModel.products.value = bundledProducts
-            cartViewModel.getListProductsInCart(isLoadingEnabled = false)
-        }else{
-            cartViewModel.getListProductsInCart()
+        if(cartViewModel.products.value == null){
+            if(bundledProducts != null) {
+                cartViewModel.products.value = bundledProducts
+//            cartViewModel.getListProductsInCart(isLoadingEnabled = false)
+            }else{
+                cartViewModel.getListProductsInCart()
+            }
         }
+
         if(bundledAddressItem != null) {
             addressViewModel.currentSelectedAddressItem.value = bundledAddressItem
         }else{
